@@ -1,0 +1,138 @@
+---Registrasi---
+
+[Post]/auth/register
+REQUEST BODY
+email: varchar
+password: varchar
+
+---Login---
+
+[post]/auth/login
+REQUEST BODY
+email: varchar
+password: varchar
+
+---Home Page---
+
+[Get]/movie/airing?limit=4
+RESPONSE
+Array
+[ {id: int,
+title: varchar,
+Genre name: varchar,
+Image: text,
+isRecomended: boll,
+status: varchar} ]
+
+[Get]/movie/upcoming?limit=4
+RESPONSE
+Array
+[ {id: int,
+title: varchar,
+Genre name: varchar,
+Image: text,
+isRecomended: boll,
+status: varchar
+ReleaseDate: date } ]
+
+---Movie---
+
+[Get]/movie?limit=4
+RESPONSE
+Array
+[ {id: int,
+title: varchar,
+Genre name: varchar,
+Image: text,
+isRecomended: boll,
+status: varchar }]
+
+Fiture[search by Title, Filter by Genre,pagination] 
+
+---Detail Movie---
+
+[Get]/movie/:id
+RESPONSE
+id: int,
+title: varchar,
+Genre name: varchar,
+ReleaseDate: date,
+sinopsis: text,
+duration: varchar,
+director: varchar,
+casts: varchar
+
+[Get]/cinema/:movieId
+RESPONSE
+cinema: varchar,
+time: date,
+location cinema name: varchar,
+image : varchar,
+date: date,
+price: int,
+pagination
+
+Fiture[filter by date,time,location]
+
+---Order---
+
+[Get]/seat-reserved?movie=?&cineme=?&location=?&time=?&date=?
+
+[post] /order
+BODY
+movieId: int,
+cinemaId: int,
+locationId: int,
+seats: [A1, A2, A3],
+date: date,
+time: time
+paymentId: int
+
+---Ticket Results---
+
+[GET] /tickets/:code-unique
+
+RESPONSE
+movie title: varchar,
+ratings: varchar,
+reservation_date: date,
+reservation_time: time,
+seats: varchar
+
+
+---Profile/Details---
+
+[GET] /profile
+RESPONSE
+firstName: varchar,
+lastName: varchar, 
+picture: text, 
+phoneNumber:varchar, 
+email: varchar,
+point: int
+
+[PATCH] /profile
+BODY
+firstName: varchar,
+lastName: varchar, 
+picture: text, 
+phoneNumber:varchar, 
+email: varchar,
+newPassword: varchar, 
+confirmPassword: varchar
+
+---Profile/Orders---
+
+[GET] /profile/orders
+RESPONSE
+reservation_date: date, 
+isPaid: boll, 
+isUsed: boll, 
+movie_title: varchar, 
+ratings: varchar, 
+reservation_time: time, 
+cinema_image: text, 
+va_number: int, 
+expired_time: time
+
+
