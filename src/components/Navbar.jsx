@@ -21,7 +21,7 @@ function Navbar(props) {
         <Link to="/" className="text-sm">
           Home
         </Link>
-        <a href="#movies" className="text-sm">
+        <a href="/movie" className="text-sm">
           Movie
         </a>
       </div>
