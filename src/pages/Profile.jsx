@@ -1,10 +1,10 @@
 import { useState } from "react"
 import Navbar from "../components/Navbar"
 import getImageUrl from "../utils/imageGet"
+import OrderHistory from "../components/OrderHistory";
 
 import { FaRegEyeSlash } from "react-icons/fa";
 import { IoEyeOutline } from "react-icons/io5"
-import { MdKeyboardArrowDown } from "react-icons/md";
 
 const Profile = () => {
   const [peekPassword, setPeekPassword] = useState(true)
@@ -146,92 +146,7 @@ const Profile = () => {
           </div>
 
           <div className={`${pageSwitch ? 'hidden' : ''}`}>
-            <div className="flex items-center justify-center w-full h-auto bg-white mt-14 rounded-3xl">
-              <div className="w-11/12 h-4/6">
-                <div className="flex flex-col-reverse justify-between gap-3 py-5 md:py-10 md:items-center md:flex-row">
-                  <div>
-                    <div className="text-slate-400">Tuesday, 07 July 2020 - 04:30pm</div>
-                    <div className="text-2xl">Spider-Man: Homecoming</div>
-                  </div>
-
-                  <div>
-                    <img className="w-32 md:w-60" src={getImageUrl('cineOne21', 'svg')} alt="" />
-                  </div>
-                </div>
-                  
-                <div className="w-full h-1 bg-lightGrey"></div>
-                <div className="flex flex-col w-full gap-5 pt-5 pb-5 md:gap-10 md:py-10">
-                    
-                    <div className="flex flex-col flex-wrap w-full md:flex-row">
-                      <div className="flex flex-col w-full md:gap-10 md:flex-row">
-                        <div htmlFor="password" className="relative flex flex-col gap-5 md:gap-10 md:flex-row md:w-4/5">
-                          <div className="flex items-center justify-center w-full h-12 text-xl text-green-500 bg-green-300 md:h-16 md:w-0 md:flex-1 rounded-xl">Ticket in active</div>
-                          <div className="flex items-center justify-center w-full h-12 text-xl text-green-500 bg-green-300 md:h-16 md:w-0 md:flex-1 rounded-xl">Not Paid</div>
-                        </div>
-                        <div htmlFor="confirmPassword" className="flex items-center justify-center w-full gap-1 md:gap-3 md:justify-end md:w-1/5">
-                          <button className="flex text-2xl text-center md:text-right text-slate-400">Show Details <MdKeyboardArrowDown className="text-4xl text-slate-400"/></button> 
-                        </div>
-
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-col flex-wrap w-full md:flex-row">
-                      <div className='w-full'>
-                        <div>Ticket Information</div>
-                        <div className="flex">
-                          <p className="w-1/4">No. Rekening Virtual</p>
-                          <p>:</p>
-                          <div className="flex justify-end flex-1 gap-3">
-                            <p>12321328913829724</p>
-                            <button>Copy</button>
-                          </div>
-                        </div>
-                        <div className="flex">
-                          <p className="w-1/4">Total Payment</p>
-                          <p>:</p>
-                          <div className="flex-1 text-right">$30</div>
-                        </div>
-                        <p>Pay this payment bill before it is due, on June 23, 2023. If the bill has not been paid by the specified time, it will be forfeited</p>
-                        <button>cek pembayaran</button>
-                      </div>
-                    </div>
-      
-                </div>
-              </div>
-            </div>   
-            
-            <div className="flex items-center justify-center w-full h-auto bg-white mt-14 rounded-3xl">
-              <div className="w-11/12 h-4/6">
-                <div className="flex flex-col-reverse justify-between gap-3 py-5 md:py-10 md:items-center md:flex-row">
-                  <div>
-                    <div className="text-slate-400">Tuesday, 07 July 2020 - 04:30pm</div>
-                    <div className="text-2xl">Spider-Man: Homecoming</div>
-                  </div>
-
-                  <div>
-                    <img className="w-32 md:w-60" src={getImageUrl('cineOne21', 'svg')} alt="" />
-                  </div>
-                </div>
-                  
-                <div className="w-full h-1 bg-lightGrey"></div>
-                <div className="flex flex-col w-full gap-5 pt-5 pb-5 md:gap-10 md:py-10">
-                    
-                    <div className="flex flex-col flex-wrap w-full md:flex-row">
-                      <div className="flex flex-col w-full md:gap-10 md:flex-row">
-                        <div htmlFor="password" className="relative flex flex-col gap-5 md:gap-10 md:flex-row md:w-4/5">
-                          <div className="flex items-center justify-center w-full h-12 text-xl text-red-500 bg-red-300 md:h-16 md:w-0 md:flex-1 rounded-xl">Ticket in active</div>
-                          <div className="flex items-center justify-center w-full h-12 text-xl text-red-500 bg-red-300 md:h-16 md:w-0 md:flex-1 rounded-xl">Not Paid</div>
-                        </div>
-                        <div htmlFor="confirmPassword" className="flex items-center justify-center w-full gap-1 md:gap-3 md:justify-end md:w-1/5">
-                          <button className="flex text-2xl text-center md:text-right text-slate-400">Show Details <MdKeyboardArrowDown className="text-4xl text-slate-400"/></button> 
-                        </div>
-
-                      </div>
-                    </div>
-      
-                </div>
-              </div>
-            </div>   
+            <OrderHistory/>
           </div>
         </section>
 
