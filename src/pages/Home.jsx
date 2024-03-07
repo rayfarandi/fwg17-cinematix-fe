@@ -62,7 +62,7 @@ function Home() {
                     </div>
                 </div>
             </section>
-            <section className="font-mulish gap-[20px] flex flex-col  pb-[63px] px-5 md:px-11 xl:px-[130px] font-mulish">
+            <section className="font-mulish gap-[20px] flex flex-col  pb-[63px] px-5 md:px-11 xl:px-[130px]">
                 <div className=" justify-center flex">
                     <div className=" md:max-w-[50%] flex flex-col items-center gap-[10px]">
                         <span className="text-[18px] text-primary font-bold">MOVIES</span>
@@ -90,7 +90,7 @@ function Home() {
                     </Link>
                 </div>
             </section>
-            <section className="font-mulish gap-[20px] flex flex-col pb-[63px] px-5 md:px-11 xl:px-[130px] font-mulish">
+            <section className="font-mulish gap-[20px] flex flex-col pb-[63px] px-5 md:px-11 xl:px-[130px]">
                 <div className=" flex justify-between items-center">
                     <div className="gap-[10px] flex flex-col">
                         <span className="text-primary text-[16px] font-bold">UPCOMING MOVIES</span>
@@ -120,7 +120,7 @@ function Home() {
 
                 </div>
             </section>
-            <section className="font-mulish pb-[63px] px-5 md:px-11 xl:px-[130px] font-mulish">
+            <section className="font-mulish pb-[63px] px-5 md:px-11 xl:px-[130px]">
                 <div className="w-full h-[318px] bg-primary rounded-[20px] flex flex-col gap-y-4 md:gap-y-12 justify-center items-center">
                     <p className="text-light text-xl md:text-3xl lg:text-5xl w-[80%] md:w-full text-center">
                         Subscribe to our newsletter
