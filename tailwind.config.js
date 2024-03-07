@@ -14,6 +14,8 @@ export default {
         dark: "#14142B",
         light: "#FFF",
         danger: "#D00707",
+        grey: "#4E4B66",
+        lightGrey: "#A0A3BD33"
       },
     },
   },
