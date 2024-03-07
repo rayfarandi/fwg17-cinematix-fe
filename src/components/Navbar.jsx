@@ -27,13 +27,13 @@ function Navbar(props) {
       </div>
       <div className="nav-end hidden lg:flex lg:gap-x-4 lg:items-center">
         <Link
-          to="/signin"
+          to="/signIn"
           className="border-2 border-primary py-3 px-4 rounded-md text-primary focus:ring-2 text-sm"
         >
           SignIn
         </Link>
         <Link
-          to="/signup"
+          to="/signUp"
           className="border-2 border-primary py-3 px-4 rounded-md text-[#F8FAFC] bg-primary focus:ring-2 text-sm"
         >
           Sign Up
