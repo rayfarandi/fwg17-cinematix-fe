@@ -67,6 +67,7 @@ function Navbar(props) {
             </div>
           </div>
         </div>
+
         <div className="nav-mid text-[#0F172A] hidden lg:flex lg:gap-x-[60px]">
           <Link to="/" className="text-sm">
             Home
@@ -139,6 +140,8 @@ function Navbar(props) {
 
 
     </>
+
+      
   );
 }
 

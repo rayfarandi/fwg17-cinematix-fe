@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import "../styles/main.css";
@@ -9,7 +9,14 @@ import DropdownMobile from "../components/DropdownMobile";
 import CardMovie from "../components/CardMovie"
 
 function Home() {
-    const [isDropdownShown, setIsDropdownShow] = useState(false);
+    const [isDropdownShown, setIsDropdownShow] = useState(false)
+    useEffect(()=>{
+        window.scrollTo({
+          top:0,
+          left:0,
+          behavior:'smooth'
+        })
+      },[])
     return (
         <>
             <Navbar isClick={() => setIsDropdownShow(true)} />
@@ -62,8 +69,10 @@ function Home() {
                     </div>
                 </div>
             </section>
+
             <section className="gap-[20px] flex flex-col  pb-[63px] px-5 md:px-11 xl:px-[130px] font-mulish">
                 <div className="flex justify-center ">
+
                     <div className=" md:max-w-[50%] flex flex-col items-center gap-[10px]">
                         <span className="text-[18px] text-primary font-bold">MOVIES</span>
                         <span className="text-center text-[32px] text-[#4F5665]">Exciting Movies That Should Be Watch Today</span>
@@ -90,8 +99,10 @@ function Home() {
                     </Link>
                 </div>
             </section>
+
             <section className="gap-[20px] flex flex-col pb-[63px] px-5 md:px-11 xl:px-[130px] font-mulish">
                 <div className="flex items-center justify-between ">
+
                     <div className="gap-[10px] flex flex-col">
                         <span className="text-primary text-[16px] font-bold">UPCOMING MOVIES</span>
                         <span className="text-[28px]">Exciting Movie Coming Soon</span>
@@ -120,7 +131,9 @@ function Home() {
 
                 </div>
             </section>
-            <section className="pb-[63px] px-5 md:px-11 xl:px-[130px] font-mulish">
+
+            <section className="font-mulish pb-[63px] px-5 md:px-11 xl:px-[130px]">
+
                 <div className="w-full h-[318px] bg-primary rounded-[20px] flex flex-col gap-y-4 md:gap-y-12 justify-center items-center">
                     <p className="text-light text-xl md:text-3xl lg:text-5xl w-[80%] md:w-full text-center">
                         Subscribe to our newsletter
