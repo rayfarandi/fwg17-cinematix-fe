@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 import "../styles/main.css";
 import Navbar from "../components/Navbar";
@@ -10,6 +10,13 @@ import PaymentModal from "../components/PaymentModal";
 function Payment() {
   const [isDropdownShown, setIsDropdownShow] = useState(false);
   const [isModalInfoShown, setisModalInfoShown] = useState(false);
+  useEffect(()=>{
+    window.scrollTo({
+      top:0,
+      left:0,
+      behavior:'smooth'
+    })
+  },[])
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />

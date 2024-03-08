@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 import "../styles/main.css";
 import Navbar from "../components/Navbar";
@@ -8,11 +8,18 @@ import DropdownMobile from "../components/DropdownMobile";
 
 function TicketResult() {
   const [isDropdownShown, setIsDropdownShow] = useState(false);
+  useEffect(()=>{
+    window.scrollTo({
+      top:0,
+      left:0,
+      behavior:'smooth'
+    })
+  },[])
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />
       <section className="flex font-mulish">
-        <div className="lg:w-3/5">
+        <div className="hidden lg:block lg:w-3/5">
           <div className="w-full h-[920px] font-mulish text-light bg-[url('https://res.cloudinary.com/dgktyg96c/image/upload/v1709686494/acengfull_onjk1kxwb437u6.png')] relative bg-cover bg-center">
             <div className="w-full h-full absolute bg-black bg-opacity-80">
               <div className="h-full flex flex-col items-center justify-center gap-y-5 px-16">
@@ -40,7 +47,7 @@ function TicketResult() {
             </div>
           </div>
         </div>
-        <div className="lg:w-2/5 py-10 lg:py-0 bg-[#A0A3BD33] flex flex-col gap-y-6 justify-center items-center">
+        <div className="w-full lg:w-2/5 py-10 lg:py-0 bg-[#A0A3BD33] flex flex-col gap-y-6 justify-center items-center">
           <div className="bg-light rounded-lg relative">
             <img
               src={getImageUrl("qrcode", "png")}
