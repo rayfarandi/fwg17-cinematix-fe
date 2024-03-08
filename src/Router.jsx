@@ -11,7 +11,7 @@ import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import Profile from "./pages/Profile";
 import Order from "./pages/Order";
-// import Payment from "./pages/Payment";
+import Payment from "./pages/Payment";
 import TicketResult from "./pages/TicketResult";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
@@ -40,11 +40,10 @@ const router = createBrowserRouter([
     path: "/order",
     element: <Order />,
   },
-  
-  // {
-  //   path: "/payment",
-  //   element: <Payment />,
-  // },
+  {
+    path: "/payment",
+    element: <Payment />,
+  },
   {
     path: "/ticketresult",
     element: <TicketResult />,
