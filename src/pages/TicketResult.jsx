@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 import "../styles/main.css";
 import Navbar from "../components/Navbar";
@@ -8,6 +8,14 @@ import DropdownMobile from "../components/DropdownMobile";
 
 function TicketResult() {
   const [isDropdownShown, setIsDropdownShow] = useState(false);
+
+  useEffect(()=>{
+    window.scrollTo({
+      top:0,
+      left:0,
+      behavior:'smooth'
+    })
+  },[])
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />

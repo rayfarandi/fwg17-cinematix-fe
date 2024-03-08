@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState,useEffect } from "react"
 import Navbar from "../components/Navbar"
 import getImageUrl from "../utils/imageGet"
 import OrderHistory from "../components/OrderHistory";
@@ -26,7 +26,13 @@ const Profile = () => {
   //     a.className = 'hidden w-full bg-black h-60'
   //   }
   // }
-
+  useEffect(()=>{
+    window.scrollTo({
+      top:0,
+      left:0,
+      behavior:'smooth'
+    })
+  },[])
   return (
     <>
       <Navbar/>
