@@ -1,4 +1,8 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+//redux
+
+//=======
 
 import Home from "./pages/Home";
 import Movie from "./pages/Movie";
@@ -9,6 +13,9 @@ import Profile from "./pages/Profile";
 import Order from "./pages/Order";
 // import Payment from "./pages/Payment";
 import TicketResult from "./pages/TicketResult";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor, store } from "./redux/store";
 
 const router = createBrowserRouter([
   {
@@ -44,4 +51,14 @@ const router = createBrowserRouter([
   },
 ]);
 
-export default router;
+function App() {
+  return (
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <RouterProvider router={router}/>
+      </PersistGate>
+    </Provider>
+  )
+}
+
+export default App;
