@@ -21,20 +21,20 @@ function Home() {
         <>
             <Navbar isClick={() => setIsDropdownShow(true)} />
             <header className="font-mulish gap-[20px] h-screen flex md:flex-row flex-col">
-                <div className=" flex-1 flex justify-center items-center">
+                <div className="flex items-center justify-center flex-1 ">
                     <div className="w-[70%] flex flex-col justify-center gap-2">
                         <span className="text-primary font-bold text-[18px]">MOVIE TICKET PURCHASES #1 IN INDONESIA</span>
                         <span className="font-bold text-[24px] md:text-[36px]" >Experience the Magic of Cinema: Book Your Tickets Today</span>
                         <span className="text-[#4F5665] text-[16px]">Sign up and get the ticket with a lot of discount</span>
                     </div>
                 </div>
-                <div className=" flex-1 flex  justify-center items-center">
+                <div className="flex items-center justify-center flex-1 ">
                     <div className="max-w-[90%] flex flex-col gap-[50px]">
-                        <div className=" grid grid-cols-2 gap-5">
+                        <div className="grid grid-cols-2 gap-5 ">
                             <div><img src={getImageUrl("home1", "png")} alt="home" className="rounded-t-[20px] w-[200px] md:h-[180px] h-[110px]" /></div>
                             <div><img src={getImageUrl("home3", "png")} alt="home" className="rounded-t-[20px] -mb-[50px] w-[200px] md:h-[270px] h-[200px]" /></div>
                         </div>
-                        <div className=" grid grid-cols-2 gap-5">
+                        <div className="grid grid-cols-2 gap-5 ">
                             <div><img src={getImageUrl("home2", "png")} alt="home" className="-mt-[70px] w-[200px] md:h-[270px] h-[200px] rounded-b-[20px]" /></div>
                             <div className="flex"><img src={getImageUrl("home4", "jpeg")} alt="home" className=" self-end rounded-b-[20px] w-[200px] md:h-[180px] h-[110px]
                                 0px]" /></div>
@@ -44,7 +44,7 @@ function Home() {
             </header>
             <section className="font-mulish my-[50px]  flex justify-center">
                 <div className="gap-[20px]  max-w-[90%] flex flex-col ">
-                    <div className=" flex justify-start items-center">
+                    <div className="flex items-center justify-start ">
                         <div className="gap-[20px] flex flex-col">
                             <span className="text-primary text-[18px] font-bold">WHY CHOOSE US</span>
                             <span className="text-[32px]">Unleashing the Ultimate Movie Experience</span>
@@ -69,8 +69,10 @@ function Home() {
                     </div>
                 </div>
             </section>
-            <section className="font-mulish gap-[20px] flex flex-col  pb-[63px] px-5 md:px-11 xl:px-[130px]">
-                <div className=" justify-center flex">
+
+            <section className="gap-[20px] flex flex-col  pb-[63px] px-5 md:px-11 xl:px-[130px] font-mulish">
+                <div className="flex justify-center ">
+
                     <div className=" md:max-w-[50%] flex flex-col items-center gap-[10px]">
                         <span className="text-[18px] text-primary font-bold">MOVIES</span>
                         <span className="text-center text-[32px] text-[#4F5665]">Exciting Movies That Should Be Watch Today</span>
@@ -87,7 +89,7 @@ function Home() {
                     </CardMovie>
 
                 </div>
-                <div className=" flex justify-center">
+                <div className="flex justify-center ">
                     <Link
                         to="/movie"
                         className="flex gap-[5px] text-primary hover:text-secondary"
@@ -97,8 +99,10 @@ function Home() {
                     </Link>
                 </div>
             </section>
-            <section className="font-mulish gap-[20px] flex flex-col pb-[63px] px-5 md:px-11 xl:px-[130px]">
-                <div className=" flex justify-between items-center">
+
+            <section className="gap-[20px] flex flex-col pb-[63px] px-5 md:px-11 xl:px-[130px] font-mulish">
+                <div className="flex items-center justify-between ">
+
                     <div className="gap-[10px] flex flex-col">
                         <span className="text-primary text-[16px] font-bold">UPCOMING MOVIES</span>
                         <span className="text-[28px]">Exciting Movie Coming Soon</span>
@@ -127,12 +131,14 @@ function Home() {
 
                 </div>
             </section>
+
             <section className="font-mulish pb-[63px] px-5 md:px-11 xl:px-[130px]">
+
                 <div className="w-full h-[318px] bg-primary rounded-[20px] flex flex-col gap-y-4 md:gap-y-12 justify-center items-center">
                     <p className="text-light text-xl md:text-3xl lg:text-5xl w-[80%] md:w-full text-center">
                         Subscribe to our newsletter
                     </p>
-                    <div className="max-sm:w-full flex flex-col gap-y-4 md:flex-row md:gap-x-4 max-sm:items-start max-sm:px-5">
+                    <div className="flex flex-col max-sm:w-full gap-y-4 md:flex-row md:gap-x-4 max-sm:items-start max-sm:px-5">
                         <input
                             type="text"
                             className="p-4 max-sm:w-full bg-primary outline-none border border-light rounded-[9px] text-light placeholder:text-light text-sm lg:text-base"

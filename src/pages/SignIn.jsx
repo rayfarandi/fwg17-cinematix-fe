@@ -1,13 +1,17 @@
 //import
 
+import axios from "axios";
 import getImageUrl from "../utils/imageGet";
-import React from "react"
+import React, { useEffect, useState } from "react"
 // import axios from 'axios'
 // import { useDispatch, useSelector } from "react-redux"
 // import { useNavigate } from "react-router-dom"
 // import { login as loginAction} from "../redux/reducers/auth"
 // import { Link } from "react-router-dom"
+import { login as loginAction} from "../redux/reducer/auth";
 import { FiEyeOff, FiEye, } from "react-icons/fi"
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
 // import loginImage from "../assets/image/login.png"
 // import logoAuth from "../assets/image/logo auth.png"
 // import logoGoogle from "../assets/image/google.svg"
@@ -19,10 +23,63 @@ const SignIn = () => {
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible)
     }
+
+    //===========================================================================
+
+
+    const [errMessage, setErrMessage] = useState('error message')
+    const [successMessage, setSuccessMessage] = useState('login success')
+
+    const [loginSuccess, setLoginSuccess] = useState(false)
+
+    const [error, setError] = useState(false)
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const token = useSelector(state => state.auth.token)
+
+    const loginProcess = async (e) => {
+        e.preventDefault()
+        const {value: email} = e.target.email
+        const {value: password} = e.target.password
+
+        const form = new URLSearchParams()
+        form.append('email', email)
+        form.append('password', password)
+
+        try{
+            const {data} = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, form.toString())
+            setSuccessMessage(data.message)
+            setLoginSuccess(true)
+
+            setTimeout(()=>{
+                setLoginSuccess(false)
+                dispatch(loginAction(data.results.token))
+                navigate('/movie')
+            },2000)
+        }catch(err){
+            console.log(err)
+            setErrMessage(err.response.data.message)
+            setError(true)
+            setTimeout(() => {
+                setError(false)
+            }, 2000);
+        }
+    }
+
+    // useEffect(()=>{
+    //     if(token){
+    //         navigate('/movie')
+    //     }
+    // },[token, navigate])
+
+
+    //===========================================================================
     return (
         <>
-            <header className="font-mulish relative h-screen flex justify-center items-center">
-                <div><img className="h-screen w-screen" src={getImageUrl("SignUp", "png")} alt="paginate-hero" /></div>
+            <header className="relative flex items-center justify-center h-screen font-mulish">
+                <div><img className="w-screen h-screen" src={getImageUrl("SignUp", "png")} alt="paginate-hero" /></div>
                 <div className="absolute inset-0 bg-black opacity-70"></div>
                 <div className=" gap-[10px] w-[50%] absolute flex flex-col justify-center items-center">
                     <img className=" w-[200px] h-[100px]" src={getImageUrl("Cinematix", "svg")} alt="paginate-hero" />
@@ -32,7 +89,7 @@ const SignIn = () => {
                                 <div className="#121212 font-bold text-[32px]">Welcome Back👋</div>
                                 <div className="text-[#4F5665]">Sign in with your data that you entered during your registration</div>
                             </div>
-                            <form className="gap-[10px] flex flex-col">
+                            <form onSubmit={loginProcess} className="gap-[10px] flex flex-col">
                                 <div className="relative flex flex-col gap-3">
                                     <label className=" text-[#4E4B66] font-bold" htmlFor="email">Email</label>
                                     <div className="-mt-[10px] flex relative items-center">
@@ -54,7 +111,7 @@ const SignIn = () => {
                                 <span className=" text-primary text-">Forgot your password?</span>
                                 </div>
                                 <div>
-                                    <button className="rounded-lg py-2 bg-primary w-full font-bold text-white active:scale-95 transition-all duration-500" type="submit">Login</button>
+                                    <button className="w-full py-2 font-bold text-white transition-all duration-500 rounded-lg bg-primary active:scale-95" type="submit">Login</button>
                                 </div>
                                 <div className="flex items-center ">
                                     <div className="flex-1 w-full h-px bg-[#DEDEDE]"></div>

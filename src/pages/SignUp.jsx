@@ -1,28 +1,52 @@
-//import
-
+import axios from "axios";
 import getImageUrl from "../utils/imageGet";
-import React from "react"
-// import axios from 'axios'
-// import { useDispatch, useSelector } from "react-redux"
-// import { useNavigate } from "react-router-dom"
-// import { login as loginAction} from "../redux/reducers/auth"
-// import { Link } from "react-router-dom"
+import React, { useState } from "react"
 import { FiEyeOff, FiEye, } from "react-icons/fi"
-// import loginImage from "../assets/image/login.png"
-// import logoAuth from "../assets/image/logo auth.png"
-// import logoGoogle from "../assets/image/google.svg"
-// import logoFacebook from "../assets/image/facebook.svg"
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
-    // Ganti type di input dari password ke text
     const [passwordVisible, setPasswordVisible] = React.useState(false)
     const togglePasswordVisibility = () => {
         setPasswordVisible(!passwordVisible)
     }
+
+    const [tcMessage, setTcmessage] = useState()
+
+    const navigate = useNavigate()
+    const [agree, setAgree] = useState(false)
+    const checked = (e) => {setAgree(e.target.checked)}
+    const processRegister = async (event) => {
+        event.preventDefault()
+        const {value: email} = event.target.email
+        const {value: password} = event.target.password
+
+        if(agree){
+            const form = new URLSearchParams()
+            form.append('email', email)
+            form.append('password', password)
+
+            try{
+                await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/register`, form.toString())
+                
+            setTimeout(() => {
+                navigate('/signin')
+            }, 2000);
+            }catch(err){
+                console.log(err)
+            }
+        }else{
+            setTcmessage(<p className="text-red-700">to continue, please check the box below</p>)
+        }
+
+
+    }
+
+
+
     return (
         <>
-            <header className="font-mulish relative h-screen flex justify-center items-center">
-                <div><img className="h-screen w-screen" src={getImageUrl("SignUp", "png")} alt="paginate-hero" /></div>
+            <header className="relative flex items-center justify-center h-screen font-mulish">
+                <div><img className="w-screen h-screen" src={getImageUrl("SignUp", "png")} alt="paginate-hero" /></div>
                 <div className="absolute inset-0 bg-black opacity-70"></div>
                 <div className=" gap-[10px] w-[50%] absolute flex flex-col justify-center items-center">
                     <img className=" w-[200px] h-[100px]" src={getImageUrl("Cinematix", "svg")} alt="paginate-hero" />
@@ -56,7 +80,8 @@ const SignUp = () => {
                                     <div className="text-[#A0A3BD]">Done</div>
                                 </div>
                             </div>
-                            <form className="gap-[10px] flex flex-col">
+                            
+                            <form onSubmit={processRegister} className="gap-[10px] flex flex-col">
                                 <div className="relative flex flex-col gap-3">
                                     <label className=" text-[#4E4B66] font-bold" htmlFor="email">Email</label>
                                     <div className="-mt-[10px] flex relative items-center">
@@ -74,16 +99,17 @@ const SignUp = () => {
                                         </div>
                                     </div>
                                 </div>
+                                {tcMessage}
                                 <div>
                                     <label className="gap-[20px] flex items-center">
-                                        <input type="checkbox" className="form-checkbox h-5 w-5" />
+                                        <input onChange={checked} id="tc" name="tc" value="yes" type="checkbox" className="w-5 h-5 form-checkbox" />
                                         <span className=" text-[#4E4B66]">I agree to terms & conditions</span>
                                     </label>
                                 </div>
                                 <div>
-                                    <button className="rounded-lg py-2 bg-primary w-full font-bold text-white active:scale-95 transition-all duration-500" type="submit">Join For Free Now</button>
+                                    <button className="w-full py-2 font-bold text-white transition-all duration-500 rounded-lg bg-primary active:scale-95" type="submit">Join For Free Now</button>
                                 </div>
-                                <div className=" flex justify-center">
+                                <div className="flex justify-center ">
                                     <div className="text-[#4E4B66]">Already have an account?<span className="text-primary"> Log In</span>
                                     </div>
                                 </div>
