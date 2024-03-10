@@ -1,4 +1,4 @@
-import { useState,useEffect,useRef } from "react";
+import { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import "../styles/main.css";
@@ -6,15 +6,11 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import getImageUrl from "../utils/imageGet";
 import DropdownMobile from "../components/DropdownMobile";
-import CardMovie from "../components/CardMovie"
+import Slider from "../components/Slider";
 
 function Home() {
     const [isDropdownShown, setIsDropdownShow] = useState(false);
-    const sliderRef = useRef(null)
-    const[isMouseDown,setIsMouseDown] = useState(false)
-    const[startX,setStartX]= useState(null)
-    const[scrollLeft,setScrollLeft]= useState(null)
-  
+   
   useEffect(() => {
     window.scrollTo({
       top: 0,
@@ -22,24 +18,7 @@ function Home() {
       behavior: "smooth",
     });
   }, []);
-    const handleMouseDown = (e)=>{
-        setIsMouseDown(true)
-        setStartX(e.pageX - sliderRef.current.offsetLeft)
-        setScrollLeft(sliderRef.current.scrollLeft)
-    }
-    const handleMouseLeave = ()=>{
-        setIsMouseDown(false)
-    }
-    const handleMouseMove=(e)=>{
-        if(!isMouseDown)return
-        e.preventDefault()
-        const x = e.pageX -sliderRef.current.offsetLeft
-        const speed = (x - startX) * 2
-        sliderRef.current.scrollLeft =scrollLeft - speed
-    }
-    const handleMouseUp = ()=>{
-        setIsMouseDown(false)
-    }
+ 
     return (
         <>
             <Navbar isClick={() => setIsDropdownShow(true)} />
@@ -103,45 +82,37 @@ function Home() {
                         <span className="text-center text-[32px] text-[#4F5665]">Exciting Movies That Should Be Watch Today</span>
                     </div>
                 </div>
+                <Slider
+                    data={[
+                        {
+                        nameMovie: 'Black Widow',
+                        image: 'movie1',
+                        genre1: 'Action',
+                        genre2: 'Adventure',
+                        },
+                        {   
+                            nameMovie: 'The Withces',
+                            image: 'movie2',
+                            genre1: 'Comedy',
+                            genre2: 'Adventure',
+                        },
+                        {  
+                        nameMovie: 'Tenet',
+                        image: 'movie3',
+                        genre1: 'Action',
+                        genre2: 'Sci-Fi',
+                        },
+                        {  
+                        nameMovie: 'Spiderman',
+                        image: 'movie4',
+                        genre1: 'Action',
+                        genre2: 'Adventure',
+                        },
+                    ]}
+                    />
                 
-                <div id="slider"
-                className="scroll scroll-smooth cursor-pointer mw-global global-px flex gap-16 pt-1 pb-5 overflow-x-auto bg-white no-scrollbar"
-                ref={sliderRef}
-                onMouseDown={handleMouseDown}
-                onMouseLeave={handleMouseLeave}
-                onMouseUp={handleMouseUp}
-                onMouseMove={handleMouseMove}
-                onTouchStart={handleMouseDown}
-                onTouchMove={handleMouseMove}
-                onTouchEnd={handleMouseUp}
-                style={{overflowY:"hidden"}}
-                >
-                <CardMovie
-                nameMovie="Black Widow"
-                image="movie1"
-                genre1="Action"
-                genre2="Adventure"
-                />
-                <CardMovie
-                nameMovie="The Withces"
-                image="movie2"
-                genre1="Comedy"
-                genre2="Adventure"
-                />
-                <CardMovie
-                nameMovie="Tenet"
-                image="movie3"
-                genre1="Action"
-                genre2="Sci-Fi"
-                />
-                <CardMovie
-                nameMovie="Spiderman"
-                image="movie4"
-                genre1="Action"
-                genre2="Adventure"
-                />
 
-                </div>
+                
 
                 <div className="flex justify-center ">
                     <Link
@@ -163,43 +134,34 @@ function Home() {
                     </div>
                     
                 </div>
-                <div id="slider"
-                className="scroll scroll-smooth cursor-pointer mw-global global-px flex gap-16 pt-1 pb-5 overflow-x-auto bg-white no-scrollbar"
-                ref={sliderRef}
-                onMouseDown={handleMouseDown}
-                onMouseLeave={handleMouseLeave}
-                onMouseUp={handleMouseUp}
-                onMouseMove={handleMouseMove}
-                onTouchStart={handleMouseDown}
-                onTouchMove={handleMouseMove}
-                onTouchEnd={handleMouseUp}
-                style={{overflowY:"hidden"}}
-                >
-                <CardMovie
-                nameMovie="Black Widow"
-                image="movie1"
-                genre1="Action"
-                genre2="Adventure"
-                />
-                <CardMovie
-                nameMovie="The Withces"
-                image="movie2"
-                genre1="Comedy"
-                genre2="Adventure"
-                />
-                <CardMovie
-                nameMovie="Tenet"
-                image="movie3"
-                genre1="Action"
-                genre2="Sci-Fi"
-                />
-                <CardMovie
-                nameMovie="Spiderman"
-                image="movie4"
-                genre1="Action"
-                genre2="Adventure"
-                />
-                </div>
+                <Slider
+                    data={[
+                        {
+                        nameMovie: 'Black Widow',
+                        image: 'movie1',
+                        genre1: 'Action',
+                        genre2: 'Adventure',
+                        },
+                        {   
+                            nameMovie: 'The Withces',
+                            image: 'movie2',
+                            genre1: 'Comedy',
+                            genre2: 'Adventure',
+                        },
+                        {  
+                        nameMovie: 'Tenet',
+                        image: 'movie3',
+                        genre1: 'Action',
+                        genre2: 'Sci-Fi',
+                        },
+                        {  
+                        nameMovie: 'Spiderman',
+                        image: 'movie4',
+                        genre1: 'Action',
+                        genre2: 'Adventure',
+                        },
+                    ]}
+                    />
             </section>
 
             <section className="font-mulish pb-[63px] px-5 md:px-11 xl:px-[130px]">
