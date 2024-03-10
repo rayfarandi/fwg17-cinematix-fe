@@ -79,28 +79,28 @@ const SignIn = () => {
     return (
         <>
             <header className="relative flex items-center justify-center h-screen font-mulish">
-                <div><img className="w-screen h-screen" src={getImageUrl("SignUp", "png")} alt="paginate-hero" /></div>
+                <img className="w-screen h-screen object-cover" src={getImageUrl("SignUp", "png")} alt="paginate-hero" />
                 <div className="absolute inset-0 bg-black opacity-70"></div>
                 <div className=" gap-[10px] w-[50%] absolute flex flex-col justify-center items-center">
                     <img className=" w-[200px] h-[100px]" src={getImageUrl("Cinematix", "svg")} alt="paginate-hero" />
                     <div className=" p-[30px] flex bg-light flex-col  justify-center items-center">
                         <div className=" flex flex-col gap-[10px]">
                             <div className="w-full gap-[10px] flex flex-col justify-center items-start">
-                                <div className="#121212 font-bold text-[32px]">Welcome Back👋</div>
-                                <div className="text-[#4F5665]">Sign in with your data that you entered during your registration</div>
+                                <div className=" font-bold text-[24px] md:text-[32px]">Welcome Back👋</div>
+                                <div className="text-[12px] md:text-[16px] text-[#4F5665]">Sign in with your data that you entered during your registration</div>
                             </div>
                             <form onSubmit={loginProcess} className="gap-[10px] flex flex-col">
                                 <div className="relative flex flex-col gap-3">
-                                    <label className=" text-[#4E4B66] font-bold" htmlFor="email">Email</label>
+                                    <label className="text-[12px] md:text-[16px] text-[#4E4B66] font-bold" htmlFor="email">Email</label>
                                     <div className="-mt-[10px] flex relative items-center">
-                                        <input required className="w-full text-[#4F5665] border-solid border-2 rounded-lg px-5 py-2 outline-none" name="email"
+                                        <input required className="text-[12px] md:text-[16px] w-full text-[#4F5665] border-solid border-2 rounded-lg px-5 py-0 md:py-2 outline-none" name="email"
                                             id="email" type="email" placeholder="Enter Your Email" />
                                     </div>
                                 </div>
                                 <div className="relative flex flex-col gap-3">
-                                    <label className=" text-[#4E4B66] font-bold" htmlFor="password">Password</label>
+                                    <label className="text-[12px] md:text-[16px] text-[#4E4B66] font-bold" htmlFor="password">Password</label>
                                     <div className="-mt-[10px] flex relative items-center">
-                                        <input required className="w-full text-[#4F5665] border-solid border-2 rounded-lg px-5 py-2 outline-none" name="password"
+                                        <input required className="text-[12px] md:text-[16px] w-full text-[#4F5665] border-solid border-2 rounded-lg px-5 py-0 md:py-2 outline-none" name="password"
                                             id="password" placeholder="Enter Your password" type={passwordVisible ? "text" : "password"} />
                                         <div className="absolute right-3" onClick={togglePasswordVisibility}>
                                             {passwordVisible ? <FiEye /> : <FiEyeOff />}
@@ -108,14 +108,14 @@ const SignIn = () => {
                                     </div>
                                 </div>
                                 <div className="flex justify-end">
-                                <span className=" text-primary text-">Forgot your password?</span>
+                                <span className="text-[12px] md:text-[16px] text-primary text-">Forgot your password?</span>
                                 </div>
                                 <div>
-                                    <button className="w-full py-2 font-bold text-white transition-all duration-500 rounded-lg bg-primary active:scale-95" type="submit">Login</button>
+                                    <button className= "text-[12px] md:text-[16px] w-full py-1 md:py-2 font-bold text-white transition-all duration-500 rounded-lg bg-primary active:scale-95" type="submit">Login</button>
                                 </div>
                                 <div className="flex items-center ">
                                     <div className="flex-1 w-full h-px bg-[#DEDEDE]"></div>
-                                    <p className="flex-1 text-center text-[#4F5665]">Or</p>
+                                    <p className="flex-1 text-[12px] md:text-[16px] text-center text-[#4F5665]">Or</p>
                                     <div className="flex-1 w-full h-px bg-[#DEDEDE]"></div>
                                 </div>
                                 <div className="flex flex-row gap-[10px]">

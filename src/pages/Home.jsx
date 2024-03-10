@@ -29,14 +29,14 @@ function Home() {
                     </div>
                 </div>
                 <div className="flex items-center justify-center flex-1 ">
-                    <div className="max-w-[90%] flex flex-col gap-[50px]">
+                    <div className="max-w-[70%] flex flex-col gap-[50px]">
                         <div className="grid grid-cols-2 gap-5 ">
-                            <div><img src={getImageUrl("home1", "png")} alt="home" className="rounded-t-[20px] w-[200px] md:h-[180px] h-[110px]" /></div>
-                            <div><img src={getImageUrl("home3", "png")} alt="home" className="rounded-t-[20px] -mb-[50px] w-[200px] md:h-[270px] h-[200px]" /></div>
+                            <div><img src={getImageUrl("home1", "png")} alt="home" className="rounded-t-[20px]  w-[130px] md:w-[200px] md:h-[180px] h-[110px] " /></div>
+                            <div><img src={getImageUrl("home3", "png")} alt="home" className="rounded-t-[20px] -mb-[50px]  w-[130px] md:w-[200px] md:h-[270px] h-[200px]" /></div>
                         </div>
                         <div className="grid grid-cols-2 gap-5 ">
-                            <div><img src={getImageUrl("home2", "png")} alt="home" className="-mt-[70px] w-[200px] md:h-[270px] h-[200px] rounded-b-[20px]" /></div>
-                            <div className="flex"><img src={getImageUrl("home4", "jpeg")} alt="home" className=" self-end rounded-b-[20px] w-[200px] md:h-[180px] h-[110px]
+                            <div><img src={getImageUrl("home2", "png")} alt="home" className="-mt-[70px]  w-[130px] md:w-[200px] md:h-[270px] h-[200px] rounded-b-[20px]" /></div>
+                            <div className="flex"><img src={getImageUrl("home4", "jpeg")} alt="home" className=" self-end rounded-b-[20px] w-[130px] md:w-[200px] md:h-[180px] h-[110px]
                                 0px]" /></div>
                         </div>
                     </div>
