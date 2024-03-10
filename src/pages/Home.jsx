@@ -161,28 +161,44 @@ function Home() {
                         <span className="text-primary text-[16px] font-bold">UPCOMING MOVIES</span>
                         <span className="text-[28px]">Exciting Movie Coming Soon</span>
                     </div>
-                    <div>
-                        <div className="flex gap-[10px]">
-                            <button className="active:bg-secondary bg-primary rounded-full w-[40px] h-[40px] flex justify-center items-center">
-                                <img src={getImageUrl("arrow-left", "svg")} alt="arrow" />
-                            </button>
-                            <button className="active:bg-secondary bg-primary rounded-full w-[40px] h-[40px] flex justify-center items-center">
-                                <img src={getImageUrl("arrow-right", "svg")} alt="arrow" />
-                            </button>
-                        </div>
-                    </div>
+                    
                 </div>
-                <div className="grid md:grid-cols-3 lg:grid-cols-4 md:gap-5">
-
-
-                    <CardMovie nameMovie="Black Widow" image="movie1" genre1="Action" genre2="Adventure"></CardMovie>
-                    <CardMovie nameMovie="The Withces" image="movie2" genre1="Comedy" genre2="Adventure"></CardMovie>
-                    <CardMovie nameMovie="Tenet" image="movie3" genre1="Action" genre2="Sci-Fi">
-                    </CardMovie>
-                    <CardMovie nameMovie="Spiderman" image="movie4" genre1="Action" genre2="Adventure">
-                    </CardMovie>
-
-
+                <div id="slider"
+                className="scroll scroll-smooth cursor-pointer mw-global global-px flex gap-16 pt-1 pb-5 overflow-x-auto bg-white no-scrollbar"
+                ref={sliderRef}
+                onMouseDown={handleMouseDown}
+                onMouseLeave={handleMouseLeave}
+                onMouseUp={handleMouseUp}
+                onMouseMove={handleMouseMove}
+                onTouchStart={handleMouseDown}
+                onTouchMove={handleMouseMove}
+                onTouchEnd={handleMouseUp}
+                style={{overflowY:"hidden"}}
+                >
+                <CardMovie
+                nameMovie="Black Widow"
+                image="movie1"
+                genre1="Action"
+                genre2="Adventure"
+                />
+                <CardMovie
+                nameMovie="The Withces"
+                image="movie2"
+                genre1="Comedy"
+                genre2="Adventure"
+                />
+                <CardMovie
+                nameMovie="Tenet"
+                image="movie3"
+                genre1="Action"
+                genre2="Sci-Fi"
+                />
+                <CardMovie
+                nameMovie="Spiderman"
+                image="movie4"
+                genre1="Action"
+                genre2="Adventure"
+                />
                 </div>
             </section>
 
