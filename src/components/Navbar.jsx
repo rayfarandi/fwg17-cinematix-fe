@@ -3,7 +3,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import getImageUrl from "../utils/imageGet";
 import { useEffect, useState } from "react";
-import { CiLogout } from "react-icons/ci";
+import { CiLogout, CiUser } from "react-icons/ci";
 import { useDispatch, useSelector } from "react-redux";
 import { removeProfile, setProfile } from "../redux/reducer/profile";
 import {logout as logoutAction} from "../redux/reducer/auth"
@@ -13,7 +13,6 @@ import axios from "axios";
 function Navbar(props) {
   const token = useSelector(state => state.auth.token)
   const [showLogOut, setShowLogOut] = useState(false)
-  console.log(token)
 
   const peekLogout = () => {
     if(!showLogOut){
@@ -31,7 +30,7 @@ function Navbar(props) {
   const processLogout = () => {
     dispatch(removeProfile())
     dispatch(logoutAction())
-    navigate('/')
+    navigate('/signin')
   }
 
   const getProfile = async () =>{
@@ -48,6 +47,8 @@ function Navbar(props) {
       }
     }
   }
+
+  const profile = useSelector(state => state.profile.data)
 
   useEffect(()=>{
     getProfile()
@@ -78,12 +79,17 @@ function Navbar(props) {
         </div>
         <div className="relative hidden nav-end lg:flex lg:gap-x-4 lg:items-center">
           <button onClick={peekLogout} className="rounded-full">
-            <img src={getImageUrl("images","jpeg")} alt="" className="object-cover w-12 h-12 rounded-full"/>
+            <img src={profile?.picture ? profile.picture : getImageUrl("DefaultPfp","jpg")} alt="" className="object-cover w-12 h-12 rounded-full"/>
           </button>
 
-          <button onClick={processLogout} to='/signin' className={`${showLogOut ? 'flex' : 'hidden'} absolute items-center justify-center w-32 h-12 font-bold text-red-600 border-2 border-red-500 rounded-md bg-white top-14 -right-10 gap-3`}>
-            <CiLogout className="text-xl font-extrabold"/> Log Out
-          </button>
+          <div className={`${showLogOut ? 'flex flex-col' : 'hidden'} z-10 absolute items-center justify-center w-32 h-auto font-bold border-2 border-slate-500 rounded-md bg-white top-14 -right-10`}>
+            <button onClick={()=>{navigate('/profile')}} className="flex items-center gap-2">
+              <CiUser className="my-3 text-xl font-extrabold"/> Profile
+            </button>
+            <button onClick={processLogout} className="flex items-center gap-2 text-red-600 border-t-2 border-slate-500">
+              <CiLogout className="my-3 text-xl font-extrabold"/> Log Out
+            </button>
+          </div>
           
         </div>
         <button className="lg:hidden" onClick={() => props.isClick()}>
