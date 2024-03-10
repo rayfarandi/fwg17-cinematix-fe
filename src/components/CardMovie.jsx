@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const CardMovie=({nameMovie,genre1,genre2,image})=>{
     return(
         <div className="flex flex-col gap-y-4">
-                    <div className="w-full h-full rounded-md relative">
+                    <div className="w-56 h-fit rounded-md relative">
                     <img
                         src={getImageUrl(`${image}`, "png")}
                         alt="movie"
