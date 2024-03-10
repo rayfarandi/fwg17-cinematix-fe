@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import getImageUrl from "../utils/imageGet";
 import DropdownMobile from "../components/DropdownMobile";
 import CardMovie from"../components/CardMovie"
+import axios from "axios";
 
 function Movie() {
   const [isDropdownShown, setIsDropdownShow] = useState(false)
@@ -15,7 +16,18 @@ function Movie() {
       left:0,
       behavior:'smooth'
     })
+    getMovie()
   },[])
+
+  const [movies, setMovies] = useState([{}])
+  const getMovie = async () => {
+     const res1 = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {params:{
+      status: "coming soon"
+    }})
+
+    setMovies(res1.data.results)
+    console.log(movies)
+  }
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />
@@ -36,7 +48,7 @@ function Movie() {
       >
         <div className="flex flex-col gap-y-5 lg:flex-row lg:gap-x-5">
           <div className="flex flex-col gap-y-4">
-            <p className="text-secondary font-semibold">Cari Event</p>
+            <p className="font-semibold text-secondary">Cari Event</p>
             <div className="relative">
               <input
                 type="text"
@@ -51,19 +63,19 @@ function Movie() {
             </div>
           </div>
           <div className="flex flex-col gap-y-4 lg:gap-y-7">
-            <p className="text-secondary font-semibold">Filter</p>
-            <div className="flex flex-col md:flex-row md:gap-x-8 md:items-center text-sm font-nunito font-semibold">
+            <p className="font-semibold text-secondary">Filter</p>
+            <div className="flex flex-col text-sm font-semibold md:flex-row md:gap-x-8 md:items-center font-nunito">
               <p className="py-2 px-4 bg-primary text-light rounded-[10px] cursor-pointer">
                 Thriller
               </p>
-              <p className="py-2 px-4 text-secondary cursor-pointer">Horror</p>
-              <p className="py-2 px-4 text-secondary cursor-pointer">
+              <p className="px-4 py-2 cursor-pointer text-secondary">Horror</p>
+              <p className="px-4 py-2 cursor-pointer text-secondary">
                 Romantic
               </p>
-              <p className="py-2 px-4 text-secondary cursor-pointer">
+              <p className="px-4 py-2 cursor-pointer text-secondary">
                 Adventure
               </p>
-              <p className="py-2 px-4 text-secondary cursor-pointer">Sci-Fi</p>
+              <p className="px-4 py-2 cursor-pointer text-secondary">Sci-Fi</p>
             </div>
           </div>
         </div>
@@ -72,6 +84,17 @@ function Movie() {
         <div className="grid md:grid-cols-3 lg:grid-cols-4 md:gap-5">
 
           
+        {/* {movies && movies.map((item) => (
+                <CardMovie
+                  key={String(item.id)}
+                  nameMovie={item.title}
+                  genre1={item.genre[0]}
+                  genre2={item.genre[1]}
+                  image={item.image}
+                  // id={item.id}
+                />
+              ))} */}
+
           <CardMovie nameMovie="Black Widow" image="movie1" genre1="Action" genre2="Adventure"></CardMovie>
           <CardMovie nameMovie="The Withces" image="movie2" genre1="Comedy" genre2="Adventure"></CardMovie>
           <CardMovie nameMovie="Tenet" image="movie3" genre1="Action" genre2="Sci-Fi">
@@ -104,7 +127,7 @@ function Movie() {
           <p className="text-light text-xl md:text-3xl lg:text-5xl w-[80%] md:w-full text-center">
             Subscribe to our newsletter
           </p>
-          <div className="max-sm:w-full flex flex-col gap-y-4 md:flex-row md:gap-x-4 max-sm:items-start max-sm:px-5">
+          <div className="flex flex-col max-sm:w-full gap-y-4 md:flex-row md:gap-x-4 max-sm:items-start max-sm:px-5">
             <input
               type="text"
               className="p-4 max-sm:w-full bg-primary outline-none border border-light rounded-[9px] text-light placeholder:text-light text-sm lg:text-base"
