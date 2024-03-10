@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+::-webkit-scrollbar {
+    width: 0;  /* Lebar scrollbar diatur menjadi 0 */
+    background: transparent; /* Warna latar belakang scrollbar */
+}

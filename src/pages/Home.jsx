@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect,useRef } from "react";
 import { Link } from "react-router-dom";
 
 import "../styles/main.css";
@@ -9,14 +9,37 @@ import DropdownMobile from "../components/DropdownMobile";
 import CardMovie from "../components/CardMovie"
 
 function Home() {
-    const [isDropdownShown, setIsDropdownShow] = useState(false)
-    useEffect(()=>{
-        window.scrollTo({
-          top:0,
-          left:0,
-          behavior:'smooth'
-        })
-      },[])
+    const [isDropdownShown, setIsDropdownShow] = useState(false);
+    const sliderRef = useRef(null)
+    const[isMouseDown,setIsMouseDown] = useState(false)
+    const[startX,setStartX]= useState(null)
+    const[scrollLeft,setScrollLeft]= useState(null)
+  
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
+  }, []);
+    const handleMouseDown = (e)=>{
+        setIsMouseDown(true)
+        setStartX(e.pageX - sliderRef.current.offsetLeft)
+        setScrollLeft(sliderRef.current.scrollLeft)
+    }
+    const handleMouseLeave = ()=>{
+        setIsMouseDown(false)
+    }
+    const handleMouseMove=(e)=>{
+        if(!isMouseDown)return
+        e.preventDefault()
+        const x = e.pageX -sliderRef.current.offsetLeft
+        const speed = (x - startX) * 2
+        sliderRef.current.scrollLeft =scrollLeft - speed
+    }
+    const handleMouseUp = ()=>{
+        setIsMouseDown(false)
+    }
     return (
         <>
             <Navbar isClick={() => setIsDropdownShow(true)} />
@@ -31,7 +54,7 @@ function Home() {
                 <div className="flex items-center justify-center flex-1 ">
                     <div className="max-w-[90%] flex flex-col gap-[50px]">
                         <div className="grid grid-cols-2 gap-5 ">
-                            <div><img src={getImageUrl("home1", "png")} alt="home" className="rounded-t-[20px] w-[200px] md:h-[180px] h-[110px]" /></div>
+                            <div className="object-cover"><img src={getImageUrl("home1", "svg")} alt="home" className="rounded-t-[20px] w-[200px] md:h-[180px] h-[110px]" /></div>
                             <div><img src={getImageUrl("home3", "png")} alt="home" className="rounded-t-[20px] -mb-[50px] w-[200px] md:h-[270px] h-[200px]" /></div>
                         </div>
                         <div className="grid grid-cols-2 gap-5 ">
@@ -42,8 +65,8 @@ function Home() {
                     </div>
                 </div>
             </header>
-            <section className="font-mulish my-[50px]  flex justify-center">
-                <div className="gap-[20px]  max-w-[90%] flex flex-col ">
+            <section className="font-mulish my-[50px]  flex justify-center px-5 md:px-11 xl:px-[130px]">
+                <div className="gap-[20px] flex flex-col ">
                     <div className="flex items-center justify-start ">
                         <div className="gap-[20px] flex flex-col">
                             <span className="text-primary text-[18px] font-bold">WHY CHOOSE US</span>
@@ -78,17 +101,46 @@ function Home() {
                         <span className="text-center text-[32px] text-[#4F5665]">Exciting Movies That Should Be Watch Today</span>
                     </div>
                 </div>
-                <div className="grid md:grid-cols-3 lg:grid-cols-4 md:gap-5">
-
-
-                    <CardMovie nameMovie="Black Widow" image="movie1" genre1="Action" genre2="Adventure"></CardMovie>
-                    <CardMovie nameMovie="The Withces" image="movie2" genre1="Comedy" genre2="Adventure"></CardMovie>
-                    <CardMovie nameMovie="Tenet" image="movie3" genre1="Action" genre2="Sci-Fi">
-                    </CardMovie>
-                    <CardMovie nameMovie="Spiderman" image="movie4" genre1="Action" genre2="Adventure">
-                    </CardMovie>
+                
+                <div id="slider"
+                className="scroll scroll-smooth cursor-pointer mw-global global-px flex gap-16 pt-1 pb-5 overflow-x-auto bg-white no-scrollbar"
+                ref={sliderRef}
+                onMouseDown={handleMouseDown}
+                onMouseLeave={handleMouseLeave}
+                onMouseUp={handleMouseUp}
+                onMouseMove={handleMouseMove}
+                onTouchStart={handleMouseDown}
+                onTouchMove={handleMouseMove}
+                onTouchEnd={handleMouseUp}
+                style={{overflowY:"hidden"}}
+                >
+                <CardMovie
+                nameMovie="Black Widow"
+                image="movie1"
+                genre1="Action"
+                genre2="Adventure"
+                />
+                <CardMovie
+                nameMovie="The Withces"
+                image="movie2"
+                genre1="Comedy"
+                genre2="Adventure"
+                />
+                <CardMovie
+                nameMovie="Tenet"
+                image="movie3"
+                genre1="Action"
+                genre2="Sci-Fi"
+                />
+                <CardMovie
+                nameMovie="Spiderman"
+                image="movie4"
+                genre1="Action"
+                genre2="Adventure"
+                />
 
                 </div>
+
                 <div className="flex justify-center ">
                     <Link
                         to="/movie"
