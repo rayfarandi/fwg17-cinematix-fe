@@ -86,7 +86,7 @@ const SignUp = () => {
                             </div>
                             <form onSubmit={processRegister} className="gap-[10px] flex flex-col">
                                     <p className={`${registerSuccess ? 'block' : 'hidden'} md:-mt-[25px] md:ml-[140px] -mt-[25px] md:text-[16px] ml-[50px] text-[8px] absolute p-[5px] font-bold text-[green]`}>{registerSuccess}</p>
-                                    <p className={`${errMessage ? 'block' : 'hidden'} md:-mt-[25px] md:ml-[140px] -mt-[25px] md:text-[16px] ml-[50px] text-[8px] absolute p-[5px] font-bold text-danger`}>{errMessage}</p>
+                                    <p className={`${errMessage ? 'block' : 'hidden'} md:-mt-[25px] md:ml-[140px] -mt-[15px] md:text-[16px] ml-[50px] text-[8px] absolute p-[5px] font-bold text-danger`}>{errMessage}</p>
                                 <div className="relative flex flex-col gap-2">
                                     <label className="text-[12px] md:text-[16px] text-[#4E4B66] font-bold" htmlFor="email">Email</label>
                                     <div className="-mt-[5px] flex relative items-center"></div>
