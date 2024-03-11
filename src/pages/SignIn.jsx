@@ -52,7 +52,7 @@ const SignIn = () => {
             setTimeout(() => {
                 setLoginSuccess(false)
                 dispatch(loginAction(data.results.token))
-                // navigate('/movie')
+                navigate('/movie')
             }, 2000)
         } catch (err) {
             console.log(err)
