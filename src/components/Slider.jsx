@@ -28,7 +28,7 @@ const Slider = ({ data }) => {
 
   return (
     <div
-      className="scroll scroll-smooth cursor-pointer mw-global global-px flex gap-16 pt-1 pb-5 overflow-x-auto bg-white no-scrollbar"
+      className="scroll scroll-smooth cursor-pointer mw-global global-px flex gap-16 pt-1 pb-5 overflow-x-auto bg-white home-scrollbar"
       ref={sliderRef}
       onMouseDown={handleMouseDown}
       onMouseLeave={handleMouseUp}
@@ -40,7 +40,7 @@ const Slider = ({ data }) => {
       style={{ overflowY: 'hidden' }}
     >
       {data.map((movie, index) => (
-        <CardMovie key={index} {...movie} />
+        <CardMovie isCardHome={true} key={index} {...movie} />
       ))}
     </div>
   );
