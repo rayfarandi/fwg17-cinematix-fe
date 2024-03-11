@@ -60,11 +60,12 @@ function Navbar(props) {
         <div className="nav-start">
           <div className="flex items-center gap-x-4">
             <div>
-              <img
+            <Link to="/"><img
                 src={getImageUrl("Cinematix", "svg")}
                 alt="logo"
                 className="w-20 h-10 md:w-28 md:h-14 lg:w-[130px] lg:h-[51px]"
               />
+            </Link> 
             </div>
           </div>
         </div>
@@ -103,11 +104,12 @@ function Navbar(props) {
         <div className="nav-start">
           <div className="flex items-center gap-x-4">
             <div>
-              <img
+            <Link to="/"><img
                 src={getImageUrl("Cinematix", "svg")}
                 alt="logo"
                 className="w-20 h-10 md:w-28 md:h-14 lg:w-[130px] lg:h-[51px]"
               />
+            </Link>
             </div>
           </div>
         </div>

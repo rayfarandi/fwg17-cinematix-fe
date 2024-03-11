@@ -74,7 +74,7 @@ function Home() {
                 </div>
             </section>
 
-            <section className="gap-[20px] flex flex-col  pb-[63px] px-5 md:px-11 xl:px-[130px] font-mulish">
+            <section className="gap-[20px] flex flex-col  pb-[63px] px-5 md:px-11 xl:px-[130px] font-mulish home-scrollbar">
                 <div className="flex justify-center ">
 
                     <div className=" md:max-w-[50%] flex flex-col items-center gap-[10px]">

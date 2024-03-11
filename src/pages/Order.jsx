@@ -21,7 +21,7 @@ function Order() {
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />
-      <section className="bg-[#A0A3BD33] py-10">
+      <section className="bg-[#A0A3BD33] py-10 order-scrollbar">
         <section className="flex justify-center items-center w-full font-mulish">
           <div className="flex gap-x-2 md:gap-x-6">
             <div className="flex flex-col gap-y-3 justify-center items-center">
