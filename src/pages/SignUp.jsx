@@ -11,6 +11,8 @@ const SignUp = () => {
     }
 
     const [tcMessage, setTcmessage] = useState()
+    const [registerSuccess, setRegisterSuccess] = useState(null)
+    const [errMessage, setErrMessage] = useState(null)
 
     const navigate = useNavigate()
     const [agree, setAgree] = useState(false)
@@ -26,13 +28,15 @@ const SignUp = () => {
             form.append('password', password)
 
             try {
-                await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/register`, form.toString())
-
-                setTimeout(() => {
-                    navigate('/signin')
-                }, 2000);
+                const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/register`, form.toString())
+                setRegisterSuccess(data.message)
+                console.log(setRegisterSuccess)
+                setErrMessage(null)
+                // setTimeout(() => {
+                //     navigate('/signin')
+                // }, 2000);
             } catch (err) {
-                console.log(err)
+                setErrMessage(err.response.data.message)
             }
         } else {
             setTcmessage(<p className="text-red-700">to continue, please check the box below</p>)
@@ -50,8 +54,8 @@ const SignUp = () => {
                 <div className="absolute inset-0 bg-black opacity-70"></div>
                 <div className=" gap-[10px] w-[50%] absolute flex flex-col justify-center items-center">
                     <img className=" w-[200px] h-[100px]" src={getImageUrl("Cinematix", "svg")} alt="paginate-hero" />
-                    <div className=" p-[30px] flex bg-light flex-col  justify-center items-center">
-                        <div className=" flex flex-col gap-[10px]">
+                    <div className="p-[20px] rounded-lg flex bg-light flex-col  justify-center items-center">
+                        <div className=" flex flex-col gap-[20px]">
                             <div className="w-full gap-1 md:gap-[20px] flex justify-center items-center">
                                 <div className=" w-[50px] md:w-[70px] flex flex-col justify-center items-center">
                                     <div className="text-white flex justify-center items-center bg-primary text-[12px] w-[25px] h-[25px] md:text-[16px] md:w-[45px] md:h-[45px] rounded-full">1</div>
@@ -69,7 +73,7 @@ const SignUp = () => {
                                     <div className="text-[12px] md:text-[16px] text-[#A0A3BD]">Activate</div>
                                 </div>
                                 <div className="flex gap-2">
-                                <div className=" md:block hidden bg-[#A0A3BD] h-[2px] w-[5px]"></div>
+                                    <div className=" md:block hidden bg-[#A0A3BD] h-[2px] w-[5px]"></div>
                                     <div className=" md:block hidden bg-[#A0A3BD] h-[2px] w-[15px]"></div>
                                     <div className=" bg-[#A0A3BD] h-[2px] w-[15px]"></div>
                                     <div className="md:block hidden bg-[#A0A3BD] h-[2px] w-[15px]"></div>
@@ -81,8 +85,11 @@ const SignUp = () => {
                                 </div>
                             </div>
                             <form onSubmit={processRegister} className="gap-[10px] flex flex-col">
-                                <div className="relative flex flex-col gap-3">
+                                    <p className={`${registerSuccess ? 'block' : 'hidden'} md:-mt-[25px] md:ml-[140px] -mt-[25px] md:text-[16px] ml-[50px] text-[8px] absolute p-[5px] font-bold text-[green]`}>{registerSuccess}</p>
+                                    <p className={`${errMessage ? 'block' : 'hidden'} md:-mt-[25px] md:ml-[140px] -mt-[25px] md:text-[16px] ml-[50px] text-[8px] absolute p-[5px] font-bold text-danger`}>{errMessage}</p>
+                                <div className="relative flex flex-col gap-2">
                                     <label className="text-[12px] md:text-[16px] text-[#4E4B66] font-bold" htmlFor="email">Email</label>
+                                    <div className="-mt-[5px] flex relative items-center"></div>
                                     <div className="-mt-[10px] flex relative items-center">
                                         <input required className="text-[12px] md:text-[16px] w-full text-[#4F5665] border-solid border-2 rounded-lg px-5 py-1 md:py-2 outline-none" name="email"
                                             id="email" type="email" placeholder="Enter Your Email" />
