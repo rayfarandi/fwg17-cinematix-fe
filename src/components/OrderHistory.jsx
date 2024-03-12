@@ -5,6 +5,7 @@ import getWholeDate from "../utils/getDate";
 import { getMonth } from "../utils/getDate";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
 const OrderHistory = ({id, title, price = '00000000', time, date, paid, used, va, category, seat, expired}) => {
@@ -54,12 +55,16 @@ const OrderHistory = ({id, title, price = '00000000', time, date, paid, used, va
     return `on ${formatSuccess}`
   }
 
+  const navigate = useNavigate()
   const checkPaid = async () => {
-    await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/customer/update-paid-status/${id}`, {
+    const form = new FormData()
+    form.append("nulify", "nulify")
+    await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/customer/update-paid-status/${id}`, form, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
+    navigate('/ticketresult')
   }
   return (
     <div className={`${title ? '' : 'hidden'} flex items-center justify-center w-full h-auto bg-white mt-14 rounded-3xl`}>

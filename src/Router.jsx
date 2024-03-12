@@ -1,8 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-//redux
-
-//=======
+import PrivateRoute, {PrivateRouteOrder} from "./components/PrivateRoute";
 
 import Home from "./pages/Home";
 import Movie from "./pages/Movie";
@@ -35,18 +33,18 @@ const router = createBrowserRouter([
     element: <MovieDetail />,
   },{
     path: "/profile",
-    element: <Profile/>
+    element: (<PrivateRoute> <Profile/> </PrivateRoute>)
   },{
     path: "/order",
-    element: <Order />,
+    element: (<PrivateRoute> (<PrivateRouteOrder><Order /></PrivateRouteOrder>)  </PrivateRoute>) 
   },
   {
     path: "/payment",
-    element: <Payment />,
+    element: (<PrivateRoute> (<PrivateRouteOrder><Payment /></PrivateRouteOrder>)  </PrivateRoute>) 
   },
   {
     path: "/ticketresult",
-    element: <TicketResult />,
+    element: (<PrivateRoute> <TicketResult /> </PrivateRoute>) 
   },
 ]);
 

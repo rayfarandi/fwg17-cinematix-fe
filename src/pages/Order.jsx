@@ -17,11 +17,8 @@ const getReservedSeat = async (cb, data, token) => {
 
 
   const {data: response} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customer/reserved-seat`, {params:{
-    movieId : data?.movieId,
-    cinemaId : data?.cinemaId,
-    locationId : data?.locationId,
-    airingTimeId : data?.airingTimeId,
-    dateId : data?.dateId,
+    movieTimeId : data?.movieTimeId,
+    cinemaLocationId : data?.cinemaLocationId
   }, headers: {
     Authorization: `Bearer ${token}`
   }})
@@ -37,14 +34,15 @@ function Order() {
   const [isDropdownShown, setIsDropdownShow] = useState(false);
   const [foundReservedSeat, setFoundReservedSeat] = useState([])
   const [choosedSeat, setChoosedSeat] = useState([])
-  const [totalPrice, setTotalPrice] = useState('IDR0')
+  const [totalPrice, setTotalPrice] = useState('0')
   const date = getWholeYear(data.date)
 
   useEffect(()=>{
-    getReservedSeat(setFoundReservedSeat, {movieId: `${data.movieId}`, cinemaId: `${data.cinemaId}`, locationId: `${data.locationId}`, airingTimeId: `${data.airingTimeId}`, dateId: `${data.dateId}`},token)
+    getReservedSeat(setFoundReservedSeat, {movieTimeId: data.movieTimeId, cinemaLocationId: data.cinemaLocationId},token)
   },[totalPrice])
 
   useEffect(()=>{
+    console.log(foundReservedSeat)
     window.scrollTo({
       top:0,
       left:0,
