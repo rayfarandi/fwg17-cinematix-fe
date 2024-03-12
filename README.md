@@ -1,7 +1,7 @@
 # CINEMATIX FRONTEND PROJECT MOVIE React JS
 
 <p align="center">
-        <img src="./src/assets/img/Cinematix.svg" width="200px" alt="logo"></img>
+        <img src="./src/assets/img/Cinematix copy.svg" width="200px" alt="logo"></img>
 </p>
 
 Welcome to the CinemaTix Frontend Web Project! This project utilizes the power of Tailwind CSS to create a sleek and responsive user interface, and is built with a component-based architecture by React.
