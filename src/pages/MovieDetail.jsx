@@ -1,14 +1,71 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState,useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import { getMonth } from "../utils/getDate";
 
 // import "../styles/main.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import getImageUrl from "../utils/imageGet";
 import DropdownMobile from "../components/DropdownMobile";
+import axios from "axios";
+// import CinemaImg from "../components/CinemaImg";
 
 function MovieDetail() {
   const [isDropdownShown, setIsDropdownShow] = useState(false);
+  
+  useEffect(()=>{
+    window.scrollTo({
+      top:0,
+      left:0,
+      behavior:'smooth'
+    })
+    getMovie()
+    getCinema()
+  },[])
+
+  const {id} = useParams()
+  const [movies, setMovies] = useState([{}])
+  const getMovie = async () => {
+     const res1 = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies/${id}`, {params:{
+      status: "now airing"
+    }})
+
+    setMovies(res1.data.results)
+  }
+
+  const [cinema, setCinema] = useState({})
+  const getCinema = async () => {
+    const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movie-cinema/${id}`)
+    setCinema(res.data.results)
+  }
+
+  let releaseDate = ''
+  if(movies && movies.releaseDate){
+    const str = movies?.releaseDate
+    const x = getMonth(str)  + ' ' + Number(str.slice(5, 7)) + ', ' + str.slice(0, 4)
+    releaseDate = x
+  }
+
+  const [cinemaId, setCinemaId] = useState()
+  const [cinemaIndicator, setCinemaIndicator] = useState()
+  const [cinemaLocation, setCineamaLocation] = useState({})
+  const [movieTime, setMovieTime] = useState([{}])
+  // const [movieCinema, setMovieCinema] = useState({})
+  const getCinemaId = async (num, i) => {
+    if(cinemaIndicator){
+      document.getElementById(cinemaIndicator).className = 'flex items-center justify-center h-32 border-2 rounded-md md:w-1/4'
+    }
+    setCinemaId(num)
+    document.getElementById(num).className = 'flex items-center justify-center h-32 border-2 rounded-md border-primary md:w-1/4'
+    setCinemaIndicator(num)
+    const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/cinema-location/${num}`)
+    setCineamaLocation(res.data.results)
+    const res1 = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movie-time/${cinema?.movieCinemaId[i]}`)
+    setMovieTime(res1.data.results)
+    console.log(res1)
+  }
+
+  
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />
@@ -17,34 +74,34 @@ function MovieDetail() {
       </header>
       <section className="px-5 md:px-11 xl:px-[130px] font-mulish lg:-top-40 lg:relative flex flex-col gap-y-7 mt-10">
         <div className="flex flex-col gap-y-4 md:flex-row md:gap-x-5">
-          <img src={getImageUrl("movie4", "png")} alt="movie" />
-          <div className="flex flex-col gap-y-4 justify-center lg:justify-end">
-            <p className="text-[2rem] text-dark font-bold">Spiderman</p>
+          <img src={movies?.image} alt="movie" />
+          <div className="flex flex-col justify-center gap-y-4 lg:justify-end">
+            <p className="text-[2rem] text-dark font-bold">{movies?.title}</p>
             <div className="flex flex-row gap-x-2">
               <p className="text-[#A0A3BD] px-5 py-2 bg-[#A0A3BD1A] rounded-[20px]">
-                Action
+                {movies.genre && movies?.genre[0]}
               </p>
               <p className="text-[#A0A3BD] px-5 py-2 bg-[#A0A3BD1A] rounded-[20px]">
-                Adventure
+              {movies.genre && movies?.genre[1]}
               </p>
             </div>
             <div className="grid grid-cols-3 gap-4">
               <div className="flex flex-col gap-y-2">
                 <p className="text-sm text-[#8692A6]">Release Date</p>
-                <p className="text-[#121212]">June 28, 2017</p>
+                <p className="text-[#121212]">{releaseDate}</p>
               </div>
-              <div className="flex flex-col gap-y-2 col-span-2">
+              <div className="flex flex-col col-span-2 gap-y-2">
                 <p className="text-sm text-[#8692A6]">Directed By</p>
-                <p className="text-[#121212]">Jon Watss</p>
+                <p className="text-[#121212]">{movies?.director}</p>
               </div>
               <div className="flex flex-col gap-y-2">
                 <p className="text-sm text-[#8692A6]">Duration</p>
-                <p className="text-[#121212]">2 hours 13 minutes </p>
+                <p className="text-[#121212]">{movies?.duration}</p>
               </div>
-              <div className="flex flex-col gap-y-2 col-span-2">
+              <div className="flex flex-col col-span-2 gap-y-2">
                 <p className="text-sm text-[#8692A6]">Casts</p>
                 <p className="text-[#121212]">
-                  Tom Holland, Michael Keaton, Robert Downey Jr
+                {movies?.casts}
                 </p>
               </div>
             </div>
@@ -53,13 +110,7 @@ function MovieDetail() {
         <div>
           <p className="text-[20px] font-semibold text-[#000]">Synopsis</p>
           <p className="text-[#A0A3BD] leading-8 lg:w-2/3">
-            Thrilled by his experience with the Avengers, Peter returns home,
-            where he lives with his Aunt May, under the watchful eye of his new
-            mentor Tony Stark, Peter tries to fall back into his normal daily
-            routine - distracted by thoughts of proving himself to be more than
-            just your friendly neighborhood Spider-Man - but when the Vulture
-            emerges as a new villain, everything that Peter holds most important
-            will be threatened.
+            {movies?.sinopsis}
           </p>
         </div>
         <div>
@@ -78,7 +129,7 @@ function MovieDetail() {
                     alt="icon"
                     className=""
                   />
-                  <p className="text-xs lg:text-base text-secondary font-semibold">
+                  <p className="text-xs font-semibold lg:text-base text-secondary">
                     21/07/20
                   </p>
                 </div>
@@ -100,7 +151,7 @@ function MovieDetail() {
                     alt="icon"
                     className=""
                   />
-                  <p className="text-xs lg:text-base text-secondary font-semibold">
+                  <p className="text-xs font-semibold lg:text-base text-secondary">
                     08 : 30 AM
                   </p>
                 </div>
@@ -122,7 +173,7 @@ function MovieDetail() {
                     alt="icon"
                     className=""
                   />
-                  <p className="text-xs lg:text-base text-secondary font-semibold">
+                  <p className="text-xs font-semibold lg:text-base text-secondary">
                     Purwokerto
                   </p>
                 </div>
@@ -134,34 +185,33 @@ function MovieDetail() {
               </div>
             </div>
             <div className="md:w-[16%]">
-              <div className="text-sm text-light bg-primary rounded-md p-4 text-center cursor-pointer">
+              <div className="p-4 text-sm text-center rounded-md cursor-pointer text-light bg-primary">
                 Filter
               </div>
             </div>
           </div>
         </div>
-        <div className="flex flex-col gap-y-10 items-center">
-          <div className="flex gap-x-7 items-center self-start">
+        <div className="flex flex-col items-center gap-y-10">
+          <div className="flex items-center self-start gap-x-7">
             <p className="md:text-[20px] text-[#121212] font-semibold">
               Choose Cinema
             </p>
             <p className="text-[18px] text-[#8692A6] font-bold">39 Result</p>
           </div>
-          <div className="flex flex-col gap-y-4 md:flex-row md:gap-x-4 w-full">
-            <div className="p-7 border-2 border-[#DEDEDE] rounded-md md:w-1/4 flex justify-center items-center">
-              <img src={getImageUrl("ebv.id", "svg")} alt="cinema" />
-            </div>
-            <div className="p-7 bg-primary border-2 border-primary rounded-md md:w-1/4 flex justify-center items-center">
-              <img src={getImageUrl("hiflix3", "svg")} alt="cinema" />
-            </div>
-            <div className="p-7 border-2 border-[#DEDEDE] rounded-md md:w-1/4 flex justify-center items-center">
-              <img src={getImageUrl("CineOne", "svg")} alt="cinema" />
-            </div>
-            <div className="p-7 border-2 border-[#DEDEDE] rounded-md md:w-1/4 flex justify-center items-center">
-              <img src={getImageUrl("ebv.id", "svg")} alt="cinema" />
-            </div>
+          <div className="flex flex-col w-full gap-y-4 md:flex-row md:gap-x-4">
+            {cinema && cinema.cinemaId && cinema.cinemaImage && cinema.cinemaId.map((x,i) => {
+            return (
+              <div key={x} id={x} className={`flex items-center justify-center h-32 border-2 rounded-md md:w-1/4`}>
+                <button name="cinemaButton" onClick={()=>{getCinemaId(x, i)}} type="button" className="w-full h-full">
+                  <div className="flex items-center justify-center w-full h-full p-7">
+                    <img src={cinema.cinemaImage[i]} alt={cinema.cinemaImage[i]} />
+                  </div>
+                </button>
+              </div>
+            )
+          })}     
           </div>
-          <div className="flex gap-x-2 justify-center font-nunito font-medium">
+          <div className="flex justify-center font-medium gap-x-2 font-nunito">
             <p className="text-light bg-primary border border-primary rounded-lg w-[40px] h-[40px] flex justify-center items-center drop-shadow-xl">
               1
             </p>
@@ -178,7 +228,7 @@ function MovieDetail() {
           <div>
             <Link
               to="/order"
-              className="text-sm text-light bg-primary py-5 px-16 justify-self: center rounded-md focus:ring-2"
+              className="px-16 py-5 text-sm rounded-md text-light bg-primary justify-self: center focus:ring-2"
             >
               Book Now
             </Link>

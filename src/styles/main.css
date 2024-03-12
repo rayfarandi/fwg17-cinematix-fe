@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.home-scrollbar::-webkit-scrollbar {
+    width: 0;  /* Lebar scrollbar diatur menjadi 0 */
+    background: transparent; /* Warna latar belakang scrollbar */
+}
+
+/* Style scrollbar */
+.order-scrollbar::-webkit-scrollbar {
+    width: 0; /* Lebar scrollbar diatur menjadi 0 */
+    background: transparent; /* Warna latar belakang scrollbar */
+}
+
+/* Hover effect on thumb */
+.order-scrollbar::-webkit-scrollbar-thumb {
+    background: #a3a3a3; /* Warna thumb scrollbar */
+}
+
+/* Hide scrollbar by default */
+.order-scrollbar {
+    scrollbar-width: none;
+}
+
+/* Show scrollbar when hovering over element with class order-scrollbar */
+.order-scrollbar:hover {
+    scrollbar-width: auto;
+}

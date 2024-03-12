@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import "../styles/main.css";
@@ -11,10 +11,17 @@ import InfoSeat from "../components/InfoSeat";
 
 function Order() {
   const [isDropdownShown, setIsDropdownShow] = useState(false);
+  useEffect(()=>{
+    window.scrollTo({
+      top:0,
+      left:0,
+      behavior:'smooth'
+    })
+  },[])
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />
-      <section className="bg-[#A0A3BD33] py-10">
+      <section className="bg-[#A0A3BD33] py-10 order-scrollbar">
         <section className="flex justify-center items-center w-full font-mulish">
           <div className="flex gap-x-2 md:gap-x-6">
             <div className="flex flex-col gap-y-3 justify-center items-center">
