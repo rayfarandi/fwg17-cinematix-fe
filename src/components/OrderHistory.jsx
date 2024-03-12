@@ -3,10 +3,13 @@ import getImageUrl from "../utils/imageGet"
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import getWholeDate from "../utils/getDate";
 import { getMonth } from "../utils/getDate";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 // eslint-disable-next-line react/prop-types
-const OrderHistory = ({id, title, price = '00000000', time, date, paid, used, va, category, seat}) => {
+const OrderHistory = ({id, title, price = '00000000', time, date, paid, used, va, category, seat, expired}) => {
 
+  const token = useSelector(state => state.auth.token)
   // eslint-disable-next-line react/prop-types
   let count = seat?.length
   seat = seat?.toString()
@@ -42,6 +45,22 @@ const OrderHistory = ({id, title, price = '00000000', time, date, paid, used, va
     e.target.focus();
     setCopySuccess("Copied!");
   };
+
+  const formatDate = (isoDate) => {
+    const date = new Date(isoDate);
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    // eslint-disable-next-line react/prop-types
+    const formatSuccess = date.toLocaleDateString('en-US', options)
+    return `on ${formatSuccess}`
+  }
+
+  const checkPaid = async () => {
+    await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/customer/update-paid-status/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+  }
   return (
     <div className={`${title ? '' : 'hidden'} flex items-center justify-center w-full h-auto bg-white mt-14 rounded-3xl`}>
       <div className="w-11/12 h-4/6">
@@ -93,8 +112,8 @@ const OrderHistory = ({id, title, price = '00000000', time, date, paid, used, va
                   </div>
                   <div className="flex-1 text-2xl sm:text-right text-secondary">IDR{price.toLocaleString('id')}</div>
                 </div>
-                <p className="text-slate-400">Pay this payment bill before it is due, on <span className="text-danger"> June 23, 2023.</span> If the bill has not been paid by the specified time, it will be forfeited</p>
-                <button className="w-full text-white rounded md:w-1/5 h-14 bg-primary ">check payment</button>
+                <p className="text-slate-400">Pay this payment bill before it is due, on <span className="text-danger">{formatDate(expired)}</span> If the bill has not been paid by the specified time, it will be forfeited</p>
+                <button onClick={checkPaid} className="w-full text-white rounded md:w-1/5 h-14 bg-primary ">check payment</button>
               </div>
               
               <div className={`${paid ? '' : 'hidden'} flex flex-col w-full gap-5`}>

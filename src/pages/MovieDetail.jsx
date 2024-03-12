@@ -74,7 +74,8 @@ function MovieDetail() {
 
   const [listLocation, setListLocation] = useState(false)
   const [cinemaLocationId, setCinemaLocationId] = useState()
-  const showLocation = (x, id) => {
+  const [locationId, setLocationId] = useState()
+  const showLocation = (x, id, locId) => {
     if(!listLocation){
       setListLocation(true)
     }else{
@@ -83,6 +84,7 @@ function MovieDetail() {
     if(x){
       setChoosedLocation(x)
       setCinemaLocationId(id)
+      setLocationId(locId)
     }
   }
   
@@ -135,7 +137,13 @@ function MovieDetail() {
       date: choosedDate,
       movieTimeId: res1.data.results.id,
       cinemaLocationId,
-      movieImage: movies?.image
+      movieImage: movies?.image,
+      movieId: movies?.id,
+      cinemaId: movieCinemaData.cinemaId,
+      locationId: locationId,
+      airingTimeId: timeId,
+      dateId : dateId,
+      price : movieCinemaData.price,
     }
     dispatch(setOrder(data))
 
@@ -207,7 +215,7 @@ function MovieDetail() {
                   {choosedDate}
                   </p>
                   <div className="flex items-end justify-end flex-1">
-                    <MdKeyboardArrowDown className=""/>
+                  {listDate ? <MdKeyboardArrowUp/> : <MdKeyboardArrowDown/>}
                   </div>
                 </button>
                   <div className={`${listDate ? '' : 'hidden'} bg-[#EFF0F6] flex flex-col gap-2 absolute top-10 rounded-md px-4 w-full py-4`}>
@@ -222,7 +230,7 @@ function MovieDetail() {
                       }
                       return(
                         <div className="w-full border-b text-secondary hover:border-b hover:border-slate-800" key={i}>
-                          <button onClick={()=>{showDate(date, id)}}>{date}</button>
+                          <button className="flex justify-start w-full" type="button" onClick={()=>{showDate(date, id)}}>{date}</button>
                         </div>
                       )
                     })}
@@ -240,7 +248,8 @@ function MovieDetail() {
                     {choosedTime}
                   </p>
                   <div className="flex items-end justify-end flex-1">
-                    <MdKeyboardArrowDown className=""/>
+                  {listTime ? <MdKeyboardArrowUp/> : <MdKeyboardArrowDown/>}
+                    
                   </div>
                 </button>
                   <div className={`${listTime ? '' : 'hidden'} bg-[#EFF0F6] flex flex-col gap-2 absolute top-10 rounded-md px-4 w-full py-4`}>
@@ -254,7 +263,7 @@ function MovieDetail() {
                       }
                       return(
                         <div className="w-full border-b text-secondary hover:border-b hover:border-slate-800" key={i}>
-                          <button onClick={()=>{showTime(time, id)}}>{time}</button>
+                          <button className="flex justify-start w-full" type="button" onClick={()=>{showTime(time, id)}}>{time}</button>
                         </div>
                       )
                     })}
@@ -272,15 +281,16 @@ function MovieDetail() {
                     {choosedLocation}
                   </p>
                   <div className="flex items-end justify-end flex-1">
-                    <MdKeyboardArrowDown className=""/>
+                  {listLocation ? <MdKeyboardArrowUp/> : <MdKeyboardArrowDown/>}
                   </div>
                 </button>
                   <div className={`${listLocation ? '' : 'hidden'} bg-[#EFF0F6] flex flex-col gap-2 absolute top-10 rounded-md px-4 w-full py-4`}>
                     {cinemaLocation && cinemaLocation.location && cinemaLocation.location.map((x, i)=>{
                       const id = cinemaLocation.cinemaLocationId[i]
+                      const locId = cinemaLocation.LocationId[i]
                       return(
                         <div className="w-full border-b text-secondary hover:border-b hover:border-slate-800" key={i}>
-                          <button onClick={()=>{showLocation(x, id)}}>{x}</button>
+                          <button className="flex justify-start w-full" type="button" onClick={()=>{showLocation(x, id, locId)}}>{x}</button>
                         </div>
                       )
                     })}
@@ -301,7 +311,9 @@ function MovieDetail() {
               const data = {
                 movieCinemaId : cinema.movieCinemaId[i],
                 cinemaName : cinema.cinemaName[i],
-                cinemaImage : cinema.cinemaImage[i]
+                cinemaImage : cinema.cinemaImage[i],
+                cinemaId: cinema.cinemaId[i],
+                price: cinema.cinemaPrice[i]
               }
             return (
               <div key={x} id={x} className={`flex items-center justify-center h-32 border-2 rounded-md md:w-1/4`}>
