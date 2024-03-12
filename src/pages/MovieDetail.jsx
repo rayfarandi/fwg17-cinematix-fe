@@ -1,17 +1,16 @@
 import { useState,useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, json, useNavigate, useParams } from "react-router-dom";
 import { getMonth } from "../utils/getDate";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { FiCalendar, FiClock  } from "react-icons/fi";
 import { SlLocationPin } from "react-icons/sl";
 
-// import "../styles/main.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import getImageUrl from "../utils/imageGet";
 import DropdownMobile from "../components/DropdownMobile";
 import axios from "axios";
-// import CinemaImg from "../components/CinemaImg";
+import { useDispatch } from "react-redux";
+import { setOrder } from "../redux/reducer/order";
 
 function MovieDetail() {
   const [isDropdownShown, setIsDropdownShow] = useState(false);
@@ -49,28 +48,33 @@ function MovieDetail() {
     releaseDate = x
   }
 
-  const [cinemaId, setCinemaId] = useState()
   const [cinemaIndicator, setCinemaIndicator] = useState()
   const [cinemaLocation, setCineamaLocation] = useState({})
   const [movieTime, setMovieTime] = useState([{}])
-  // const [movieCinema, setMovieCinema] = useState({})
-  const getCinemaId = async (num, i) => {
+  const [choosedLocation, setChoosedLocation] = useState('---------')
+  const [choosedDate, setChoosedDate] = useState('---------')
+  const [choosedTime, setChoosedTime] = useState('---------')
+
+  const [movieCinemaData, setMovieCinemaData] = useState({})
+  const getCinemaId = async (num, i, data) => {
+    setMovieCinemaData(data)
+    setChoosedLocation('---------')
+    setChoosedDate('---------')
+    setChoosedTime('---------')
     if(cinemaIndicator){
       document.getElementById(cinemaIndicator).className = 'flex items-center justify-center h-32 border-2 rounded-md md:w-1/4'
     }
-    setCinemaId(num)
     document.getElementById(num).className = 'flex items-center justify-center h-32 border-2 rounded-md border-primary md:w-1/4'
     setCinemaIndicator(num)
     const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/cinema-location/${num}`)
     setCineamaLocation(res.data.results)
-    // const res1 = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movie-time/${cinema?.movieCinemaId[i]}`)
-    // setMovieTime(res1.data.results)
-    console.log(cinemaLocation)
+    const res1 = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movie-time?movieCinemaId=${cinema?.movieCinemaId[i]}`)
+    setMovieTime(res1.data.results)
   }
 
   const [listLocation, setListLocation] = useState(false)
-  const [choosedLocation, setChoosedLocation] = useState('---------')
-  const showLocation = (x) => {
+  const [cinemaLocationId, setCinemaLocationId] = useState()
+  const showLocation = (x, id) => {
     if(!listLocation){
       setListLocation(true)
     }else{
@@ -78,10 +82,68 @@ function MovieDetail() {
     }
     if(x){
       setChoosedLocation(x)
+      setCinemaLocationId(id)
+    }
+  }
+  
+  const [dateId, setDateId] = useState()
+  const [listDate, setListDate] = useState(false)
+  const [time, setTime] = useState([{}])
+  const showDate = async (x, id) => {
+    if(!listDate){
+      setListDate(true)
+    }else{
+      setListDate(false)
+    }
+    if(x){
+      setChoosedTime('---------')
+      setChoosedDate(x)
+      setDateId(id)
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/airing-time-date?dateId=${id}`)
+      setTime(res.data.results)
+    }
+  }
+  
+  const [timeId, setTimeId] = useState()
+  const [listTime, setListTime] = useState(false)
+  const showTime = (x, id) => {
+    if(!listTime){
+      setListTime(true)
+    }else{
+      setListTime(false)
+    }
+    if(x){
+      setChoosedTime(x)
+      setTimeId(id)
     }
   }
 
-  
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const getDataOrder = async () => {
+
+    const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/airing-time-date-id?airingTimeId=${timeId}&dateId=${dateId}`)
+    const res1 = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movie-time-id?airingTimeDateId=${res.data.results.id}&movieCinemaId=${movieCinemaData.movieCinemaId}`)
+
+
+    const data = {
+      title: movies?.title,
+      genre: movies?.genre,
+      time: choosedTime,
+      cinemaName: movieCinemaData.cinemaName,
+      cinemaImage: movieCinemaData.cinemaImage,
+      date: choosedDate,
+      movieTimeId: res1.data.results.id,
+      cinemaLocationId,
+      movieImage: movies?.image
+    }
+    dispatch(setOrder(data))
+
+    if(data.movieTimeId){
+      navigate('/order')
+    }
+  }
+
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />
@@ -134,32 +196,69 @@ function MovieDetail() {
             Book Tickets
           </p>
           <div className="flex flex-col gap-y-4 md:flex-row md:items-end md:gap-x-4 lg:gap-x-[30px]">
-            <div className="flex flex-col gap-y-4 md:w-1/4">
+          <div className="flex flex-col gap-y-4 md:w-1/4">
               <p className="md:text-[20px] font-semibold text-black">
                 Chose Date
               </p>
-              <div className="flex justify-between items-center p-4 px-6 bg-[#EFF0F6] rounded-md cursor-pointer w-full">
-                <div className="flex items-center justify-center gap-x-4">
+              <div className="relative flex flex-col justify-center items-center py-4 bg-[#EFF0F6] rounded-md cursor-pointer w-full">
+                <button onClick={()=>{showDate()}} type="button" className="flex items-center justify-center w-full gap-4 px-4">
                   <FiCalendar/>
                   <p className="text-xs font-semibold lg:text-base text-secondary">
-                    21/07/20
+                  {choosedDate}
                   </p>
-                </div>
-                <MdKeyboardArrowDown/>
+                  <div className="flex items-end justify-end flex-1">
+                    <MdKeyboardArrowDown className=""/>
+                  </div>
+                </button>
+                  <div className={`${listDate ? '' : 'hidden'} bg-[#EFF0F6] flex flex-col gap-2 absolute top-10 rounded-md px-4 w-full py-4`}>
+                    {movieTime && movieTime.map((x, i)=>{
+                      let date
+                      let parsed
+                      let id
+                      if(x?.airingTimeDate){
+                        parsed = JSON.parse(x.airingTimeDate)
+                        date = parsed[0].date
+                        id = parsed[0].dateId
+                      }
+                      return(
+                        <div className="w-full border-b text-secondary hover:border-b hover:border-slate-800" key={i}>
+                          <button onClick={()=>{showDate(date, id)}}>{date}</button>
+                        </div>
+                      )
+                    })}
+                  </div>
               </div>
             </div>
             <div className="flex flex-col gap-y-4 md:w-1/4">
               <p className="md:text-[20px] font-semibold text-black">
                 Chose Time
               </p>
-              <div className="flex justify-between items-center p-4 px-6 bg-[#EFF0F6] rounded-md cursor-pointer w-full">
-                <div className="flex items-center justify-center gap-x-4">
+              <div className="relative flex flex-col justify-center items-center py-4 bg-[#EFF0F6] rounded-md cursor-pointer w-full">
+                <button onClick={()=>{showTime()}} type="button" className="flex items-center justify-center w-full gap-4 px-4">
                   <FiClock/>
                   <p className="text-xs font-semibold lg:text-base text-secondary">
-                    08 : 30 AM
+                    {choosedTime}
                   </p>
-                </div>
-                <MdKeyboardArrowDown/>
+                  <div className="flex items-end justify-end flex-1">
+                    <MdKeyboardArrowDown className=""/>
+                  </div>
+                </button>
+                  <div className={`${listTime ? '' : 'hidden'} bg-[#EFF0F6] flex flex-col gap-2 absolute top-10 rounded-md px-4 w-full py-4`}>
+                    {time && time.map((x, i)=>{
+                      let time
+                      let id
+                      if(x.airingTimeId){
+                        time = x.airingTime
+                        time = time.slice(11, 16)
+                        id = x.airingTimeId
+                      }
+                      return(
+                        <div className="w-full border-b text-secondary hover:border-b hover:border-slate-800" key={i}>
+                          <button onClick={()=>{showTime(time, id)}}>{time}</button>
+                        </div>
+                      )
+                    })}
+                  </div>
               </div>
             </div>
             <div className="flex flex-col gap-y-4 md:w-1/4">
@@ -178,9 +277,10 @@ function MovieDetail() {
                 </button>
                   <div className={`${listLocation ? '' : 'hidden'} bg-[#EFF0F6] flex flex-col gap-2 absolute top-10 rounded-md px-4 w-full py-4`}>
                     {cinemaLocation && cinemaLocation.location && cinemaLocation.location.map((x, i)=>{
+                      const id = cinemaLocation.cinemaLocationId[i]
                       return(
                         <div className="w-full border-b text-secondary hover:border-b hover:border-slate-800" key={i}>
-                          <button onClick={()=>{showLocation(x)}}>{x}</button>
+                          <button onClick={()=>{showLocation(x, id)}}>{x}</button>
                         </div>
                       )
                     })}
@@ -198,9 +298,14 @@ function MovieDetail() {
           </div>
           <div className="flex flex-col w-full gap-y-4 md:flex-row md:gap-x-4">
             {cinema && cinema.cinemaId && cinema.cinemaImage && cinema.cinemaId.map((x,i) => {
+              const data = {
+                movieCinemaId : cinema.movieCinemaId[i],
+                cinemaName : cinema.cinemaName[i],
+                cinemaImage : cinema.cinemaImage[i]
+              }
             return (
               <div key={x} id={x} className={`flex items-center justify-center h-32 border-2 rounded-md md:w-1/4`}>
-                <button name="cinemaButton" onClick={()=>{getCinemaId(x, i)}} type="button" className="w-full h-full">
+                <button name="cinemaButton" onClick={()=>{getCinemaId(x, i, data)}} type="button" className="w-full h-full">
                   <div className="flex items-center justify-center w-full h-full p-7">
                     <img src={cinema.cinemaImage[i]} alt={cinema.cinemaImage[i]} />
                   </div>
@@ -224,12 +329,12 @@ function MovieDetail() {
             </p>
           </div>
           <div>
-            <Link
-              to="/order"
+            <button
+              onClick={getDataOrder}
               className="px-16 py-5 text-sm rounded-md text-light bg-primary justify-self: center focus:ring-2"
             >
               Book Now
-            </Link>
+            </button>
           </div>
         </div>
       </section>
