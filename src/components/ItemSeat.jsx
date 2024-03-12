@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 
-function ItemSeat() {
+function ItemSeat({reservedSeat}) {
+    console.log(reservedSeat)
     const [selectedSeats, setSelectedSeats] = useState([]);
 
     const checkSeat = (seat) => {
@@ -356,7 +357,7 @@ function ItemSeat() {
           <td
             className="px-1 cursor-pointer"
           >
-            <div className={`w-[26px] h-[26px] ${checkSeat("E4") ? "bg-primary" : "bg-[#D6D8E7]" } rounded`} onClick={() => {seatHandler("E4")}}></div>
+            <div id='E4' className={`w-[26px] h-[26px] ${checkSeat("E4") ? "bg-primary" : "bg-[#D6D8E7]" } rounded`} onClick={() => {seatHandler("E4")}}></div>
           </td>
           <td
             className="px-1 cursor-pointer"
