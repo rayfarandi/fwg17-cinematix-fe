@@ -60,8 +60,8 @@ VITE_BACKEND_URL="..." Your Backend Golang Host
 
 ## Collaborator
 
-[Wisnu] (https://github.com/wisnu31899)
-[Haidar](https://github.com/patih1)
-[Gabriel](https://github.com/putragabrielll)
-[Nanda](https://github.com/xel26)
-[Dzul](https://github.com/DzulfiqarSiraj)
+- [Wisnu](https://github.com/wisnu31899)
+- [Haidar](https://github.com/patih1)
+- [Gabriel](https://github.com/putragabrielll)
+- [Nanda](https://github.com/xel26)
+- [Dzul](https://github.com/DzulfiqarSiraj)
