@@ -3,6 +3,7 @@ import getImageUrl from "../utils/imageGet";
 import React, { useState } from "react"
 import { FiEyeOff, FiEye, } from "react-icons/fi"
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const SignUp = () => {
     const [passwordVisible, setPasswordVisible] = React.useState(false)
@@ -32,11 +33,14 @@ const SignUp = () => {
                 setRegisterSuccess(data.message)
                 console.log(setRegisterSuccess)
                 setErrMessage(null)
-                // setTimeout(() => {
-                //     navigate('/signin')
-                // }, 2000);
+                setTimeout(() => {
+                    navigate('/signin')
+                }, 2000);
             } catch (err) {
                 setErrMessage(err.response.data.message)
+                setTimeout(() => {
+                    setErrMessage(null)
+                }, 2000);
             }
         } else {
             setTcmessage(<p className="text-red-700">to continue, please check the box below</p>)
@@ -116,7 +120,7 @@ const SignUp = () => {
                                     <button className="text-[12px] md:text-[16px] w-full py-1 md:py-2 font-bold text-white transition-all duration-500 rounded-lg bg-primary active:scale-95" type="submit">Join For Free Now</button>
                                 </div>
                                 <div className="flex justify-center ">
-                                    <div className="text-[12px] md:text-[16px] text-[#4E4B66]">Already have an account?<span className="text-primary"> Log In</span>
+                                    <div className="text-[12px] md:text-[16px] text-[#4E4B66]">Already have an account? <Link to="/signin" className="text-primary"> Log In </Link>
                                     </div>
                                 </div>
                                 <div className="flex items-center ">
