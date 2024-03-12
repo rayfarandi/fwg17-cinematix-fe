@@ -8,8 +8,12 @@ import getImageUrl from "../utils/imageGet";
 import DropdownMobile from "../components/DropdownMobile";
 import Slider from "../components/Slider";
 
+import axios from "axios";
+
 function Home() {
-    const [isDropdownShown, setIsDropdownShow] = useState(false);
+    const [isDropdownShown, setIsDropdownShow] = useState(false)
+    const [movies, setMovies] = useState([])
+    const [movieAir,setMovieAir] =useState([])
    
   useEffect(() => {
     window.scrollTo({
@@ -17,7 +21,32 @@ function Home() {
       left: 0,
       behavior: "smooth",
     });
-  }, []);
+    getMovies()
+    getMovieAir()
+  }, [])
+
+  const getMovies = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/movies`,
+        { params: { status: "coming soon" } }
+      )
+      setMovies(res.data.results)
+    } catch (error) {
+      console.error("Error fetching movies:", error)
+    }
+  }
+  const getMovieAir = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/movies`,
+        { params: { status: "now airing" } }
+      )
+      setMovieAir(res.data.results)
+    } catch (error) {
+      console.error("Error fetching movies:", error)
+    }
+  }
  
     return (
         <>
@@ -82,35 +111,8 @@ function Home() {
                         <span className="text-center text-[32px] text-[#4F5665]">Exciting Movies That Should Be Watch Today</span>
                     </div>
                 </div>
-                <Slider
-                    data={[
-                        {
-                        nameMovie: 'Black Widow',
-                        image: 'movie1',
-                        genre1: 'Action',
-                        genre2: 'Adventure',
-                        },
-                        {   
-                            nameMovie: 'The Withces',
-                            image: 'movie2',
-                            genre1: 'Comedy',
-                            genre2: 'Adventure',
-                        },
-                        {  
-                        nameMovie: 'Tenet',
-                        image: 'movie3',
-                        genre1: 'Action',
-                        genre2: 'Sci-Fi',
-                        },
-                        {  
-                        nameMovie: 'Spiderman',
-                        image: 'movie4',
-                        genre1: 'Action',
-                        genre2: 'Adventure',
-                        },
-                    ]}
-                    />
                 
+                <Slider data={movieAir}/>
 
                 
 
@@ -134,34 +136,9 @@ function Home() {
                     </div>
                     
                 </div>
-                <Slider
-                    data={[
-                        {
-                        nameMovie: 'Black Widow',
-                        image: 'movie1',
-                        genre1: 'Action',
-                        genre2: 'Adventure',
-                        },
-                        {   
-                            nameMovie: 'The Withces',
-                            image: 'movie2',
-                            genre1: 'Comedy',
-                            genre2: 'Adventure',
-                        },
-                        {  
-                        nameMovie: 'Tenet',
-                        image: 'movie3',
-                        genre1: 'Action',
-                        genre2: 'Sci-Fi',
-                        },
-                        {  
-                        nameMovie: 'Spiderman',
-                        image: 'movie4',
-                        genre1: 'Action',
-                        genre2: 'Adventure',
-                        },
-                    ]}
-                    />
+                <Slider data={movies}
+                    
+                />
             </section>
 
             <section className="font-mulish pb-[63px] px-5 md:px-11 xl:px-[130px]">

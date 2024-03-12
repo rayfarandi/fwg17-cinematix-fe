@@ -3,19 +3,12 @@
 import axios from "axios";
 import getImageUrl from "../utils/imageGet";
 import React, { useEffect, useState } from "react"
-// import axios from 'axios'
-// import { useDispatch, useSelector } from "react-redux"
-// import { useNavigate } from "react-router-dom"
-// import { login as loginAction} from "../redux/reducers/auth"
-// import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
 import { login as loginAction } from "../redux/reducer/auth";
 import { FiEyeOff, FiEye, } from "react-icons/fi"
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
-// import loginImage from "../assets/image/login.png"
-// import logoAuth from "../assets/image/logo auth.png"
-// import logoGoogle from "../assets/image/google.svg"
-// import logoFacebook from "../assets/image/facebook.svg"
+
 
 const SignIn = () => {
     // Ganti type di input dari password ke text
@@ -52,13 +45,15 @@ const SignIn = () => {
             setTimeout(() => {
                 setLoginSuccess(false)
                 dispatch(loginAction(data.results.token))
-                navigate('/movie')
+                navigate('/')
             }, 2000)
         } catch (err) {
             setErrMessage(err.response.data.message)
             setTimeout(() => {
+
                 setErrMessage('')
             }, 2000)
+
         }
     }
 
@@ -104,7 +99,7 @@ const SignIn = () => {
                                     </div>
                                 </div>
                                 <div className="flex justify-end">
-                                    <span className="text-[12px] md:text-[16px] text-primary text-">Forgot your password?</span>
+                                <Link to="/signin" className="text-[12px] md:text-[16px] text-primary text-">Forgot your password?</Link>
                                 </div>
                                 <div>
                                     <button className="text-[12px] md:text-[16px] w-full py-1 md:py-2 font-bold text-white transition-all duration-500 rounded-lg bg-primary active:scale-95" type="submit">Login</button>

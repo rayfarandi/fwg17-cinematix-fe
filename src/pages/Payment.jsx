@@ -1,4 +1,6 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
 
 import "../styles/main.css";
 import Navbar from "../components/Navbar";
@@ -8,15 +10,35 @@ import DropdownMobile from "../components/DropdownMobile";
 import PaymentModal from "../components/PaymentModal";
 
 function Payment() {
+
+  const token = useSelector(state => state.auth.token)
+  const [userData, setUserData] = useState(null);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
   const [isModalInfoShown, setisModalInfoShown] = useState(false);
-  useEffect(()=>{
+  // const [orderId, setOrderId] = useState(null)
+
+
+  const getDataUser = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customer/profile`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      setUserData(response.data.results)
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
     window.scrollTo({
-      top:0,
-      left:0,
-      behavior:'smooth'
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
     })
-  },[])
+    getDataUser()
+  }, [])
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />
@@ -84,24 +106,29 @@ function Payment() {
                 Personal Information
               </p>
               <div className="flex flex-col gap-y-4">
-                <div className="flex flex-col gap-y-3">
-                  <p className="text-[#696F79]">Full Name</p>
-                  <div className="p-4 px-8 border rounded-sm">
-                    Jonas El Rodriguez
-                  </div>
-                </div>
-                <div className="flex flex-col gap-y-3">
-                  <p className="text-[#696F79]">Email</p>
-                  <div className="p-4 px-8 border rounded-sm">
-                    jonasrodri123@gmail.com
-                  </div>
-                </div>
-                <div className="flex flex-col gap-y-3">
-                  <p className="text-[#696F79]">Phone Number</p>
-                  <div className="p-4 px-8 border rounded-sm">
-                    +6281445687121
-                  </div>
-                </div>
+                {userData && (
+                  <>
+                    <div className="flex flex-col gap-y-3">
+                      <p className="text-[#696F79]">Full Name</p>
+                      <div className="p-4 px-8 border rounded-sm">
+                        {`${userData.firstName} ${userData.lastName}`}
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-y-3">
+                      <p className="text-[#696F79]">Email</p>
+                      <div className="p-4 px-8 border rounded-sm">
+                        {userData.email}
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-y-3">
+                      <p className="text-[#696F79]">Phone Number</p>
+                      <div className="p-4 px-8 border rounded-sm">
+                        {userData.phoneNumber}
+                      </div>
+                    </div>
+                  </>
+                )}
+
               </div>
             </div>
             <div>
@@ -148,7 +175,8 @@ function Payment() {
       {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
       )}
-      {isModalInfoShown&& <PaymentModal/>}
+      {isModalInfoShown && <PaymentModal  />}
+      {/* {isModalInfoShown && <PaymentModal orderId={orderId} />} */}
     </>
   );
 }

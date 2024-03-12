@@ -8,16 +8,40 @@ import getImageUrl from "../utils/imageGet";
 import DropdownMobile from "../components/DropdownMobile";
 import ItemSeat from "../components/ItemSeat";
 import InfoSeat from "../components/InfoSeat";
+import axios from "axios";
+import { useSelector } from "react-redux";
+
+const getReservedSeat = async (cb, data, token) => {
+  const {data: response} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customer/reserved-seat`, {params:{
+    movieId : data?.movieId,
+    cinemaId : data?.cinemaId,
+    locationId : data?.locationId,
+    airingTimeId : data?.airingTimeId,
+    dateId : data?.dateId,
+  }, headers: {
+    Authorization: `Bearer ${token}`
+  }})
+
+  if(response.success){
+    cb(response.results.seatCode)
+  }
+}
 
 function Order() {
+  const token = useSelector(state => state.auth.token)
   const [isDropdownShown, setIsDropdownShow] = useState(false);
+  const [foundReservedSeat, setFoundReservedSeat] = useState([])
+
   useEffect(()=>{
     window.scrollTo({
       top:0,
       left:0,
       behavior:'smooth'
     })
+    // value dari data pada serFoundReservedSeat diganti dengan data-data yang tersimpan di redux
+    getReservedSeat(setFoundReservedSeat, {movieId: '1', cinemaId: '1', locationId: '1', airingTimeId: '2', dateId: '2'},token)
   },[])
+
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />
@@ -75,7 +99,7 @@ function Order() {
               <p className="text-2xl font-bold">Chose Your Seet</p>
               <div className="px-4 overflow-auto w-full">
               <div className="mb-20"></div>
-                <ItemSeat></ItemSeat>
+                <ItemSeat reservedSeat={foundReservedSeat}></ItemSeat>
                 <InfoSeat/>
               </div>
               
