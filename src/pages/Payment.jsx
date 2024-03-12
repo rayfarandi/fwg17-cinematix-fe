@@ -15,6 +15,8 @@ function Payment() {
   const [userData, setUserData] = useState(null);
   const [isDropdownShown, setIsDropdownShow] = useState(false);
   const [isModalInfoShown, setisModalInfoShown] = useState(false);
+  // const [orderId, setOrderId] = useState(null)
+
 
   const getDataUser = async () => {
     try {
@@ -173,7 +175,8 @@ function Payment() {
       {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />
       )}
-      {isModalInfoShown && <PaymentModal />}
+      {isModalInfoShown && <PaymentModal  />}
+      {/* {isModalInfoShown && <PaymentModal orderId={orderId} />} */}
     </>
   );
 }

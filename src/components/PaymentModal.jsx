@@ -11,24 +11,31 @@ function PaymentModal() {
   const noVirtualRef = useRef(null);
   const [paymentInfo, setPaymentInfo] = useState(null)
 
-
-
-  useEffect(() => {
-    const getDataPayment = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customer/payment-info?orderId=58`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        setPaymentInfo(response.data.results)
-        console.log(response)
-      } catch (err) {
-        console.log(err)
-      }
+  const getDataPayment = async () => {
+    try {
+      // const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customer/payment-info?orderId=${orderId}`, {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`
+      //   }
+      // })
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customer/payment-info?orderId=58`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      setPaymentInfo(response.data.results)
+      console.log(response)
+    } catch (err) {
+      console.log(err)
     }
+  }
+
+  // useEffect(() => {
+  //   getDataPayment()
+  // }, [orderId, token]);
+  useEffect(() => {
     getDataPayment()
-  }, []);
+  }, [token]);
 
   const formatDate = (isoDate) => {
     const date = new Date(isoDate);
@@ -74,7 +81,7 @@ function PaymentModal() {
                 />
                 <button
                   className="py-3 px-4 text-sm text-primary border-primary border rounded-md cursor-pointer"
-                  onClick={copyToClipboard} // Panggil fungsi copyToClipboard saat tombol diklik
+                  onClick={copyToClipboard}
                 >
                   {copySuccess}
                 </button>
