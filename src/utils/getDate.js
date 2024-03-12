@@ -14,5 +14,9 @@ const getWholeDate = (str1, str2) => {
   return getDay(str1) + ', ' + str1.slice(8, 10) + ' ' + getMonth(str1) + ' - ' + str2.slice(11, 16)
 }
 
+const getWholeYear = (str1) => {
+  return getDay(str1) + ', ' + str1.slice(8, 10) + ' ' + getMonth(str1) + ' ' + str1.slice(0, 4)
+}
+
 export default getWholeDate
-export {getMonth}
+export {getMonth, getWholeYear}
