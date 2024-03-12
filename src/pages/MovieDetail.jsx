@@ -1,6 +1,9 @@
 import { useState,useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getMonth } from "../utils/getDate";
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { FiCalendar, FiClock  } from "react-icons/fi";
+import { SlLocationPin } from "react-icons/sl";
 
 // import "../styles/main.css";
 import Navbar from "../components/Navbar";
@@ -60,9 +63,22 @@ function MovieDetail() {
     setCinemaIndicator(num)
     const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/cinema-location/${num}`)
     setCineamaLocation(res.data.results)
-    const res1 = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movie-time/${cinema?.movieCinemaId[i]}`)
-    setMovieTime(res1.data.results)
-    console.log(res1)
+    // const res1 = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movie-time/${cinema?.movieCinemaId[i]}`)
+    // setMovieTime(res1.data.results)
+    console.log(cinemaLocation)
+  }
+
+  const [listLocation, setListLocation] = useState(false)
+  const [choosedLocation, setChoosedLocation] = useState('---------')
+  const showLocation = (x) => {
+    if(!listLocation){
+      setListLocation(true)
+    }else{
+      setListLocation(false)
+    }
+    if(x){
+      setChoosedLocation(x)
+    }
   }
 
   
@@ -123,21 +139,13 @@ function MovieDetail() {
                 Chose Date
               </p>
               <div className="flex justify-between items-center p-4 px-6 bg-[#EFF0F6] rounded-md cursor-pointer w-full">
-                <div className="flex gap-x-4">
-                  <img
-                    src={getImageUrl("calendar", "svg")}
-                    alt="icon"
-                    className=""
-                  />
+                <div className="flex items-center justify-center gap-x-4">
+                  <FiCalendar/>
                   <p className="text-xs font-semibold lg:text-base text-secondary">
                     21/07/20
                   </p>
                 </div>
-                <img
-                  src={getImageUrl("Forward", "svg")}
-                  alt="icon"
-                  className=""
-                />
+                <MdKeyboardArrowDown/>
               </div>
             </div>
             <div className="flex flex-col gap-y-4 md:w-1/4">
@@ -145,48 +153,38 @@ function MovieDetail() {
                 Chose Time
               </p>
               <div className="flex justify-between items-center p-4 px-6 bg-[#EFF0F6] rounded-md cursor-pointer w-full">
-                <div className="flex gap-x-4">
-                  <img
-                    src={getImageUrl("time", "svg")}
-                    alt="icon"
-                    className=""
-                  />
+                <div className="flex items-center justify-center gap-x-4">
+                  <FiClock/>
                   <p className="text-xs font-semibold lg:text-base text-secondary">
                     08 : 30 AM
                   </p>
                 </div>
-                <img
-                  src={getImageUrl("Forward", "svg")}
-                  alt="icon"
-                  className=""
-                />
+                <MdKeyboardArrowDown/>
               </div>
             </div>
             <div className="flex flex-col gap-y-4 md:w-1/4">
               <p className="md:text-[20px] font-semibold text-black">
                 Chose Location
               </p>
-              <div className="flex justify-between items-center p-4 px-6 bg-[#EFF0F6] rounded-md cursor-pointer w-full">
-                <div className="flex gap-x-4">
-                  <img
-                    src={getImageUrl("location", "svg")}
-                    alt="icon"
-                    className=""
-                  />
+              <div className="relative flex flex-col justify-center items-center py-4 bg-[#EFF0F6] rounded-md cursor-pointer w-full">
+                <button type="button" onClick={()=>{showLocation()}} className="flex items-center justify-center w-full gap-4 px-4">
+                  <SlLocationPin/>
                   <p className="text-xs font-semibold lg:text-base text-secondary">
-                    Purwokerto
+                    {choosedLocation}
                   </p>
-                </div>
-                <img
-                  src={getImageUrl("Forward", "svg")}
-                  alt="icon"
-                  className=""
-                />
-              </div>
-            </div>
-            <div className="md:w-[16%]">
-              <div className="p-4 text-sm text-center rounded-md cursor-pointer text-light bg-primary">
-                Filter
+                  <div className="flex items-end justify-end flex-1">
+                    <MdKeyboardArrowDown className=""/>
+                  </div>
+                </button>
+                  <div className={`${listLocation ? '' : 'hidden'} bg-[#EFF0F6] flex flex-col gap-2 absolute top-10 rounded-md px-4 w-full py-4`}>
+                    {cinemaLocation && cinemaLocation.location && cinemaLocation.location.map((x, i)=>{
+                      return(
+                        <div className="w-full border-b text-secondary hover:border-b hover:border-slate-800" key={i}>
+                          <button onClick={()=>{showLocation(x)}}>{x}</button>
+                        </div>
+                      )
+                    })}
+                  </div>
               </div>
             </div>
           </div>
