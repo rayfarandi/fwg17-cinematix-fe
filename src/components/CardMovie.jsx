@@ -35,6 +35,7 @@ const CardMovie=({nameMovie,genre,image,id})=>{
             <p className="text-[#A0A3BD] px-5 py-2 bg-[#A0A3BD1A] rounded-[20px]">
                 {genre && genre[1]}
             </p>
+
             </div>
         </div>
     )
