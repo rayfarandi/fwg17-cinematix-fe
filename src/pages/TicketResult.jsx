@@ -1,13 +1,30 @@
 import { useState,useEffect } from "react";
-
+import axios from "axios";
 import "../styles/main.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import getImageUrl from "../utils/imageGet";
 import DropdownMobile from "../components/DropdownMobile";
+import { useSelector } from "react-redux";
+import {getMonth} from "../utils/getDate"
+
+const getTicketResult = async (cb, data, token) => {
+  const {data: response} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customer/history-order/ticket`, {params: {
+    orderId : data?.orderId
+  }, headers: {
+    Authorization: `Bearer ${token}`
+  }})
+
+  if(response.success) {
+    cb(response.results)
+  }
+}
 
 function TicketResult() {
+  const token = useSelector(state => state.auth.token)
   const [isDropdownShown, setIsDropdownShow] = useState(false);
+  const [foundTicket, setFoundTicket] = useState({})
+  console.log(foundTicket)
 
   useEffect(()=>{
     window.scrollTo({
@@ -15,6 +32,7 @@ function TicketResult() {
       left:0,
       behavior:'smooth'
     })
+    getTicketResult(setFoundTicket, {orderId: '1'}, token)
   },[])
   return (
     <>
@@ -59,31 +77,31 @@ function TicketResult() {
             <div className="grid grid-cols-2 gap-4 py-10 px-4">
               <div className="flex flex-col gap-y-2">
                 <p className="text-xs text-[#AAA] font-semibold">Movie</p>
-                <p className="text-sm text-dark font-semibold">Spiderman</p>
+                <p className="text-sm text-dark font-semibold">{foundTicket?.MovieTitle}</p>
               </div>
               <div className="flex flex-col gap-y-2">
                 <p className="text-xs text-[#AAA] font-semibold">Category</p>
-                <p className="text-sm text-dark font-semibold">PG-13</p>
+                <p className="text-sm text-dark font-semibold">{foundTicket?.rating}</p>
               </div>
               <div className="flex flex-col gap-y-2">
                 <p className="text-xs text-[#AAA] font-semibold">Date</p>
-                <p className="text-sm text-dark font-semibold">07 Jul</p>
+                <p className="text-sm text-dark font-semibold">{`${foundTicket?.date.toString().slice(8,10)} ${getMonth(foundTicket?.date.toString())}`}</p>
               </div>
               <div className="flex flex-col gap-y-2">
                 <p className="text-xs text-[#AAA] font-semibold">Time</p>
-                <p className="text-sm text-dark font-semibold">2:00pm</p>
+                <p className="text-sm text-dark font-semibold">{foundTicket?.time.toString().slice(12,16)}</p>
               </div>
               <div className="flex flex-col gap-y-2">
                 <p className="text-xs text-[#AAA] font-semibold">Count</p>
-                <p className="text-sm text-dark font-semibold">3 pcs</p>
+                <p className="text-sm text-dark font-semibold">{`${foundTicket?.seatCount} pcs`}</p>
               </div>
               <div className="flex flex-col gap-y-2">
                 <p className="text-xs text-[#AAA] font-semibold">Seats</p>
-                <p className="text-sm text-dark font-semibold">C4, C5, C6</p>
+                <p className="text-sm text-dark font-semibold">{foundTicket?.seatCode.toString()}</p>
               </div>
               <div className="py-2 px-3 border rounded-md flex justify-between col-span-2">
                 <p>Total </p>
-                <p className="font-semibold">$30.00</p>
+                <p className="font-semibold">{`IDR ${foundTicket?.total}`}</p>
               </div>
             </div>
             <div className="flex justify-center gap-x-52 w-full absolute top-52">
