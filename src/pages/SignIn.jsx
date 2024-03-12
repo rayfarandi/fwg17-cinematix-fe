@@ -40,19 +40,20 @@ const SignIn = () => {
 
         try {
             const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, form.toString())
+            setErrMessage('')
             setLoginSuccess(data.message)
-
             setTimeout(() => {
                 setLoginSuccess(false)
                 dispatch(loginAction(data.results.token))
                 navigate('/')
             }, 2000)
         } catch (err) {
-            console.log(err)
             setErrMessage(err.response.data.message)
             setTimeout(() => {
-                setErrMessage(null)
-            }, 2000);
+
+                setErrMessage('')
+            }, 2000)
+
         }
     }
 
@@ -67,7 +68,7 @@ const SignIn = () => {
     return (
         <>
             <header className="relative flex items-center justify-center h-screen font-mulish">
-                <img className="w-screen h-screen object-cover" src={getImageUrl("SignUp", "png")} alt="paginate-hero" />
+                <img className="object-cover w-screen h-screen" src={getImageUrl("SignUp", "png")} alt="paginate-hero" />
                 <div className="absolute inset-0 bg-black opacity-70"></div>
                 <div className=" gap-[10px] w-[50%] absolute flex flex-col justify-center items-center">
                     <img className=" w-[200px] h-[100px]" src={getImageUrl("Cinematix", "svg")} alt="paginate-hero" />
