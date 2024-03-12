@@ -10,6 +10,8 @@ import axios from "axios";
 
 function Movie() {
   const [isDropdownShown, setIsDropdownShow] = useState(false)
+  const [movies, setMovies] = useState([{}])
+  const [search_movie,setSearchMovie] = useState("")
   useEffect(()=>{
     window.scrollTo({
       top:0,
@@ -19,7 +21,7 @@ function Movie() {
     getMovie()
   },[])
 
-  const [movies, setMovies] = useState([{}])
+ 
   const getMovie = async () => {
      const res1 = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {params:{
       status: "now airing"
@@ -27,6 +29,20 @@ function Movie() {
 
     setMovies(res1.data.results)
   }
+
+  const search = async(e) =>{
+    e.preventDefault()
+    try{
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {params:{
+        search : search_movie
+      }})
+      setMovies(res.data.results)
+    }catch(error){
+      console.error("error searching movies",error)
+    }
+  }
+  
+  
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />
@@ -48,18 +64,23 @@ function Movie() {
         <div className="flex flex-col gap-y-5 lg:flex-row lg:gap-x-5">
           <div className="flex flex-col gap-y-4">
             <p className="font-semibold text-secondary">Cari Event</p>
-            <div className="relative">
+            <form onSubmit={search} className="relative">
               <input
                 type="text"
+                name="search_movie"
+                value={search_movie}
+                onChange={(e) => setSearchMovie(e.target.value)}
                 className="border border-[#DEDEDE] py-4 md:py-5 pl-16 pr-[18px] w-full md:w-[340px] rounded-sm outline-none placeholder:text-[#A0A3BD] placeholder:max-sm:text-sm"
                 placeholder="New Born Expert"
               />
+              <button>
               <img
                 src={getImageUrl("Search", "svg")}
                 alt="icon"
                 className="absolute top-5 md:top-6 left-5"
               />
-            </div>
+              </button>
+            </form>
           </div>
           <div className="flex flex-col gap-y-4 lg:gap-y-7">
             <p className="font-semibold text-secondary">Filter</p>
