@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState,useEffect } from "react";
 import { Link, json, useNavigate, useParams } from "react-router-dom";
 import { getMonth } from "../utils/getDate";
@@ -147,12 +148,12 @@ function MovieDetail() {
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />
-      <header className="hidden lg:block w-full h-[415px] font-mulish text-light bg-[url('https://res.cloudinary.com/dgktyg96c/image/upload/v1709685875/sapiderment_fhxbe3gem.png')] relative bg-cover bg-center">
+      <header className="hidden lg:block w-full h-[415px] font-mulish text-light relative bg-cover bg-center" style={{backgroundImage: `url(${movies?.image})`}}>
         <div className="w-full h-full  px-11 xl:px-[130px] absolute bg-black bg-opacity-40"></div>
       </header>
-      <section className="px-5 md:px-11 xl:px-[130px] font-mulish lg:-top-40 lg:relative flex flex-col gap-y-7 mt-10">
+      <section className="px-5 md:px-11 xl:px-[130px] font-mulish lg:-top-36 lg:relative flex flex-col gap-y-7 mt-10">
         <div className="flex flex-col gap-y-4 md:flex-row md:gap-x-5">
-          <img src={movies?.image} alt="movie" />
+          <img className=" w-full h-full md:w-[20rem] md:h-[25rem]" src={movies?.image} alt="movie" />
           <div className="flex flex-col justify-center gap-y-4 lg:justify-end">
             <p className="text-[2rem] text-dark font-bold">{movies?.title}</p>
             <div className="flex flex-row gap-x-2">
