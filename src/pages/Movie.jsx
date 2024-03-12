@@ -22,11 +22,10 @@ function Movie() {
   const [movies, setMovies] = useState([{}])
   const getMovie = async () => {
      const res1 = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {params:{
-      status: "coming soon"
+      status: "now airing"
     }})
 
     setMovies(res1.data.results)
-    console.log(movies)
   }
   return (
     <>
@@ -84,24 +83,15 @@ function Movie() {
         <div className="grid md:grid-cols-3 lg:grid-cols-4 md:gap-5">
 
           
-        {/* {movies && movies.map((item) => (
-                <CardMovie
-                  key={String(item.id)}
-                  nameMovie={item.title}
-                  genre1={item.genre[0]}
-                  genre2={item.genre[1]}
-                  image={item.image}
-                  // id={item.id}
-                />
-              ))} */}
-
-          <CardMovie nameMovie="Black Widow" image="movie1" genre1="Action" genre2="Adventure"></CardMovie>
-          <CardMovie nameMovie="The Withces" image="movie2" genre1="Comedy" genre2="Adventure"></CardMovie>
-          <CardMovie nameMovie="Tenet" image="movie3" genre1="Action" genre2="Sci-Fi">
-          </CardMovie>
-          <CardMovie nameMovie="Spiderman" image="movie4" genre1="Action" genre2="Adventure">
-          </CardMovie>
-          
+          {movies && movies.map((item) => (
+            <CardMovie
+              key={String('movie' + item.id)}
+              nameMovie={item.title}
+              genre={item.genre}
+              image={item.image}
+              id={item.id}
+            />
+          ))}          
           
         </div>
       </section>
