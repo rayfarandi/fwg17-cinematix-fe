@@ -1,15 +1,16 @@
 /* eslint-disable react/prop-types */
-import getImageUrl from "../utils/imageGet";
+// import getImageUrl from "../utils/imageGet";
 import { Link } from "react-router-dom";
-const CardMovie=({nameMovie,genre1,genre2,image,id})=>{
+const CardMovie=({nameMovie,genre,image,id})=>{
+    
     return(
         <div className="flex flex-col gap-y-4">
 
-            <div className="relative w-56 h-fit rounded-md">
+            <div className="relative w-56 rounded-md h-fit">
             <img
-                src={getImageUrl(`${image}`, "png")}
+                src={image}
                 alt="movie"
-                className="w-full h-full"
+                className="w-[264] h-[405] object-cover"
             />
             <div className="absolute inset-0 flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-0 opacity-0 gap-y-3 hover:opacity-100 hover:opac hover:bg-opacity-40">
                 <Link
@@ -29,10 +30,10 @@ const CardMovie=({nameMovie,genre1,genre2,image,id})=>{
             <p className="text-2xl font-semibold text-dark">{nameMovie}</p>
             <div className="flex flex-row gap-x-2">
             <p className="text-[#A0A3BD] px-5 py-2 bg-[#A0A3BD1A] rounded-[20px]">
-                {genre1}
+                {genre && genre[0]}
             </p>
             <p className="text-[#A0A3BD] px-5 py-2 bg-[#A0A3BD1A] rounded-[20px]">
-                {genre2}
+                {genre && genre[1]}
             </p>
             </div>
         </div>
