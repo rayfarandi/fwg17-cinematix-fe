@@ -43,7 +43,7 @@ const router = createBrowserRouter([
     element: (<PrivateRoute> (<PrivateRouteOrder><Payment /></PrivateRouteOrder>)  </PrivateRoute>) 
   },
   {
-    path: "/ticketresult",
+    path: "/ticketresult/:id",
     element: (<PrivateRoute> <TicketResult /> </PrivateRoute>) 
   },
 ]);
