@@ -20,7 +20,7 @@ const CardMovie=({nameMovie,genre,image,id,isCardHome})=>{
                             Details
                         </Link>
                         <Link
-                            to="/movie/1"
+                            to={`/movie/${id}`}
                             className="w-40 p-3 text-sm text-center rounded-md text-light bg-primary focus:ring-2"
                         >
                             Buy Ticket
@@ -42,7 +42,7 @@ const CardMovie=({nameMovie,genre,image,id,isCardHome})=>{
                             Details
                         </Link>
                         <Link
-                            to="/movie/1"
+                            to={`/movie/${id}`}
                             className="w-40 p-3 text-sm text-center rounded-md text-light bg-primary focus:ring-2 "
                         >
                             Buy Ticket
