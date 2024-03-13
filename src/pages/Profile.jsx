@@ -277,6 +277,7 @@ const Profile = () => {
                   category={item.rating}
                   seat={item.seatCode}
                   expired={item.expiredDate}
+                  image={item.cinemaImage}
                   // airingDate={getWholeDate(item.date, item.time)}
                 />
               ))}
