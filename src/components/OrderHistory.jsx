@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 // eslint-disable-next-line react/prop-types
-const OrderHistory = ({id, title, price = '00000000', time, date, paid, used, va, category, seat, expired}) => {
+const OrderHistory = ({id, title, price = '00000000', time, date, paid, used, va, category, seat, expired, image}) => {
 
   const token = useSelector(state => state.auth.token)
   // eslint-disable-next-line react/prop-types
@@ -76,7 +76,7 @@ const OrderHistory = ({id, title, price = '00000000', time, date, paid, used, va
           </div>
 
           <div>
-            <img className="w-32 md:w-60" src={getImageUrl('cineOne21', 'svg')} alt="" />
+            <img className="h-32" src={image} alt="" />
           </div>
         </div>
           
