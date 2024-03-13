@@ -100,7 +100,7 @@ function Order() {
         <section className="px-5 md:px-11 xl:px-[130px] font-mulish mt-10 flex flex-col gap-y-4 lg:flex-row lg:gap-x-4">
           <div className="w-full px-5 py-8 rounded-md lg:w-4/6 bg-light">
             <div className="py-3 px-4 border border-[#DEDEDE] flex flex-col gap-y-4 md:flex-row md:gap-x-6 justify-center rounded-sm">
-              <img src={getImageUrl("spiderman", "png")} alt="movie" />
+              <img className="object-cover w-40 h-24" src={data.movieImage} alt="movie" />
               <div className="flex flex-col gap-y-3">
                 <p className="text-2xl font-semibold text-dark">{data.title}</p>
                 <div className="flex flex-row gap-x-2">
@@ -111,7 +111,7 @@ function Order() {
                   {data.genre[1]}
                   </p>
                 </div>
-                <p className="text-[#121212]">Regular - 13:00 PM</p>
+                <p className="text-[#121212]">{data.time}</p>
               </div>
               <Link
                 to="/"
