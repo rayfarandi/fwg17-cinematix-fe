@@ -7,6 +7,7 @@ import getImageUrl from "../utils/imageGet";
 import DropdownMobile from "../components/DropdownMobile";
 import { useSelector } from "react-redux";
 import {getMonth} from "../utils/getDate"
+import { useParams } from "react-router-dom";
 
 const getTicketResult = async (cb, data, token) => {
   const {data: response} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customer/history-order/ticket`, {params: {
@@ -21,10 +22,31 @@ const getTicketResult = async (cb, data, token) => {
 }
 
 function TicketResult() {
+  const {id} = useParams()
   const token = useSelector(state => state.auth.token)
   const [isDropdownShown, setIsDropdownShow] = useState(false);
   const [foundTicket, setFoundTicket] = useState({})
-  console.log(foundTicket)
+  
+  const getTicket = async () => {
+    const res =await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customer/history-order/ticket?orderId=${id}`, {
+      headers:{
+        Authorization: `Bearer ${token}`
+      }
+    })
+    setFoundTicket(res.data.results)
+  }
+
+  let date
+  let time
+  if(foundTicket.date && foundTicket.time){
+    date = foundTicket.date.slice(8, 10) + ' ' + getMonth(foundTicket.date).slice(0,3)
+    time = foundTicket.time.slice(11, 16)
+  }
+
+  let seatCode
+  if(foundTicket.seatCode){
+    seatCode = foundTicket.seatCode.toString()
+  }
 
   useEffect(()=>{
     window.scrollTo({
@@ -32,16 +54,16 @@ function TicketResult() {
       left:0,
       behavior:'smooth'
     })
-    getTicketResult(setFoundTicket, {orderId: '1'}, token)
+    getTicket()
   },[])
   return (
     <>
       <Navbar isClick={() => setIsDropdownShow(true)} />
-      <section className="flex font-mulish">
+      {foundTicket && <section className="flex font-mulish">
         <div className="lg:w-3/5">
           <div className="w-full h-[920px] font-mulish text-light bg-[url('https://res.cloudinary.com/dgktyg96c/image/upload/v1709686494/acengfull_onjk1kxwb437u6.png')] relative bg-cover bg-center">
-            <div className="w-full h-full absolute bg-black bg-opacity-80">
-              <div className="h-full flex flex-col items-center justify-center gap-y-5 px-16">
+            <div className="absolute w-full h-full bg-black bg-opacity-80">
+              <div className="flex flex-col items-center justify-center h-full px-16 gap-y-5">
                 <div className="flex flex-col gap-y-4">
                   <div>
                     <img
@@ -67,44 +89,44 @@ function TicketResult() {
           </div>
         </div>
         <div className="lg:w-2/5 py-10 lg:py-0 bg-[#A0A3BD33] flex flex-col gap-y-6 justify-center items-center">
-          <div className="bg-light rounded-lg relative">
+          <div className="relative rounded-lg bg-light">
             <img
               src={getImageUrl("qrcode", "png")}
               alt="qrcode"
-              className="py-4 px-6"
+              className="px-6 py-4"
             />
             <div className="w-full border border-dashed"></div>
-            <div className="grid grid-cols-2 gap-4 py-10 px-4">
+            <div className="grid grid-cols-2 gap-4 px-4 py-10">
               <div className="flex flex-col gap-y-2">
                 <p className="text-xs text-[#AAA] font-semibold">Movie</p>
-                <p className="text-sm text-dark font-semibold">{foundTicket?.MovieTitle}</p>
+                <p className="text-sm font-semibold text-dark">{foundTicket?.MovieTitle}</p>
               </div>
               <div className="flex flex-col gap-y-2">
                 <p className="text-xs text-[#AAA] font-semibold">Category</p>
-                <p className="text-sm text-dark font-semibold">{foundTicket?.rating}</p>
+                <p className="text-sm font-semibold text-dark">{foundTicket?.rating}</p>
               </div>
               <div className="flex flex-col gap-y-2">
                 <p className="text-xs text-[#AAA] font-semibold">Date</p>
-                <p className="text-sm text-dark font-semibold">{`${foundTicket?.date.toString().slice(8,10)} ${getMonth(foundTicket?.date.toString())}`}</p>
+                <p className="text-sm font-semibold text-dark">{date}</p>
               </div>
               <div className="flex flex-col gap-y-2">
                 <p className="text-xs text-[#AAA] font-semibold">Time</p>
-                <p className="text-sm text-dark font-semibold">{foundTicket?.time.toString().slice(12,16)}</p>
+                <p className="text-sm font-semibold text-dark">{time}</p>
               </div>
               <div className="flex flex-col gap-y-2">
                 <p className="text-xs text-[#AAA] font-semibold">Count</p>
-                <p className="text-sm text-dark font-semibold">{`${foundTicket?.seatCount} pcs`}</p>
+                <p className="text-sm font-semibold text-dark">{foundTicket?.seatCount}</p>
               </div>
               <div className="flex flex-col gap-y-2">
                 <p className="text-xs text-[#AAA] font-semibold">Seats</p>
-                <p className="text-sm text-dark font-semibold">{foundTicket?.seatCode.toString()}</p>
+                <p className="text-sm font-semibold text-dark">{seatCode}</p>
               </div>
-              <div className="py-2 px-3 border rounded-md flex justify-between col-span-2">
+              <div className="flex justify-between col-span-2 px-3 py-2 border rounded-md">
                 <p>Total </p>
-                <p className="font-semibold">{`IDR ${foundTicket?.total}`}</p>
+                <p className="font-semibold">{foundTicket?.total}</p>
               </div>
             </div>
-            <div className="flex justify-center gap-x-52 w-full absolute top-52">
+            <div className="absolute flex justify-center w-full gap-x-52 top-52">
               <div className="p-4 bg-[#ECEDF2] rounded-full"></div>
               <div className="p-4 bg-[#ECEDF2] rounded-full"></div>
             </div>
@@ -125,7 +147,8 @@ function TicketResult() {
             </button>
           </div>
         </div>
-      </section>
+      </section>}
+      
       <Footer />
       {isDropdownShown && (
         <DropdownMobile isClick={() => setIsDropdownShow(false)} />

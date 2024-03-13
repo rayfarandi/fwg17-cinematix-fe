@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -66,6 +66,18 @@ function PaymentModal( {id} ) {
     copyTextToClipboard()
   };
 
+  const navigate = useNavigate()
+  const checkPaid = async () => {
+    const form = new FormData()
+    form.append("nulify", "nulify")
+    await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/customer/update-paid-status/${id}`, form, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    navigate(`/ticketresult/${id}`)
+  }
+
 
   return (
     <div className="absolute z-10 items-center justify-center h-screen bg-gray-200 opacity-100 font-mulish">
@@ -105,12 +117,12 @@ function PaymentModal( {id} ) {
               </p>
             </div>
             <div className="flex flex-col items-center gap-y-4">
-              <Link
-                to="/ticketresult"
+              <button
+                onClick={checkPaid}
                 className="w-full px-4 py-4 mt-6 font-bold text-center rounded-md text-light bg-primary drop-shadow-xl focus:ring-2"
               >
                 Check Payment
-              </Link>
+              </button>
               <Link to="/" className="font-bold text-primary">
                 Pay Later
               </Link>

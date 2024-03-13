@@ -64,7 +64,7 @@ const OrderHistory = ({id, title, price = '00000000', time, date, paid, used, va
         Authorization: `Bearer ${token}`
       }
     })
-    navigate('/ticketresult')
+    navigate(`/ticketresult/${id}`)
   }
   return (
     <div className={`${title ? '' : 'hidden'} flex items-center justify-center w-full h-auto bg-white mt-14 rounded-3xl`}>
