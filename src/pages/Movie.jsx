@@ -151,7 +151,7 @@ function Movie() {
                     ? "bg-primary text-light"
                     : "text-secondary "
                 } rounded-[10px] cursor-pointer`}
-                onClick={() => submitGenre("Sci fi")}
+                onClick={() => submitGenre("Sci-fi")}
               >
                 Sci-Fi
               </button>

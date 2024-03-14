@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./index.html", "./src/**/*.jsx"],
+  content: ["./index.html", "./src/**/*.jsx", "./node_modules/tailwind-datepicker-react/dist/**/*.js",],
   theme: {
     extend: {
       fontFamily: {
