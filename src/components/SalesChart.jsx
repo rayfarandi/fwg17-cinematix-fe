@@ -1,19 +1,41 @@
 import { Chart } from "chart.js/auto";
 import { Line } from "react-chartjs-2";
 
-// defaults.global.tooltips.enabled = false;
-// defaults.global.legend.position = "bottom";
-
 Chart.defaults.font.size = 13;
 Chart.defaults.font.weight = 500;
 Chart.defaults.font.family = "mulish";
 
-function SalesChart() {
-  const dateArr = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
-  const salesArr = [300, 400, 800, 500, 200, 450];
+function SalesChart({ dateArr = [], salesArr = [] }) {
+  // Generate default labels for x-axis (1-30)
+  const defaultLabels = Array.from({ length: 30 }, (_, index) => index + 1);
+
+  // Set default data for y-axis (Rp0-1000000)
+  const defaultData = Array.from({ length: 30 }, () =>
+    Math.floor(Math.random() * 1000000)
+  );
+
+// Pengecekan tambahan untuk memastikan bahwa dateArr dan salesArr bukan null
+if (!dateArr || !salesArr) {
+  dateArr = defaultLabels;
+  salesArr = defaultData;
+} else {
+  if (dateArr.length === 1) {
+    salesArr = [0, salesArr[0]];
+    dateArr = [0, ...dateArr];
+  } else {
+    // Jika dateArr memiliki lebih dari satu nilai, tambahkan 0 di awal dan akhir salesArr
+    salesArr = [0, ...salesArr];
+    // Tambahan nilai 0 di awal dateArr
+    dateArr = [0, ...dateArr];
+  }
+}
+
+
+
 
   return (
-    <Line
+<>
+<Line
       data={{
         labels: dateArr,
         datasets: [
@@ -41,8 +63,10 @@ function SalesChart() {
           },
           y: {
             ticks: {
-              callback: (value) => "$" + value,
-              stepSize: 200,
+              callback: (value) => "Rp" + value,
+              stepSize: 100000,
+              max: 1000000,
+              min: 0
             },
             beginAtZero: true,
           },
@@ -51,6 +75,7 @@ function SalesChart() {
       height={200}
       width={600}
     />
+</>
   );
 }
 
