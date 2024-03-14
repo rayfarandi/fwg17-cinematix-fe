@@ -307,7 +307,7 @@ function MovieDetail() {
             </p>
             <p className="text-[18px] text-[#8692A6] font-bold">39 Result</p>
           </div>
-          <div className="flex flex-col w-full gap-y-4 md:flex-row md:gap-x-4">
+          <div className="flex flex-col w-full gap-y-4 overflow-hidden md:flex-row md:gap-x-4">
             {cinema && cinema.cinemaId && cinema.cinemaImage && cinema.cinemaId.map((x,i) => {
               const data = {
                 movieCinemaId : cinema.movieCinemaId[i],
@@ -327,20 +327,7 @@ function MovieDetail() {
             )
           })}     
           </div>
-          <div className="flex justify-center font-medium gap-x-2 font-nunito">
-            <p className="text-light bg-primary border border-primary rounded-lg w-[40px] h-[40px] flex justify-center items-center drop-shadow-xl">
-              1
-            </p>
-            <p className="text-[#A0A3BD] border border-[#DEDEDE] rounded-lg w-[40px] h-[40px] flex justify-center items-center">
-              2
-            </p>
-            <p className="text-[#A0A3BD] border border-[#DEDEDE] rounded-lg w-[40px] h-[40px] flex justify-center items-center">
-              3
-            </p>
-            <p className="text-[#A0A3BD] border border-[#DEDEDE] rounded-lg w-[40px] h-[40px] flex justify-center items-center">
-              4
-            </p>
-          </div>
+          
           <div>
             <button
               onClick={getDataOrder}
