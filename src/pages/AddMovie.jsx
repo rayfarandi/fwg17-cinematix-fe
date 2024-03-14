@@ -120,7 +120,7 @@ function AddMovie() {
                             <p>Genre</p>
                             <input type="text" className='bg-input_bg w-full px-3 py-3 outline-none border border-solid border-input_border rounded-md' placeholder='Add movie genre' />
                         </div>
-                        <div className='flex flex-col gap-4 md:flex-row'>
+                        <div className='flex flex-col gap-4 lg:flex-row'>
                             <div id='Release_date' className='md:flex-1'>
                                 <p>Release date</p>
                                 <input type="text" className='bg-input_bg w-full px-3 py-3 outline-none border border-solid border-input_border rounded-md' placeholder='YYYY/MM/DD' />
