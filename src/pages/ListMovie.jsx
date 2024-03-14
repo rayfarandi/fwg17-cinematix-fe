@@ -27,65 +27,6 @@ function ListMovie() {
     "December",
   ]);
 
-//   const [searchParams] = useSearchParams({});
-//   const getMovieUrl =
-//     import.meta.env.VITE_BACKEND_HOST + "/movie?" + searchParams.toString();
-//   const [dataMovie, setDataMovie] = useState([]);
-//   const [metaMovie, setMetaMovie] = useState([]);
- 
-//   useEffect(() => {
-//     getAllMovie(token, getMovieUrl)
-//       .then((res) => {
-//         setDataMovie(res.data.data);
-//         setMetaMovie(res.data.meta);
-//       })
-//       .catch(() => {
-//         setDataMovie([]);
-//       });
-//   }, [searchParams]);
-
-//   const navigate = useNavigate();
-//   const pagination = (page) => {
-//     if (page !== metaMovie.page) {
-//       // const params = searchParams.toString().slice(0, 1) + page;
-//       navigate("/admin/movie?page=" + page);
-//     }
-//   };
-
-//   const renderButtons = () => {
-//     return Array.from({ length: metaMovie.total_page }, (_, index) => (
-//       <button
-//         onClick={() => {
-//           pagination(index + 1);
-//         }}
-//         key={index}
-//         className={` text-light border border-primary rounded-lg w-[40px] h-[40px] flex justify-center items-center drop-shadow-xl ${
-//           index + 1 === metaMovie.page
-//             ? "bg-primary text-white"
-//             : "bg-light text-primary"
-//         }`}
-//       >
-//         {index + 1}
-//       </button>
-//     ));
-//   };
-
-//   const url = import.meta.env.VITE_BACKEND_HOST;
-//   const authAxios = axios.create({
-//     baseURL: url,
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-//   const DeleteHandler = (id) => {
-//     authAxios.delete(`/movie/${id}`).then((res) => {
-//       console.log(res);
-//       authAxios
-//         .get("/admin/movie")
-//         .then((res) => setDataMovie(res.data.data))
-//         .catch((err) => console.log(err));
-//     });
-//   };
 
   return (
     <>
