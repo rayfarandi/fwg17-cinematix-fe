@@ -1,98 +1,143 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Navbar from "../components/Navbar";
 import DropdownMobile from "../components/DropdownMobile";
-import Select from 'react-select';
-
-const options = [
-    { value: 'G', label: 'G',color: '#00B8D9', isFixed: true },
-    { value: 'PG', label: 'PG', color: '#0052CC', isFixed: true  },
-    { value: 'PG-13', label: 'PG-13', color: '#5243AA', isFixed: true  },
-    { value: 'R', label: 'R', color: '#FF5630', isFixed: true  },
-    { value: 'NC-17', label: 'NC-17', color: '#FF8B00', isFixed: true   },
-];
-
-const customStyles = {
-    option: (provided, state) => ({
-        ...provided,
-        backgroundColor: state.isSelected ? state.data.color : null,
-        color: state.isSelected ? 'white' : state.data.color,
-        padding: 10,
-    }),
-    control: (provided) => ({
-        ...provided,
-        width: 'full',
-    }),
-};
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md';
+import { FiClock } from 'react-icons/fi';
+import { RxCross1 } from "react-icons/rx";
+import { TbMovieOff } from "react-icons/tb";
+import { number } from 'prop-types';
 
 function AddMovie() {
     const [isDropdownShown, setIsDropdownShow] = useState(false);
-
+    const token = useSelector(state=>state.auth.token)
     const [image, setImage] = useState("");
     const changeImageHandler = (e) => {
         setImage(e.target.files[0]);
     };
-    // const submitHandler = (e) => {
-    //     e.preventDefault();
-    //     const formData = new FormData();
-    //     formData.append("movie_cover", image);
-    //     formData.append("movie_name", e.target.fullname.value);
-    //     formData.append("genre", e.target.email.value);
-    //     formData.append("release_date", e.target.phone.value);
-    //     formData.append("duration", e.target.password.value);
-    //     formData.append("cast", e.target.address.value);
-    //     formData.append("category", e.target.address.value);
-    //     formData.append("sinopsis", e.target.address.value);
-    //     formData.append("schedules", e.target.address.value);
-    // }
+    const [message, setMessage] = useState('')
 
-    const [dateTimeList, setDateTimeList] = useState([]);
     const [selectedDate, setSelectedDate] = useState('');
-    const [selectedTime, setSelectedTime] = useState('');
-
-
-    const renderTime = (time) => {
-        const hour = parseInt(time.split(':')[0], 10);
-        const ampm = hour >= 12 ? 'pm' : 'am';
-        const displayHour = hour > 12 ? hour - 12 : hour;
-        return `${displayHour}:${time.split(':')[1]}${ampm}`;
-    };
 
     const handleDateChange = (event) => {
         const newDate = event.target.value;
         setSelectedDate(newDate);
     };
 
-    const handleTimeChange = (event) => {
-        const newTime = event.target.value;
-        setSelectedTime(newTime);
-    };
-
-    const handleTimeAdd = () => {
-        if (selectedDate && selectedTime) {
-            const newDateTime = {
-                date: selectedDate,
-                time: selectedTime,
-            };
-
-            setDateTimeList([...dateTimeList, newDateTime]);
-        }
-    };
-    const consol = () => {
-        console.log(dateTimeList)
+    const [listTime, setListTime] = useState([{}])
+    const getTime = async () => {
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/admin/airing-time`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        setListTime(res.data.results)
     }
+
+    const [time, setTime] = useState(false) 
+    const [choosedTime, setChoosedTime] = useState([])
+    const showTime = (x) => {
+        if(!time){
+          setTime(true)
+        }else{
+          setTime(false)
+        }
+        if(x){
+            if(!choosedTime.includes(x)){
+                setChoosedTime([...choosedTime, x])
+            }
+        }
+      }
+
+    const removeTime = (arr, x) => {
+        const filteredArr = arr.filter((str)=>str != x)
+        setChoosedTime(filteredArr)
+    }
+
+      useEffect(()=>{
+        getTime()
+      },[])
+
+      const rating = ['G', 'PG', 'PG-13', 'R', 'NC-17']
+      const [listRating, setListRating] = useState(false)
+      const [choosedRating, setChoosedRating] = useState('Choose Rating')
+      const [ratingId, setRatingId] = useState()
+      const showRating = (x,i) => {
+        if(!listRating){
+          setListRating(true)
+        }else{
+          setListRating(false)
+        }
+        if(x){
+            setChoosedRating(x)
+            setRatingId(i)
+        }
+      }
+
+      const postMovie = async (e) => {
+        e.preventDefault()
+        try{
+            const [file] = e.target.image.files
+            const { value: title } = e.target.title
+            const { value: genre } = e.target.genre
+            const { value: releaseDate } = e.target.releaseDate
+            const { value: dHour } = e.target.dHour
+            const { value: dMinute } = e.target.dMinute
+            const duration = Number(dHour * 60) + Number(dMinute) + ' minutes'
+            const { value: director } = e.target.director
+            const { value: casts } = e.target.casts
+            const { value: sinopsis } = e.target.sinopsis
+            const { value: location } = e.target.location
+            // console.log(ratingId)
+            // console.log(selectedDate)
+            const airingTime = choosedTime.toString()
+
+            const form = new FormData()
+
+            form.append('image', file)
+            form.append('title', title)
+            form.append('genre', genre)
+            form.append('releaseDate', releaseDate)
+            form.append('duration', duration)
+            form.append('director', director)
+            form.append('casts', casts)
+            form.append('sinopsis', sinopsis)
+            form.append('location', location)
+            form.append('ratingId', ratingId)
+            form.append('date', selectedDate)
+            form.append('airingTime', airingTime)
+
+             
+      const {data} = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/admin/add-new-movie`, form, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      setImage('')
+
+      console.log(data)
+
+        }catch(err){
+            console.log(err)
+        }
+      }
     return (
         <>
+        {/* <div className='fixed left-[50%] top-[15%] bg-slate-100 w-40 h-10 text-center items-center flex justify-center -translate-x-[25%]' >ASDASDASD</div> */}
             <Navbar isClick={() => setIsDropdownShow(true)} />
             <main className='bg-gray-300 py-[50px] flex justify-center'>
-                <section className='max-w-[full] w-[70%] bg-white h-full md:p-[50px] p-[20px] rounded-lg'>
-                    <div className='text-sm flex flex-col gap-4'>
+                <section className='max-w-[full] w-[85%] bg-white h-full md:p-[50px] p-[20px] rounded-lg'>
+                    <form id='postForm' onSubmit={postMovie} className='flex flex-col gap-4 text-sm'>
                         <p className='text-xl font-semibold'>Add New Movie</p>
                         <div id='Upload_Image' className='flex flex-col gap-4'>
                             {image ? (
                                 <img
                                     src={URL.createObjectURL(image)}
                                     alt="user-image"
-                                    className="w-20 h-20 rounded-md"
+                                    className="object-cover w-[300px] h-[400px] rounded-md"
                                     name="users_image"
                                 />
                             ) : (
@@ -101,7 +146,7 @@ function AddMovie() {
                             <input
                                 type="file"
                                 id="image"
-                                name="users_image"
+                                name="image"
                                 className="hidden"
                                 onChange={changeImageHandler}
                             />
@@ -112,101 +157,112 @@ function AddMovie() {
                                 Upload
                             </label>
                         </div>
-                        <div id='Movie_Name' onClick={consol}>
+                        <div>
                             <p>Movie Name</p>
-                            <input type="text" className='bg-input_bg w-full px-3 py-3 outline-none border border-solid border-input_border rounded-md' placeholder='Add movie name' />
+                            <input id='title' name='title' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add movie name' />
                         </div>
-                        <div id='Category'>
+                        <div>
                             <p>Genre</p>
-                            <input type="text" className='bg-input_bg w-full px-3 py-3 outline-none border border-solid border-input_border rounded-md' placeholder='Add movie genre' />
+                            <input id='genre' name='genre' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add movie genre' />
                         </div>
                         <div className='flex flex-col gap-4 lg:flex-row'>
-                            <div id='Release_date' className='md:flex-1'>
+                            <div className='md:flex-1'>
                                 <p>Release date</p>
-                                <input type="text" className='bg-input_bg w-full px-3 py-3 outline-none border border-solid border-input_border rounded-md' placeholder='YYYY/MM/DD' />
+                                <input id='releaseDate' name='releaseDate' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='YYYY-MM-DD' />
                             </div>
-                            <div id='Duration'>
+                            <div>
                                 <p>Duration (hour/minutes)</p>
                                 <div className='flex gap-3 '>
-                                    <input type="text" className='bg-input_bg px-3 py-3 w-1/2 outline-none border border-solid border-input_border rounded-md' placeholder='H' />
-                                    <input type="text" className='bg-input_bg px-3 py-3 w-1/2  outline-none border border-solid border-input_border rounded-md' placeholder='M' />
+                                    <input  id='dHour' name='dHour' type="text" className='w-1/2 px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='H' />
+                                    <input id='dMinute' name='dMinute' type="text" className='w-1/2 px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='M' />
                                 </div>
                             </div>
                         </div>
-                        <div id='Director_Name'>
+                        <div>
                             <p>Director Name</p>
-                            <input type="text" className='bg-input_bg w-full px-3 py-3 outline-none border border-solid border-input_border rounded-md' placeholder='Add director name' />
+                            <input  id='director' name='director' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add director name' />
                         </div>
-                        <div id='Cast'>
+                        <div>
                             <p>Cast</p>
-                            <input type="text" className='bg-input_bg w-full px-3 py-3 outline-none border border-solid border-input_border rounded-md' placeholder='Add movie cast' />
+                            <input id='casts' name='casts' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add movie cast' />
                         </div>
-                        <div id='Synopsis'>
+                        <div>
                             <p>Synopsis</p>
-                            <textarea rows="7" cols="0" className='bg-input_bg w-full px-3 py-3 outline-none border border-solid border-input_border rounded-md' placeholder='Add movie synopsis' />
+                            <textarea  id='sinopsis' name='sinopsis' rows="7" cols="0" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add movie synopsis' />
                         </div>
-                        <div id='Location'>
+                        <div>
                             <p>Add Location</p>
-                            <input type="text" className='bg-input_bg w-full px-3 py-3 outline-none border border-solid border-input_border rounded-md' placeholder='Add location' />
+                            <input  id='location' name='location' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add location' />
                         </div>
 
-                        <div id='Date_Time' className='flex flex-col gap-3'>
-                            <p>Set Date & Time</p>
-                            <div id='Date_and_time' className='flex flex-col gap-4'>
-                                <input
-                                    type="date"
-                                    className='bg-backgorund_gray flex px-2 py-2 rounded-md'
-                                    placeholder='add date'
-                                    onChange={handleDateChange}
-                                />
-                                {selectedDate && (
-                                    <div className='flex items-center gap-3 font-semibold'>
-                                        <div
-                                            className='border border-solid border-purple_border px-2 w-fit rounded-md cursor-pointer'
-                                            onClick={handleTimeAdd}
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none">
-                                                <path fillRule="evenodd" clipRule="evenodd" d="M15 6.5625C15.2486 6.5625 15.4871 6.66127 15.6629 6.83709C15.8387 7.0129 15.9375 7.25136 15.9375 7.5V15C15.9375 15.2486 15.8387 15.4871 15.6629 15.6629C15.4871 15.8387 15.2486 15.9375 15 15.9375H7.5C7.25136 15.9375 7.0129 15.8387 6.83709 15.6629C6.66127 15.4871 6.5625 15.2486 6.5625 15C6.5625 14.7514 6.66127 14.5129 6.83709 14.3371C7.0129 14.1613 7.25136 14.0625 7.5 14.0625H14.0625V7.5C14.0625 7.25136 14.1613 7.0129 14.3371 6.83709C14.5129 6.66127 14.7514 6.5625 15 6.5625Z" fill="#5F2EEA" />
-                                                <path fillRule="evenodd" clipRule="evenodd" d="M14.0625 15C14.0625 14.7514 14.1613 14.5129 14.3371 14.3371C14.5129 14.1613 14.7514 14.0625 15 14.0625H22.5C22.7486 14.0625 22.9871 14.1613 23.1629 14.3371C23.3387 14.5129 23.4375 14.7514 23.4375 15C23.4375 15.2486 23.3387 15.4871 23.1629 15.6629C22.9871 15.8387 22.7486 15.9375 22.5 15.9375H15.9375V22.5C15.9375 22.7486 15.8387 22.9871 15.6629 23.1629C15.4871 23.3387 15.2486 23.4375 15 23.4375C14.7514 23.4375 14.5129 23.3387 14.3371 23.1629C14.1613 22.9871 14.0625 22.7486 14.0625 22.5V15Z" fill="#5F2EEA" />
-                                            </svg>
-                                        </div>
-                                        <input
-                                            type="time"
-                                            value={selectedTime}
-                                            onChange={handleTimeChange}
-                                            className='bg-background_gray px-2 py-2 rounded-md'
-                                        />
+                        <div className="relative flex flex-col items-center justify-center py-2 cursor-pointer w-44 roun100d-md bg-slate-100">
+                            <button onClick={()=>{showRating()}} type="button" className="flex items-center justify-center w-full gap-2 px-3">
+                              <TbMovieOff className='text-base text-primary'/>
+                              <p className="font-semibold text-normal text-secondary">
+                                {choosedRating}
+                              </p>
+                              <div className="flex items-end justify-end flex-1">
+                              {listRating ? <MdKeyboardArrowUp/> : <MdKeyboardArrowDown/>}
+
+                              </div>
+                            </button>
+                              <div className={`${listRating ? '' : 'hidden'} bg-slate-100 flex flex-col gap-2 top-8 z-10 rounded-md absolute px-4 w-full py-2`}>
+                                {rating && rating.map((x, i)=>{
+                                    const id = i + 1
+                                  return(
+                                    <div className="w-full text-blue-400 border-b hover:border-b hover:border-slate-800" key={i}>
+                                      <button className="flex justify-start w-full" type="button" onClick={()=>{showRating(x, id)}}>{x}</button>
                                     </div>
-                                )}
-                            </div>
-                            <div className='flex flex-col gap-2'>
+                                  )
+                                })}
+                              </div>
+                        </div>
 
-                                <h2>Stored Date and Time:</h2>
-                                <ul className="list-none p-0 flex gap-2">
-                                    {dateTimeList.map((item, index) => (
-                                        <li key={index} className="inline-block">
-                                            {renderTime(item.time)}
-                                        </li>
-                                    ))}
-                                </ul>
+                        <div className='flex flex-col gap-3'>
+                            <p >Set Date & Time</p>
+                            <div className='flex flex-col gap-4'>
+                                <input id='dates' type="date" className='flex px-2 py-2 border-2 rounded-md outline-none w-44 bg-backgorund_gray' onChange={handleDateChange}/>  
                             </div>
                         </div>
-                        <div className="flex flex-col">
-                            <p>Ratings</p>
-                            <Select
-                                defaultValue={[]}
-                                isMulti
-                                name="colors"
-                                options={options}
-                                styles={customStyles}
-                                className="basic-multi-select"
-                                classNamePrefix="select"
-                            />
+                        <div className="relative flex flex-col items-center justify-center py-2 cursor-pointer w-44 roun100d-md bg-slate-100">
+                            <button onClick={()=>{showTime()}} type="button" className="flex items-center justify-center w-full gap-2 px-3">
+                              <FiClock className='text-primary'/>
+                              <p className="font-semibold text-normal text-secondary">
+                                Choose Time
+                              </p>
+                              <div className="flex items-end justify-end flex-1">
+                              {time ? <MdKeyboardArrowUp/> : <MdKeyboardArrowDown/>}
+
+                              </div>
+                            </button>
+                              <div className={`${time ? '' : 'hidden'} bg-slate-100 flex flex-col gap-2 top-10 rounded-md px-4 w-full pt-4`}>
+                                {listTime && listTime.map((x, i)=>{
+                                    let time
+                                    if(x.time){
+                                        time = x.time.slice(11, 16)
+                                    }
+                                  return(
+                                    <div className="w-full border-b text-secondary hover:border-b hover:border-slate-800" key={i}>
+                                      <button className="flex justify-start w-full" type="button" onClick={()=>{showTime(time)}}>{time}</button>
+                                    </div>
+                                  )
+                                })}
+                              </div>
                         </div>
-                        <button className='bg-primary w-full outline-none flex px-2 py-2 justify-center text-white rounded-md'>
-                            Save Movie
-                        </button>
-                    </div>
+                        <div className='flex flex-col gap-3'>
+                            <p>Selected Time</p>
+                            <div className='flex flex-wrap gap-3'>
+                                {choosedTime && choosedTime.map((x, i)=>{
+                                    return (
+                                        <div key={i} className=''>
+                                            <p  className='flex items-center gap-2 p-2 font-semibold border-2 border-primary text-primary'><button type='button' onClick={()=>{removeTime(choosedTime, x)}} ><RxCross1/></button>{x}</p>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                        <button className='flex justify-center w-full px-2 py-2 text-white rounded-md outline-none bg-primary'> Save Movie </button>
+                    </form>
                 </section>
             </main>
             {isDropdownShown && (
