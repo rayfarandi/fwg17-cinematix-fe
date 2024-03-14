@@ -257,7 +257,7 @@ function Movie() {
         <p className="text-light bg-primary rounded-full w-[40px] h-[40px] flex justify-center items-center">
           1
         </p>
-        <p className="text-[#A0A3BD] bg-[#F9FAFB] rounded-full w-[40px] h-[40px] flex justify-center items-center">
+        {/* <p className="text-[#A0A3BD] bg-[#F9FAFB] rounded-full w-[40px] h-[40px] flex justify-center items-center">
           2
         </p>
         <p className="text-[#A0A3BD] bg-[#F9FAFB] rounded-full w-[40px] h-[40px] flex justify-center items-center">
@@ -265,7 +265,7 @@ function Movie() {
         </p>
         <p className="text-[#A0A3BD] bg-[#F9FAFB] rounded-full w-[40px] h-[40px] flex justify-center items-center">
           4
-        </p>
+        </p> */}
         <p className="bg-primary rounded-full w-[40px] h-[40px] flex justify-center items-center">
           <img src={getImageUrl("arrow-right", "svg")} alt="arrow" />
         </p>

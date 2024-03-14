@@ -14,6 +14,9 @@ import TicketResult from "./pages/TicketResult";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistor, store } from "./redux/store";
+import Dashboard from "./pages/Dashboard";
+import AddMovie from "./pages/AddMovie";
+import ListMovie from "./pages/ListMovie";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +48,21 @@ const router = createBrowserRouter([
   {
     path: "/ticketresult/:id",
     element: (<PrivateRoute> <TicketResult /> </PrivateRoute>) 
+  },
+  {
+    path: "/admin/dashboard",
+    element: (
+      <PrivateRoute> <Dashboard /></PrivateRoute>)
+  },
+  {
+    path: "/admin/addmovie",
+    element: (
+      <PrivateRoute> <AddMovie /></PrivateRoute>)
+  },
+  {
+    path: "/admin/listmovie",
+    element: (
+      <PrivateRoute> <ListMovie /></PrivateRoute>)
   },
 ]);
 
