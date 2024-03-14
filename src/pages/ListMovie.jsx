@@ -7,11 +7,15 @@ import { GoTrash } from "react-icons/go";
 import Navbar from "../components/Navbar";
 import DropdownMobile from "../components/DropdownMobile";
 import getImageUrl from "../utils/imageGet";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { FiCalendar } from "react-icons/fi";
 
 
 function ListMovie() {
   const [isDropdownShown, setIsDropdownShow] = useState(false);
-  const [IsDate, setIsDate] = useState(false);
+  const [isYear, setIsyear] = useState(false);
+  const [isDate, setIsDate] = useState(false);
+  const [year, setYear] = useState('');
   const [date, setDate] = useState("Select month");
   const [dataDate] = useState([
     "January",
@@ -26,6 +30,13 @@ function ListMovie() {
     "October",
     "November",
     "December",
+  ]);
+  const [dataYear] = useState([
+    "2024",
+    "2025",
+    "2026",
+    "2027",
+    "2028"
   ]);
 
 //   const [searchParams] = useSearchParams({});
@@ -98,26 +109,45 @@ function ListMovie() {
             <div className="flex flex-col gap-y-4 md:flex-row md:gap-x-4 md:items-center">
               <div className="relative flex flex-col gap-y-2">
                 <div
-                  className="py-3 px-4 bg-[#EFF0F6] flex justify-beetwen gap-6 md:gap-x-10 rounded-lg items-center cursor-pointer"
-                  onClick={() => setIsDate((state) => !state)}
+                  className="py-3 px-4 bg-[#EFF0F6] flex justify-beetwen gap-3 md:gap-x-6 rounded-lg items-center cursor-pointer"
+                  onClick={() => setIsyear((state) => !state)}
                 >
-                  <img src={getImageUrl("calendar", "svg")} alt="icon" />
+                  <FiCalendar/>
                   <p className="font-semibold text-secondary">{date}</p>
-                  <img src={getImageUrl("Forward", "svg")} alt="icon" />
+                  <MdKeyboardArrowDown/>
                 </div>
-                {IsDate && (
+                {isYear && (
                   <div className="p-4 px-6 bg-[#EFF0F6] rounded-md cursor-pointer w-full absolute top-16 drop-shadow-xl">
                     <div className="flex flex-col gap-y-3">
-                      {dataDate.map((result, i) => (
+                      {dataYear.map((x, i) => (
                         <p
-                          className="font-semibold text-secondary"
+                          className="font-semibold border-b text-secondary hover:border-b hover:border-slate-800"
                           key={i}
                           onClick={() => {
-                            setDate(result);
+                            setYear(x);
+                            setIsyear(false);
+                            setIsDate((state) => !state);
+                          }}
+                        >
+                          {x}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {isDate && (
+                  <div className="p-4 px-6 bg-[#EFF0F6] rounded-md cursor-pointer w-full absolute top-16 drop-shadow-xl">
+                    <div className="flex flex-col gap-y-3">
+                      {dataDate.map((x, i) => (
+                        <p
+                          className="font-semibold border-b text-secondary hover:border-b hover:border-slate-800"
+                          key={i}
+                          onClick={() => {
+                            setDate(x + ' ' + year);
                             setIsDate(false);
                           }}
                         >
-                          {result}
+                          {x}
                         </p>
                       ))}
                     </div>
@@ -125,7 +155,7 @@ function ListMovie() {
                 )}
               </div>
               <Link
-                to="/addmovie"
+                to="/admin/addmovie"
                 className="px-6 py-3 font-bold text-center rounded-lg bg-primary text-light focus:ring-2"
               >
                 Add Movies
