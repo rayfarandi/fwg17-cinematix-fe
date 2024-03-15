@@ -7,7 +7,7 @@ import getImageUrl from "../utils/imageGet";
 import DropdownMobile from "../components/DropdownMobile";
 import { useSelector } from "react-redux";
 import {getMonth} from "../utils/getDate"
-import { useParams } from "react-router-dom";
+import { useParams,Link } from "react-router-dom";
 
 const getTicketResult = async (cb, data, token) => {
   const {data: response} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customer/history-order/ticket`, {params: {
@@ -139,12 +139,15 @@ function TicketResult() {
               <img src={getImageUrl("download", "png")} alt="icon" />
               Download
             </button>
+            <Link to="/profile">
             <button
-              to="/order"
+              
               className="font-bold text-light bg-primary border border-primary py-4 px-24 rounded-md focus:ring-2 w-[357px]"
             >
               Done
             </button>
+            </Link>
+            
           </div>
         </div>
       </section>}
