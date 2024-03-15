@@ -224,12 +224,12 @@ function ListMovie() {
           
             <div className="flex justify-center mt-4font-medium gap-x-2 font-nunito">
             {/* Pagination */}
-            <div className="flex-1 flex justify-center">
-                <ul className="flex gap-5 items-center">
+            <div className="flex justify-center flex-1">
+                <ul className="flex items-center gap-5">
                 {/* Previous data */}
                 {currentPage !== 1 && (
                     <li>
-                    <button onClick={() => changePages(currentPage - 1)} className="px-3 py-3 bg-primary border border-primary rounded-full">
+                    <button onClick={() => changePages(currentPage - 1)} className="px-3 py-3 border rounded-full bg-primary border-primary">
                         Previou
                     </button>
                     </li>
@@ -250,7 +250,7 @@ function ListMovie() {
                 {/* Next data */}
                 {currentPage !== totalPage && (
                     <li>
-                    <button onClick={() => changePages(currentPage + 1)} className="px-3 py-3 bg-primary border border-primary rounded-full">
+                    <button onClick={() => changePages(currentPage + 1)} className="px-3 py-3 text-white border rounded-full bg-primary border-primary">
                     Next
                     </button>
                     </li>

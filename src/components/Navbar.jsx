@@ -70,6 +70,19 @@ function Navbar(props) {
           </div>
         </div>
 
+        {profile && profile.roleId == 2 ? 
+        
+        <div className="nav-mid text-[#0F172A] hidden lg:flex lg:gap-x-[60px]">
+          <Link to="/admin/dashboard" className="text-sm">
+            Dahsboard
+          </Link>
+          <a href="/admin/listmovie" className="text-sm">
+            List Movie
+          </a>
+        </div>
+
+        :
+        
         <div className="nav-mid text-[#0F172A] hidden lg:flex lg:gap-x-[60px]">
           <Link to="/" className="text-sm">
             Home
@@ -78,6 +91,9 @@ function Navbar(props) {
             Movie
           </a>
         </div>
+        }
+
+
         <div className="relative hidden nav-end lg:flex lg:gap-x-4 lg:items-center">
           <button onClick={peekLogout} className="rounded-full">
             <img src={profile?.picture ? profile.picture : getImageUrl("DefaultPfp","jpg")} alt="" className="object-cover w-12 h-12 rounded-full"/>

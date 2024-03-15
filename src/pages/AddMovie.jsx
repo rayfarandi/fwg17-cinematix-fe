@@ -10,13 +10,15 @@ import { TbMovieOff } from "react-icons/tb";
 import { number } from 'prop-types';
 
 function AddMovie() {
+  const [errMessage, setErrMessage] = useState('')
+  const [message, setMessage] = useState('')
     const [isDropdownShown, setIsDropdownShow] = useState(false);
     const token = useSelector(state=>state.auth.token)
     const [image, setImage] = useState("");
     const changeImageHandler = (e) => {
         setImage(e.target.files[0]);
     };
-    const [message, setMessage] = useState('')
+    
 
     const [selectedDate, setSelectedDate] = useState('');
 
@@ -109,24 +111,44 @@ function AddMovie() {
             form.append('airingTime', airingTime)
 
              
-      const {data} = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/admin/add-new-movie`, form, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`
-        }
-      })
+         const {data} = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/admin/add-new-movie`, form, {
+           headers: {
+             'Content-Type': 'multipart/form-data',
+             'Authorization': `Bearer ${token}`
+           }
+         })
+       
+         setImage('')
+       
+         console.log(data)
+       
+         setMessage(data.results.message)
+         setTimeout(() => {
 
-      setImage('')
-
-      console.log(data)
+          setMessage('')
+      }, 2000)
 
         }catch(err){
             console.log(err)
+            setErrMessage(err.response.data.message)
+            setTimeout(() => {
+
+              setErrMessage('')
+          }, 2000)
         }
       }
     return (
         <>
-        {/* <div className='fixed left-[50%] top-[15%] bg-slate-100 w-40 h-10 text-center items-center flex justify-center -translate-x-[25%]' >ASDASDASD</div> */}
+        {
+          message ? 
+          <div className='fixed left-[50%] top-[15%] bg-green-200 text-green-600 px-3 py-2 text-center items-center flex justify-center -translate-x-[50%] rounded-xl' >{message}</div>
+          : ''
+        }
+        {
+          errMessage ? 
+          <div className='fixed left-[50%] top-[15%] bg-red-200 text-red-600  px-3 py-2 text-center items-center flex justify-center -translate-x-[50%] rounded-xl' >{errMessage}</div>
+          : ''
+        }
             <Navbar isClick={() => setIsDropdownShow(true)} />
             <main className='bg-gray-300 py-[50px] flex justify-center'>
                 <section className='max-w-[full] w-[85%] bg-white h-full md:p-[50px] p-[20px] rounded-lg'>
