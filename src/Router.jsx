@@ -17,6 +17,7 @@ import { persistor, store } from "./redux/store";
 import Dashboard from "./pages/Dashboard";
 import AddMovie from "./pages/AddMovie";
 import ListMovie from "./pages/ListMovie";
+import Unauthorized from "./pages/Unauthorized";
 
 const router = createBrowserRouter([
   {
@@ -63,6 +64,11 @@ const router = createBrowserRouter([
     path: "/admin/listmovie",
     element: (
       <PrivateRoute> <ListMovie /></PrivateRoute>)
+  },
+  {
+    path: "/unauthorized",
+    element: <Unauthorized/>
+      
   },
 ]);
 
