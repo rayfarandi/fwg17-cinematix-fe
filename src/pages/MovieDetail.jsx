@@ -203,7 +203,7 @@ function MovieDetail() {
         
         
         
-        {movies.status === 1 ?  (
+        {movies.status === "now airing" ?  (
           <div>
             <div>
           <p className="text-xl md:text-[2rem] text-[#121212] mb-5">
