@@ -31,15 +31,6 @@ const Profile = () => {
     }
   }
 
-  useEffect(() => {
-    // window.scrollTo({
-    //   top: 0,
-    //   left: 0,
-    //   behavior: 'smooth'
-    // })
-    getOrder()
-  }, [])
-
   const dispatch = useDispatch()
   const updateProfile = async (e) => {
     e.preventDefault()
@@ -134,23 +125,42 @@ const Profile = () => {
     }
   }
 
-  const [order, setOrder] = useState([{}])
+  const [order, setOrder] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
+
   const getOrder = async () => {
-    const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customer/history-order`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-    setOrder(res.data.results)
-    console.log(order)
+    setIsLoading(true)
+    setError(null)
+    try{
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/customer/history-order?page=${page}&limit=5`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      setOrder([...order, ...res.data.results])
+    }catch(err){
+      setError(err)
+      console.log(err)
+    }finally{
+      setIsLoading(false)
+    }
   }
 
-  // const [airingDate, setAiringDate] = useState()
-  // setAiringDate(getWholeDate())
+  useEffect(() => {
+    getOrder()
+  }, [page])
 
-  // const debug = () =>{
-  //   console.log(order)
-  // }
+  window.onscroll = function(ev) {
+
+    if ((window.innerHeight + Math.round(window.scrollY)) >= document.body.offsetHeight) {
+        if(!pageSwitch){
+          setPage(page + 1)
+        }
+    }
+};
+
 
   return (
     <>
@@ -210,8 +220,8 @@ const Profile = () => {
           </nav>
 
           <form onSubmit={updateProfile} className={`${pageSwitch ? '' : 'hidden'}`}>
-            <div className=" flex items-center justify-center w-full h-auto bg-white mt-14 rounded-3xl">
-              <div className=" w-11/12 h-4/6">
+            <div className="flex items-center justify-center w-full h-auto bg-white mt-14 rounded-3xl">
+              <div className="w-11/12 h-4/6">
                 <div className="pt-10">Details Information</div>
                 <br />
                 <div className="w-full h-1 bg-lightGrey"></div>
@@ -279,7 +289,7 @@ const Profile = () => {
               </div>
             </div>
 
-            <button className="w-full h-16 text-2xl text-white md:h-20 rounded-xl bg-primary relatve md:w-1/2 flex justify-center items-center">
+            <button className="flex items-center justify-center w-full h-16 text-2xl text-white md:h-20 rounded-xl bg-primary relatve md:w-1/2">
             <p className={`${updateSuccess ? 'block' : 'hidden'} md:-mt-[120px] md:text-[20px] text-[14px] -mt-[100px] absolute font-bold text-[green]`}>{updateSuccess}</p>
               <p className={`${errMessage ? 'block' : 'hidden'} md:-mt-[120px] md:text-[20px] text-[14px] -mt-[100px] absolute  font-bold text-danger`}>{errMessage}</p>
               Update Changes
