@@ -322,7 +322,7 @@ function MovieDetail() {
               price: cinema.cinemaPrice[i]
             }
           return (
-            <div key={x} id={x} className={`flex items-center justify-center h-32 border-2 rounded-md md:w-1/4`}>
+            <div key={x} id={x} className={`flex items-center justify-center h-32 border-2 rounded-md md:w-1/4 overflow-hidden`}>
               <button name="cinemaButton" onClick={()=>{getCinemaId(x, i, data)}} type="button" className="w-full h-full">
                 <div className="flex items-center justify-center w-full h-full p-7">
                   <img src={cinema.cinemaImage[i]} alt={cinema.cinemaImage[i]} />

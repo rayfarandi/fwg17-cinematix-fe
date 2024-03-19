@@ -25,6 +25,7 @@ const Slider = ({ data }) => {
   const handleMouseUp = () => {
     setIsMouseDown(false);
   };
+  // console.log(data)
 
   return (
     <div
@@ -39,11 +40,20 @@ const Slider = ({ data }) => {
       onTouchEnd={handleMouseUp}
       style={{ overflowY: 'hidden' }}
     >
-      {data.map((movie, index) => (
-        <CardMovie isCardHome={true} key={index} {...movie} />
+      {data?.map((movies, index) => (
+        <div key={index}>
+        <CardMovie
+          key={index}
+          {...movies}
+          isCardHomemovieAir={movies.isCardHomemovieAir}
+          isCardHomemovie={movies.isCardHomemovie}
+        />
+
+        </div>
       ))}
+     
     </div>
-  );
-};
+  )
+}
 
 export default Slider;

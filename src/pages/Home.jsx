@@ -9,11 +9,15 @@ import DropdownMobile from "../components/DropdownMobile";
 import Slider from "../components/Slider";
 
 import axios from "axios";
+import Loading from "../components/Loading";
 
 function Home() {
     const [isDropdownShown, setIsDropdownShow] = useState(false)
     const [movies, setMovies] = useState([])
     const [movieAir,setMovieAir] =useState([])
+    const [loadingMovies, setLoadingMovies] = useState(true)
+    const [loadingMoviesAir,setLoadingMoviesAir] = useState(true)
+    
    
   useEffect(() => {
     window.scrollTo({
@@ -31,10 +35,13 @@ function Home() {
         `${import.meta.env.VITE_BACKEND_URL}/movies`,
         { params: { status: "coming soon" } }
       )
-      setMovies(res.data.results)
+      setTimeout(()=>{
+          setMovies(res.data.results)
+          setLoadingMovies(false)
+      },2500)
     } catch (error) {
       console.error("Error fetching movies:", error)
-    }
+    } 
   }
   const getMovieAir = async () => {
     try {
@@ -42,10 +49,14 @@ function Home() {
         `${import.meta.env.VITE_BACKEND_URL}/movies`,
         { params: { status: "now airing" } }
       )
-      setMovieAir(res.data.results)
+      setTimeout(()=>{
+        setMovieAir(res.data.results)
+        setLoadingMoviesAir(false)
+      }, 2500)
+      
     } catch (error) {
       console.error("Error fetching movies:", error)
-    }
+    } 
   }
  
     return (
@@ -111,11 +122,15 @@ function Home() {
                         <span className="text-center text-[32px] text-[#4F5665]">Exciting Movies That Should Be Watch Today</span>
                     </div>
                 </div>
-                
-                <Slider data={movieAir}/>
+                {loadingMoviesAir? (
+                    <div className="flex justify-center mt-10">
+                        <Loading/>
+                    </div>
+                ):(
 
+                <Slider data={movieAir.map(movie => ({ ...movie, isCardHomemovieAir: true }))} />
+                )}
                 
-
                 <div className="flex justify-center ">
                     <Link
                         to="/movie"
@@ -136,9 +151,18 @@ function Home() {
                     </div>
                     
                 </div>
-                <Slider data={movies}
+                {loadingMovies ?(
+                    <div className="flex justify-center mt-10">
+                        <Loading/>
+                    </div>
+                ):(
+                    <Slider data={movies.map(movie => ({ ...movie, isCardHomemovie: true }))} />
+
+                )
+                
+                }
                     
-                />
+                
             </section>
 
             <section className="font-mulish pb-[63px] px-5 md:px-11 xl:px-[130px]">
@@ -174,5 +198,7 @@ function Home() {
         </>
     );
 }
+
+
 
 export default Home;
