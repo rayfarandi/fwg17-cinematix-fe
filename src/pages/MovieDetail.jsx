@@ -200,143 +200,165 @@ function MovieDetail() {
             {movies?.sinopsis}
           </p>
         </div>
-        <div>
+        
+        
+        
+        {movies.status === "now airing" ?  (
+          <div>
+            <div>
           <p className="text-xl md:text-[2rem] text-[#121212] mb-5">
-            Book Tickets
+          Book Tickets
           </p>
           <div className="flex flex-col gap-y-4 md:flex-row md:items-end md:gap-x-4 lg:gap-x-[30px]">
           <div className="flex flex-col gap-y-4 md:w-1/4">
-              <p className="md:text-[20px] font-semibold text-black">
-                Chose Date
-              </p>
-              <div className="relative flex flex-col justify-center items-center py-4 bg-[#EFF0F6] rounded-md cursor-pointer w-full">
-                <button onClick={()=>{showDate()}} type="button" className="flex items-center justify-center w-full gap-4 px-4">
-                  <FiCalendar/>
-                  <p className="text-xs font-semibold lg:text-base text-secondary">
-                  {choosedDate}
-                  </p>
-                  <div className="flex items-end justify-end flex-1">
-                  {listDate ? <MdKeyboardArrowUp/> : <MdKeyboardArrowDown/>}
-                  </div>
-                </button>
-                  <div className={`${listDate ? '' : 'hidden'} bg-[#EFF0F6] flex flex-col gap-2 absolute top-10 rounded-md px-4 w-full py-4`}>
-                    {movieTime && movieTime.map((x, i)=>{
-                      let date
-                      let parsed
-                      let id
-                      if(x?.airingTimeDate){
-                        parsed = JSON.parse(x.airingTimeDate)
-                        date = parsed[0].date
-                        id = parsed[0].dateId
-                      }
-                      return(
-                        <div className="w-full border-b text-secondary hover:border-b hover:border-slate-800" key={i}>
-                          <button className="flex justify-start w-full" type="button" onClick={()=>{showDate(date, id)}}>{date}</button>
-                        </div>
-                      )
-                    })}
-                  </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-y-4 md:w-1/4">
-              <p className="md:text-[20px] font-semibold text-black">
-                Chose Time
-              </p>
-              <div className="relative flex flex-col justify-center items-center py-4 bg-[#EFF0F6] rounded-md cursor-pointer w-full">
-                <button onClick={()=>{showTime()}} type="button" className="flex items-center justify-center w-full gap-4 px-4">
-                  <FiClock/>
-                  <p className="text-xs font-semibold lg:text-base text-secondary">
-                    {choosedTime}
-                  </p>
-                  <div className="flex items-end justify-end flex-1">
-                  {listTime ? <MdKeyboardArrowUp/> : <MdKeyboardArrowDown/>}
-                    
-                  </div>
-                </button>
-                  <div className={`${listTime ? '' : 'hidden'} bg-[#EFF0F6] flex flex-col gap-2 absolute top-10 rounded-md px-4 w-full py-4`}>
-                    {time && time.map((x, i)=>{
-                      let time
-                      let id
-                      if(x.airingTimeId){
-                        time = x.airingTime
-                        time = time.slice(11, 16)
-                        id = x.airingTimeId
-                      }
-                      return(
-                        <div className="w-full border-b text-secondary hover:border-b hover:border-slate-800" key={i}>
-                          <button className="flex justify-start w-full" type="button" onClick={()=>{showTime(time, id)}}>{time}</button>
-                        </div>
-                      )
-                    })}
-                  </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-y-4 md:w-1/4">
-              <p className="md:text-[20px] font-semibold text-black">
-                Chose Location
-              </p>
-              <div className="relative flex flex-col justify-center items-center py-4 bg-[#EFF0F6] rounded-md cursor-pointer w-full">
-                <button type="button" onClick={()=>{showLocation()}} className="flex items-center justify-center w-full gap-4 px-4">
-                  <SlLocationPin/>
-                  <p className="text-xs font-semibold lg:text-base text-secondary">
-                    {choosedLocation}
-                  </p>
-                  <div className="flex items-end justify-end flex-1">
-                  {listLocation ? <MdKeyboardArrowUp/> : <MdKeyboardArrowDown/>}
-                  </div>
-                </button>
-                  <div className={`${listLocation ? '' : 'hidden'} bg-[#EFF0F6] flex flex-col gap-2 absolute top-10 rounded-md px-4 w-full py-4`}>
-                    {cinemaLocation && cinemaLocation.location && cinemaLocation.location.map((x, i)=>{
-                      const id = cinemaLocation.cinemaLocationId[i]
-                      const locId = cinemaLocation.LocationId[i]
-                      return(
-                        <div className="w-full border-b text-secondary hover:border-b hover:border-slate-800" key={i}>
-                          <button className="flex justify-start w-full" type="button" onClick={()=>{showLocation(x, id, locId)}}>{x}</button>
-                        </div>
-                      )
-                    })}
-                  </div>
-              </div>
+            <p className="md:text-[20px] font-semibold text-black">
+              Chose Date
+            </p>
+            <div className="relative flex flex-col justify-center items-center py-4 bg-[#EFF0F6] rounded-md cursor-pointer w-full">
+              <button onClick={()=>{showDate()}} type="button" className="flex items-center justify-center w-full gap-4 px-4">
+                <FiCalendar/>
+                <p className="text-xs font-semibold lg:text-base text-secondary">
+                {choosedDate}
+                </p>
+                <div className="flex items-end justify-end flex-1">
+                {listDate ? <MdKeyboardArrowUp/> : <MdKeyboardArrowDown/>}
+                </div>
+              </button>
+                <div className={`${listDate ? '' : 'hidden'} bg-[#EFF0F6] flex flex-col gap-2 absolute top-10 rounded-md px-4 w-full py-4`}>
+                  {movieTime && movieTime.map((x, i)=>{
+                    let date
+                    let parsed
+                    let id
+                    if(x?.airingTimeDate){
+                      parsed = JSON.parse(x.airingTimeDate)
+                      date = parsed[0].date
+                      id = parsed[0].dateId
+                    }
+                    return(
+                      <div className="w-full border-b text-secondary hover:border-b hover:border-slate-800" key={i}>
+                        <button className="flex justify-start w-full" type="button" onClick={()=>{showDate(date, id)}}>{date}</button>
+                      </div>
+                    )
+                  })}
+                </div>
             </div>
           </div>
-        </div>
-        <div className="flex flex-col items-center gap-y-10">
-          <div className="flex items-center self-start gap-x-7">
-            <p className="md:text-[20px] text-[#121212] font-semibold">
-              Choose Cinema
+          <div className="flex flex-col gap-y-4 md:w-1/4">
+            <p className="md:text-[20px] font-semibold text-black">
+              Chose Time
             </p>
-            <p className="text-[18px] text-[#8692A6] font-bold">39 Result</p>
+            <div className="relative flex flex-col justify-center items-center py-4 bg-[#EFF0F6] rounded-md cursor-pointer w-full">
+              <button onClick={()=>{showTime()}} type="button" className="flex items-center justify-center w-full gap-4 px-4">
+                <FiClock/>
+                <p className="text-xs font-semibold lg:text-base text-secondary">
+                  {choosedTime}
+                </p>
+                <div className="flex items-end justify-end flex-1">
+                {listTime ? <MdKeyboardArrowUp/> : <MdKeyboardArrowDown/>}
+                  
+                </div>
+              </button>
+                <div className={`${listTime ? '' : 'hidden'} bg-[#EFF0F6] flex flex-col gap-2 absolute top-10 rounded-md px-4 w-full py-4`}>
+                  {time && time.map((x, i)=>{
+                    let time
+                    let id
+                    if(x.airingTimeId){
+                      time = x.airingTime
+                      time = time.slice(11, 16)
+                      id = x.airingTimeId
+                    }
+                    return(
+                      <div className="w-full border-b text-secondary hover:border-b hover:border-slate-800" key={i}>
+                        <button className="flex justify-start w-full" type="button" onClick={()=>{showTime(time, id)}}>{time}</button>
+                      </div>
+                    )
+                  })}
+                </div>
+            </div>
+          </div>
+          <div className="flex flex-col gap-y-4 md:w-1/4">
+            <p className="md:text-[20px] font-semibold text-black">
+              Chose Location
+            </p>
+            <div className="relative flex flex-col justify-center items-center py-4 bg-[#EFF0F6] rounded-md cursor-pointer w-full">
+              <button type="button" onClick={()=>{showLocation()}} className="flex items-center justify-center w-full gap-4 px-4">
+                <SlLocationPin/>
+                <p className="text-xs font-semibold lg:text-base text-secondary">
+                  {choosedLocation}
+                </p>
+                <div className="flex items-end justify-end flex-1">
+                {listLocation ? <MdKeyboardArrowUp/> : <MdKeyboardArrowDown/>}
+                </div>
+              </button>
+                <div className={`${listLocation ? '' : 'hidden'} bg-[#EFF0F6] flex flex-col gap-2 absolute top-10 rounded-md px-4 w-full py-4`}>
+                  {cinemaLocation && cinemaLocation.location && cinemaLocation.location.map((x, i)=>{
+                    const id = cinemaLocation.cinemaLocationId[i]
+                    const locId = cinemaLocation.LocationId[i]
+                    return(
+                      <div className="w-full border-b text-secondary hover:border-b hover:border-slate-800" key={i}>
+                        <button className="flex justify-start w-full" type="button" onClick={()=>{showLocation(x, id, locId)}}>{x}</button>
+                      </div>
+                    )
+                  })}
+                </div>
+            </div>
+          </div>
+          </div>
+          </div>
+          <div className="flex flex-col items-center gap-y-10">
+          <div className="flex items-center self-start gap-x-7">
+          <p className="md:text-[20px] text-[#121212] font-semibold">
+            Choose Cinema
+          </p>
+          <p className="text-[18px] text-[#8692A6] font-bold">39 Result</p>
           </div>
           <div className="flex flex-col w-full gap-y-4 overflow-hidden md:flex-row md:gap-x-4">
-            {cinema && cinema.cinemaId && cinema.cinemaImage && cinema.cinemaId.map((x,i) => {
-              const data = {
-                movieCinemaId : cinema.movieCinemaId[i],
-                cinemaName : cinema.cinemaName[i],
-                cinemaImage : cinema.cinemaImage[i],
-                cinemaId: cinema.cinemaId[i],
-                price: cinema.cinemaPrice[i]
-              }
-            return (
-              <div key={x} id={x} className={`flex items-center justify-center h-32 border-2 rounded-md md:w-1/4`}>
-                <button name="cinemaButton" onClick={()=>{getCinemaId(x, i, data)}} type="button" className="w-full h-full">
-                  <div className="flex items-center justify-center w-full h-full p-7">
-                    <img src={cinema.cinemaImage[i]} alt={cinema.cinemaImage[i]} />
-                  </div>
-                </button>
-              </div>
-            )
+          {cinema && cinema.cinemaId && cinema.cinemaImage && cinema.cinemaId.map((x,i) => {
+            const data = {
+              movieCinemaId : cinema.movieCinemaId[i],
+              cinemaName : cinema.cinemaName[i],
+              cinemaImage : cinema.cinemaImage[i],
+              cinemaId: cinema.cinemaId[i],
+              price: cinema.cinemaPrice[i]
+            }
+          return (
+            <div key={x} id={x} className={`flex items-center justify-center h-32 border-2 rounded-md md:w-1/4 overflow-hidden`}>
+              <button name="cinemaButton" onClick={()=>{getCinemaId(x, i, data)}} type="button" className="w-full h-full">
+                <div className="flex items-center justify-center w-full h-full p-7">
+                  <img src={cinema.cinemaImage[i]} alt={cinema.cinemaImage[i]} />
+                </div>
+              </button>
+            </div>
+          )
           })}     
           </div>
-          
+
           <div>
-            <button
-              onClick={getDataOrder}
-              className="px-16 py-5 text-sm rounded-md text-light bg-primary justify-self: center focus:ring-2"
-            >
-              Book Now
-            </button>
+          <button
+            onClick={getDataOrder}
+            className="px-16 py-5 text-sm rounded-md text-light bg-primary justify-self: center focus:ring-2"
+          >
+            Book Now
+          </button>
           </div>
-        </div>
+          </div>
+          </div>
+          
+          ) : (
+          <div>
+            <div>
+              <p className="text-xl md:text-[2rem] text-[#121212] mb-5">
+                Movie Is In Coming on {releaseDate}
+              </p>
+              </div>
+              <Link to="/">
+              <button className="bg-primary hover:bg-secondary text-white font-bold py-2 px-4 rounded">
+                Go Back to Homepage
+              </button></Link>
+              
+          </div>
+          )}
+        
       </section>
       <Footer />
       {isDropdownShown && (

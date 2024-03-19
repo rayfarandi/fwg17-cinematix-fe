@@ -1,11 +1,11 @@
 /* eslint-disable react/prop-types */
 // import getImageUrl from "../utils/imageGet";
 import { Link } from "react-router-dom";
-const CardMovie=({nameMovie,genre,image,id,isCardHome})=>{
+const CardMovie=({nameMovie,genre,image,id,isCardHomemovieAir,isCardHomemovie})=>{
     
     return(
         <div className="flex flex-col gap-y-4 pb-2">
-        {isCardHome ? (
+        {isCardHomemovieAir ? (
                 <div className="relative w-56 h-[21rem] rounded-md">
                     <img
                         src={image}
@@ -27,7 +27,24 @@ const CardMovie=({nameMovie,genre,image,id,isCardHome})=>{
                         </Link>
                     </div>
                 </div>
-            ) : (
+            ) : isCardHomemovie ?(
+                <div className="relative w-56 h-[21rem] rounded-md">
+                    <img
+                        src={image}
+                        alt="movie"
+                        className="w-full h-full"
+                    />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center w-full h-full bg-black bg-opacity-0 opacity-0 gap-y-3 hover:opacity-100 hover:opac hover:bg-opacity-40">
+                        <Link
+                            to={`/movie/${id}`}
+                            className="w-40 p-3 text-sm text-center border rounded-md text-light border-light focus:ring-2"
+                        >
+                            Details
+                        </Link>
+                    </div>
+                </div>
+            
+            ): (
                 <div className="relative w-full h-fit rounded-md ">
                     <img
                         src={image}
