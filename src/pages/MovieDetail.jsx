@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { setOrder } from "../redux/reducer/order";
 
 function MovieDetail() {
+  const [guide, setGuide] = useState('')
   const [isDropdownShown, setIsDropdownShow] = useState(false);
   
   useEffect(()=>{
@@ -125,36 +126,64 @@ function MovieDetail() {
   const navigate = useNavigate()
   const getDataOrder = async () => {
 
-    const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/airing-time-date-id?airingTimeId=${timeId}&dateId=${dateId}`)
-    const res1 = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movie-time-id?airingTimeDateId=${res.data.results.id}&movieCinemaId=${movieCinemaData.movieCinemaId}`)
-
-
-    const data = {
-      title: movies?.title,
-      genre: movies?.genre,
-      time: choosedTime,
-      cinemaName: movieCinemaData.cinemaName,
-      cinemaImage: movieCinemaData.cinemaImage,
-      date: choosedDate,
-      movieTimeId: res1.data.results.id,
-      cinemaLocationId,
-      movieImage: movies?.image,
-      movieId: movies?.id,
-      cinemaId: movieCinemaData.cinemaId,
-      locationId: locationId,
-      airingTimeId: timeId,
-      dateId : dateId,
-      price : movieCinemaData.price,
+    if(!movieCinemaData.cinemaId){
+      setGuide('Please Choose Cinema')
+      setTimeout(() => {
+        setGuide('')
+      }, 2000);
+    }else if(choosedLocation == '---------'){
+      setGuide('Please Choose Location')
+      setTimeout(() => {
+        setGuide('')
+      }, 2000);
+    } else if(choosedDate == '---------'){
+      setGuide('Please Choose Date')
+      setTimeout(() => {
+        setGuide('')
+      }, 2000);
+    }else if(choosedTime == '---------'){
+      setGuide('Please Choose Time')
+      setTimeout(() => {
+        setGuide('')
+      }, 2000);
+    }else{
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/airing-time-date-id?airingTimeId=${timeId}&dateId=${dateId}`)
+      const res1 = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movie-time-id?airingTimeDateId=${res.data.results.id}&movieCinemaId=${movieCinemaData.movieCinemaId}`)
+  
+  
+      const data = {
+        title: movies?.title,
+        genre: movies?.genre,
+        time: choosedTime,
+        cinemaName: movieCinemaData.cinemaName,
+        cinemaImage: movieCinemaData.cinemaImage,
+        date: choosedDate,
+        movieTimeId: res1.data.results.id,
+        cinemaLocationId,
+        movieImage: movies?.image,
+        movieId: movies?.id,
+        cinemaId: movieCinemaData.cinemaId,
+        locationId: locationId,
+        airingTimeId: timeId,
+        dateId : dateId,
+        price : movieCinemaData.price,
+      }
+      dispatch(setOrder(data))
+  
+      if(data.movieTimeId){
+        navigate('/order')
+      }
     }
-    dispatch(setOrder(data))
 
-    if(data.movieTimeId){
-      navigate('/order')
-    }
   }
 
   return (
     <>
+      {guide && 
+        <div className="fixed left-[50%] -translate-x-[50%] bg-red-100 text-red-500 rounded-3xl px-5 h-10 top-[7%] z-50 items-center justify-center flex text-lg b">
+          {guide}
+        </div>
+      }
       <Navbar isClick={() => setIsDropdownShow(true)} />
       <header className="hidden lg:block w-full h-[415px] font-mulish text-light relative bg-cover bg-center" style={{backgroundImage: `url(${movies?.image})`}}>
         <div className="w-full h-full  px-11 xl:px-[130px] absolute bg-black bg-opacity-40"></div>
@@ -312,7 +341,7 @@ function MovieDetail() {
           </p>
           <p className="text-[18px] text-[#8692A6] font-bold">39 Result</p>
           </div>
-          <div className="flex flex-col w-full gap-y-4 overflow-hidden md:flex-row md:gap-x-4">
+          <div className="flex flex-col w-full overflow-hidden gap-y-4 md:flex-row md:gap-x-4">
           {cinema && cinema.cinemaId && cinema.cinemaImage && cinema.cinemaId.map((x,i) => {
             const data = {
               movieCinemaId : cinema.movieCinemaId[i],
@@ -352,7 +381,7 @@ function MovieDetail() {
               </p>
               </div>
               <Link to="/">
-              <button className="bg-primary hover:bg-secondary text-white font-bold py-2 px-4 rounded">
+              <button className="px-4 py-2 font-bold text-white rounded bg-primary hover:bg-secondary">
                 Go Back to Homepage
               </button></Link>
               

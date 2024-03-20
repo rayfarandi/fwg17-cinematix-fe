@@ -29,6 +29,7 @@ const getReservedSeat = async (cb, data, token) => {
 }
 
 function Order() {
+  const [guide, setGuide] = useState('')
   const data = useSelector(state => state.order.data)
   const token = useSelector(state => state.auth.token)
   const [isDropdownShown, setIsDropdownShow] = useState(false);
@@ -54,6 +55,12 @@ function Order() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const getDataOrder = () => {
+    if(choosedSeat.length < 1){
+      setGuide('Please Choose Your Seat')
+      setTimeout(() => {
+        setGuide('')
+      }, 2000);
+    }
     const seatCode = choosedSeat.toString()
     const totalSeat = choosedSeat.length
     const total = totalPrice
@@ -69,6 +76,11 @@ function Order() {
 
   return (
     <>
+    {guide && 
+      <div className="fixed left-[50%] -translate-x-[50%] bg-red-100 text-red-500 rounded-3xl px-5 h-10 top-[7%] z-50 items-center justify-center flex text-lg b">
+        {guide}
+      </div>
+    }
       <Navbar isClick={() => setIsDropdownShow(true)} />
       <section className="bg-[#A0A3BD33] py-10 order-scrollbar">
         <section className="flex items-center justify-center w-full font-mulish">
