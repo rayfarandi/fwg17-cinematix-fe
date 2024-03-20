@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import getImageUrl from "../utils/imageGet";
 import DropdownMobile from "../components/DropdownMobile";
 import CardMovie from"../components/CardMovie"
+import Loading from "../components/Loading";
 import axios from "axios";
 
 function Movie() {
@@ -14,6 +15,9 @@ function Movie() {
   const [search_movie,setSearchMovie] = useState("")
   const [genre, setGenre] = useState("")
   const [isGenre, setIsGenre] = useState(false)
+  const [loadingMovie,setLoadingMovie] = useState(true)
+  const [errorMovie,setErrorMovie] = useState(false)
+
   useEffect(()=>{
     window.scrollTo({
       top:0,
@@ -25,35 +29,63 @@ function Movie() {
 
  
   const getMovie = async () => {
-     const res1 = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {params:{
-      status: "now airing"
-    }})
-
-    setMovies(res1.data.results)
+    setLoadingMovie(true)
+    try{
+      const resAll = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {params:{
+       status: "now airing"
+     }})
+      if(resAll.data.success && resAll.data.results.length === 0){ //jika api mengembalikan aray kosong
+        setErrorMovie("All movie not Found")
+      }else{
+        setLoadingMovie(false)
+        setMovies(resAll.data.results)
+      }
+    }catch(error){
+      console.error("no Movie",error)
+      setErrorMovie("Failed to fatch get movie") // jika link or endpoint tidak berfungsi
+    }
+    setLoadingMovie(false)
   }
+
 
   const search = async(e) =>{
     e.preventDefault()
+    setLoadingMovie(true)
     try{
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {params:{
-        search : search_movie
+        search : search_movie,
+        status: "now airing"
       }})
-      setMovies(res.data.results)
+      if (res.data.results.length === 0 ){
+        setErrorMovie("No movie found")
+      } else{
+        setMovies(res.data.results)
+        setErrorMovie(null)
+      }
     }catch(error){
       console.error("error searching movies",error)
     }
+    setLoadingMovie(false)
   }
 
   const filterByGenre = async (selectedGenre) => {
+    setLoadingMovie(true)
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {
-        params: { filter: selectedGenre }
-      });
-      setMovies(res.data.results);
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {params:{
+        filter: selectedGenre, 
+        status: "now airing" 
+      }})
+      if (res.data.results.length === 0 ){
+        setErrorMovie("No movie found")  
+      }else{
+        setMovies(res.data.results)
+        setErrorMovie(null)
+      }
     } catch (error) {
-      console.error("Error filtering movies by genre:", error);
+      console.error("Error filtering movies by genre:", error)
     }
-  };
+    setLoadingMovie(false)
+  }
 
   const submitGenre = (selectedGenre) => {
     setGenre(selectedGenre);
@@ -238,9 +270,20 @@ function Movie() {
         </div>
       </section>
       <section className="pb-[63px] px-5 md:px-11 xl:px-[130px] font-mulish">
-        <div className="grid md:grid-cols-3 lg:grid-cols-4 md:gap-5">
+        
+        
+        {loadingMovie?(
+          <div className="flex justify-center mt-10">
+            <Loading/>
+          </div>
+        ): errorMovie?(<div role="alert" className="alert alert-error">
+        <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+        <span>{errorMovie}</span>
+        </div>
+        ):(
+          <>
+          <div className="grid md:grid-cols-3 lg:grid-cols-4 md:gap-5">
 
-          
           {movies && movies.map((item) => (
             <CardMovie
               key={String('movie' + item.id)}
@@ -250,8 +293,12 @@ function Movie() {
               id={item.id}
             />
           ))}          
+          </div>
+          </>
+        )}
           
-        </div>
+          
+        
       </section>
       <section className="pb-[63px] flex gap-x-5 justify-center font-nunito font-medium">
         <p className="text-light bg-primary rounded-full w-[40px] h-[40px] flex justify-center items-center">
