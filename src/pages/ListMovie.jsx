@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Link, Navigate, useNavigate } from "react-router-dom"; // Tambahkan useHistory
+import { Link} from "react-router-dom"
 import { SlPencil } from "react-icons/sl";
 import { IoEyeOutline } from "react-icons/io5";
 import { GoTrash } from "react-icons/go";
 
 import Navbar from "../components/Navbar";
 import DropdownMobile from "../components/DropdownMobile";
+import Loading from "../components/Loading";
 import axios from "axios";
 
 import { MdKeyboardArrowDown } from "react-icons/md";
@@ -17,7 +18,7 @@ function ListMovie() {
   const [isDate, setIsDate] = useState(false);
   const [date, setDate] = useState();
   const token = useSelector((state) => state.auth.token);
-  const navigate = useNavigate()
+
 
   const [movies, setMovies] = useState([{}]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -27,6 +28,7 @@ function ListMovie() {
   const [errMessage, setErrMessage] = useState(null)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedMovieId, setSelectedMovieId] = useState(null)
+  const [loadingMovie,setLoadingMovie] = useState(true)
   
 
   const [dataDate] = useState([
@@ -60,9 +62,8 @@ function ListMovie() {
   const handleDelete = async () => {
     try {
       await deleteMovie(selectedMovieId);
-      handleCloseDeleteModal() // Tutup modal setelah penghapusan berhasil
-      // Navigasi pengguna ke halaman beranda menggunakan useNavigate
-      navigate("/admin/listmovie")
+      handleCloseDeleteModal() // Tutup modal setelah 
+      window.location.reload() // Reload setelah delete
     } catch (error) {
       console.error("error delete movie", error)
     }
@@ -81,6 +82,7 @@ function ListMovie() {
     });
 
     async function getMovie() {
+      setLoadingMovie(true)
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/admin/list-movies`,
@@ -111,10 +113,11 @@ function ListMovie() {
         setPagesArr([]);
         setErrMessage("No movies found.");
       }
+      setLoadingMovie(false)
     }
 
     getMovie();
-  }, [currentPage, date, token,navigate]);
+  }, [currentPage, date, token]);
 
   const deleteMovie = async (id) => {
     try {
@@ -127,7 +130,6 @@ function ListMovie() {
           },
         }
       )
-      getMovie()
     } catch (error) {
       console.error("error delete movie", error)
     }
@@ -196,39 +198,47 @@ function ListMovie() {
 
               <div className="mt-4">
                 <div className="flex flex-col justify-between gap-3 text-sm text-center">
-                  {movies.map((movie, index) => (
-                    <div key={index} className="flex justify-between gap-3 text-sm text-center">
-                      <div className="text-[#1F4173] w-6 flex items-center justify-center">{index + 1}</div>
-                      <div className="flex items-center justify-center w-24 rounded-lg">
-                        <img src={movie.image} alt="Thumbnail" className="object-cover w-10 h-8 rounded-lg" />
-                      </div>
-                      <div className="flex items-center justify-center w-60 lg:w-0 lg:flex-1 text-primary">{movie.title}</div>
-                      <div className="text-[#1F4173] flex w-60 lg:w-0 lg:flex-1 items-center justify-center">
-                        {movie.genre && movie.genre.join(", ")}
-                      </div>
-                      <div className="text-[#1F4173] w-52 lg:w-0 lg:flex-1 flex items-center justify-center">
-                        {(movie.releaseDate)?.toLocaleString().split("T")[0].split("-").reverse().join("-")}
-                      </div>
-                      <div className="text-[#1F4173] w-52 lg:w-0 lg:flex-1 flex items-center justify-center">
-                        {movie.duration}
-                      </div>
-                      <div className="flex items-center justify-center w-32 gap-3">
-                        <Link to={`/movie/${movie.id}`}>
-                          <button className="flex items-center justify-center w-6 h-6 rounded-md bg-primary">
-                            <IoEyeOutline className="text-white" />
-                          </button>
-                        </Link>
+                {loadingMovie ? ( 
+                <div className="flex justify-center items-center">
+                <Loading/>
+                </div>
+                  ) : (
+                    <>
+                      {movies.map((movie, index) => (
+                        <div key={index} className="flex justify-between gap-3 text-sm text-center">
+                          <div className="text-[#1F4173] w-6 flex items-center justify-center">{index + 1}</div>
+                          <div className="flex items-center justify-center w-24 rounded-lg">
+                            <img src={movie.image} alt="Thumbnail" className="object-cover w-10 h-8 rounded-lg" />
+                          </div>
+                          <div className="flex items-center justify-center w-60 lg:w-0 lg:flex-1 text-primary">{movie.title}</div>
+                          <div className="text-[#1F4173] flex w-60 lg:w-0 lg:flex-1 items-center justify-center">
+                            {movie.genre && movie.genre.join(", ")}
+                          </div>
+                          <div className="text-[#1F4173] w-52 lg:w-0 lg:flex-1 flex items-center justify-center">
+                            {(movie.releaseDate)?.toLocaleString().split("T")[0].split("-").reverse().join("-")}
+                          </div>
+                          <div className="text-[#1F4173] w-52 lg:w-0 lg:flex-1 flex items-center justify-center">
+                            {movie.duration}
+                          </div>
+                          <div className="flex items-center justify-center w-32 gap-3">
+                            <Link to={`/movie/${movie.id}`}>
+                              <button className="flex items-center justify-center w-6 h-6 rounded-md bg-primary">
+                                <IoEyeOutline className="text-white" />
+                              </button>
+                            </Link>
 
-                        <button className="flex items-center justify-center w-6 h-6 rounded-md cursor-pointer bg-secondary">
-                          <SlPencil className="text-white" />
-                        </button>
+                            <button className="flex items-center justify-center w-6 h-6 rounded-md cursor-pointer bg-secondary">
+                              <SlPencil className="text-white" />
+                            </button>
 
-                        <button onClick={() => handleOpenDeleteModal(movie.id)} className="flex items-center justify-center w-6 h-6 rounded-md cursor-pointer bg-danger">
-                          <GoTrash className="text-white" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                            <button onClick={() => handleOpenDeleteModal(movie.id)} className="flex items-center justify-center w-6 h-6 rounded-md cursor-pointer bg-danger">
+                              <GoTrash className="text-white" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  )}
                 </div>
               </div>
             </div>
