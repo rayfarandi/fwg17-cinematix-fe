@@ -186,7 +186,8 @@ function Payment() {
               </div>
             </div>
             <button
-              className="w-full px-4 py-4 mt-10 font-bold text-center rounded-md text-light bg-primary drop-shadow-xl focus:ring-2"
+            disabled={!paymentId}
+              className="w-full px-4 py-4 mt-10 font-bold text-center rounded-md text-light bg-primary disabled:bg-slate-500 drop-shadow-xl focus:ring-2"
               onClick={processOrder}
             >
               Pay Your Order
