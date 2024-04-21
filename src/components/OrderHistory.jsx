@@ -90,7 +90,7 @@ const OrderHistory = ({id, title, price = '00000000', time, date, paid, used, va
                   <div className={`${paid ? 'text-blue-600 bg-blue-300' : 'text-red-600 bg-red-300'} flex items-center justify-center w-full h-12 text-xl md:h-14 md:w-0 md:flex-1 rounded-xl`}>{paid ? 'Paid' : 'Not Paid'}</div>
                 </div>
                 <div htmlFor="confirmPassword" className="flex items-center justify-center w-full gap-1 md:gap-3 md:justify-end md:w-1/5">
-                  <button onClick={()=>{showDetails(`detail` + id)}} className="flex mt-5 text-2xl text-center md:text-right text-slate-400 md:mt-0">Show Details {arrowDown ? <MdKeyboardArrowDown className="text-4xl text-slate-400"/> : <MdKeyboardArrowUp className="text-4xl text-slate-400"/>}  </button> 
+                  <button onClick={()=>{showDetails(`detail` + id)}} className="flex mt-5 text-lg text-center md:text-right text-slate-400 md:mt-0">Show Details {arrowDown ? <MdKeyboardArrowDown className="text-4xl text-slate-400"/> : <MdKeyboardArrowUp className="text-4xl text-slate-400"/>}  </button> 
                 </div>
 
               </div>
@@ -145,7 +145,7 @@ const OrderHistory = ({id, title, price = '00000000', time, date, paid, used, va
                     <div className="flex gap-10">
                       <div className="w-1/4 h-12 overflow-hidden text-ellipsis whitespace-nowrap">
                         <p className="text-slate-400">Movie</p>
-                        <p className="text-elipsis">Spiderman: Homecoming</p>
+                        <p className="text-elipsis">{title}</p>
                       </div>
                       <div className="w-1/4 h-12 overflow-hidden text-ellipsis whitespace-nowrap">
                         <p className="text-slate-400">Date</p>

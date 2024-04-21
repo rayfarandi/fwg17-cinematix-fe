@@ -89,14 +89,14 @@ function TicketResult() {
           </div>
         </div>
         <div className="lg:w-2/5 py-10 lg:py-0 bg-[#A0A3BD33] flex flex-col gap-y-6 justify-center items-center">
-          <div className="relative rounded-lg bg-light">
+          <div className="relative rounded-lg bg-light flex flex-col items-center">
             <img
               src={getImageUrl("qrcode", "png")}
               alt="qrcode"
               className="px-6 py-4"
             />
             <div className="w-full border border-dashed"></div>
-            <div className="grid grid-cols-2 gap-4 px-4 py-10">
+            <div className="grid grid-cols-2 gap-4 px-4 py-10 w-full">
               <div className="flex flex-col gap-y-2">
                 <p className="text-xs text-[#AAA] font-semibold">Movie</p>
                 <p className="text-sm font-semibold text-dark">{foundTicket?.MovieTitle}</p>

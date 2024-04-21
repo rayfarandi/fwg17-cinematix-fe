@@ -11,9 +11,8 @@ import { setProfile } from "../redux/reducer/profile";
 
 const Profile = () => {
   const [peekPassword, setPeekPassword] = useState(true)
+  const [peekConfirmPassword, setPeekConfirmPassword] = useState(true)
   const [pageSwitch, setPageSwitch] = useState(true)
-  const [updateSuccess, setUpdateSuccess] = useState(null)
-  const [errMessage, setErrMessage] = useState(null)
 
 
   let x = ''
@@ -23,67 +22,82 @@ const Profile = () => {
     x = profile.phoneNumber.slice(3)
   }
 
-  const peek = () => {
-    if (!peekPassword) {
-      setPeekPassword(true)
-    } else {
-      setPeekPassword(false)
-    }
-  }
-
   const dispatch = useDispatch()
-  const updateProfile = async (e) => {
-    e.preventDefault()
 
+  const [updateSuccess, setUpdateSuccess] = useState()
+  const [errMessage, setErrMessage] = useState()
+  const [loadingUpdate, setLoadingUpdate] = useState()
+  const updateProfile = async (event) => {
+    event.preventDefault()
 
-    const form = new FormData()
+    const form = new URLSearchParams()
     const fields = ['firstName', 'lastName', 'email', 'phoneNumber', 'password']
 
-    let y = ''
+    if(event.target.password.value && event.target.password.value !== event.target.confirmPassword.value){
+        setErrMessage("confirm password does not match!")
+        setTimeout(() => {
+          setErrMessage(null)
+        }, 3000);
+        return
+    }
+
+
     fields.forEach((field) => {
       if (profile && event.target[field].value && profile[field] !== event.target[field].value) {
-        if (field == 'phoneNumber' && event.target[field].value != x) {
-          y = "+62" + event.target[field].value
-
-          x = '' + event.target[field].value
+        if(field === "phoneNumber" && event.target[field].value != x){
+          const y = "+62" + event.target[field].value
           form.append(field, y)
-        } else if (field == 'password') {
-          if (event.target[field].value && event.target[field].value == event.target.confirmPassword.value) {
-            form.append(field, event.target[field].value)
-            event.target[field].value = ''
-            event.target.confirmPassword.value = ''
-          } else {
-            console.log('missed')
-          }
-        } else {
+          console.log(field, y)
+        }else if (field === "phoneNumber" && event.target[field].value == x){
+          return
+        }else{
           form.append(field, event.target[field].value)
         }
       }
     })
 
+    if(form.size == 0){
+      setErrMessage("No data has been modified!")
+      setTimeout(() => {
+        setErrMessage(null)
+      }, 3000);
+      return
+    }
+
+    setLoadingUpdate("loading")
+
     try {
-      const { data } = await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/customer/profile`, form, {
+      const { data } = await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/customer/profile`, form.toString(), {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/x-www-form-urlencoded',
           'Authorization': `Bearer ${token}`
         }
       })
 
-      if (data.results) {
-        dispatch(setProfile(data.results))
-      }
+      setLoadingUpdate(null)
+
+
+      dispatch(setProfile(data.results))
       setUpdateSuccess(data.message)
       setTimeout(() => {
         setUpdateSuccess(null)
-      }, 2000);
+      }, 3000);
       setErrMessage(null)
+
+      if(event.target.password.value || event.target.confirmPassword.value){
+        event.target.password.value = ''
+        event.target.confirmPassword.value = ''
+      }
+
     } catch (err) {
+      setLoadingUpdate(null)
       setErrMessage(err.response.data.message)
       setTimeout(() => {
         setErrMessage(null)
-      }, 2000);
+      }, 3000);
     }
   }
+
 
   const [preview, setPreview] = useState()
   const changePicture = (e) => {
@@ -91,13 +105,40 @@ const Profile = () => {
     setPreview(pictureUrl)
   }
 
+
+  const [uploadSuccess, setUploadSuccess] = useState()
+  const [errUpload, setErrUpload] = useState()
+  const [loadingUpload, setLoadingUpload] = useState()
+  const fileType = ["image/png","image/jpeg","image/jpg",]
   const uploadPhoto = async (e) => {
     if (e) {
       e.preventDefault()
 
     }
+    const [file] = e.target.picture.files
+    if(file.size > 2 * 1024 * 1024){
+      setErrUpload("File too large. Maximum size is 2MB!")
+      setTimeout(() => {
+        setErrUpload(null)
+      }, 3000);
+
+      return
+    }
+
+
+
+    if(!fileType.includes(file.type)){
+      setErrUpload("Extension not support!")
+      setTimeout(() => {
+        setErrUpload(null)
+      }, 3000);
+
+      return
+    }
+
+    
+    setLoadingUpload("loading")
     try {
-      const [file] = e.target.picture.files
       if (file) {
         const form = new FormData()
         form.append('picture', file)
@@ -107,21 +148,24 @@ const Profile = () => {
             'Authorization': `Bearer ${token}`
           }
         })
+        
+        setLoadingUpload(null)
 
         dispatch(setProfile(data.results))
         setPreview(null)
-        setUpdateSuccess(data.message)
+        setUploadSuccess(data.message)
         setTimeout(() => {
-          setUpdateSuccess(null)
-        }, 2000);
+          setUploadSuccess(null)
+        }, 3000);
         setErrMessage(null)
       }
 
     } catch (err) {
-      setErrMessage(err.response.data.message)
+      setLoadingUpload(null)
+      setErrUpload(err.response.data.message)
       setTimeout(() => {
-        setErrMessage(null)
-      }, 2000);
+        setErrUpload(null)
+      }, 3000);
     }
   }
 
@@ -129,6 +173,7 @@ const Profile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
+  console.log(order)
 
   const getOrder = async () => {
     setIsLoading(true)
@@ -142,7 +187,6 @@ const Profile = () => {
       setOrder([...order, ...res.data.results])
     }catch(err){
       setError(err)
-      console.log(err)
     }finally{
       setIsLoading(false)
     }
@@ -168,28 +212,33 @@ const Profile = () => {
 
       {/* <button onClick={debug}>---------------------ADSAHSFGASD</button> */}
 
-      <section className="flex flex-col w-full h-auto md:flex-col bg-lightGrey lg:flex-row">
+      <section className="flex flex-col w-full h-auto md:flex-col bg-lightGrey lg:flex-row py-8">
      
-        <aside className="flex items-center justify-center h-screen px-5 py-8 lg:w-96 lg:px-0">
-          <div className="flex flex-col items-center justify-center w-full h-full px-4 bg-white lg:w-4/5 rounded-3xl">
-            <div className="flex flex-col justify-center w-11/12 gap-5 px-3 h-2/4">
+        <aside className="flex items-center justify-center px-5 lg:w-96 h-fit lg:px-0">
+          <div className="flex flex-col items-center justify-center w-full h-fit px-4 py-4 bg-white lg:w-4/5 rounded-3xl lg:gap-6">
+            <div className="flex flex-col justify-center w-11/12 px-3 h-2/4 gap-5">
               <div className="flex items-center justify-between">
                 <div className="leading-3 text-grey ">INFO</div>
                 <button className="text-4xl leading-3 text-secondary">⋅⋅⋅</button>
               </div>
               <label htmlFor="picture">
-                <form onSubmit={uploadPhoto} className="flex flex-col items-center justify-center">
+                <form onSubmit={uploadPhoto} className="flex flex-col items-center justify-center gap-2">
                   <input multiple={false} onChange={changePicture} type="file" name="picture" id="picture" className="hidden" />
                   <img src={preview ? preview : profile?.picture ? profile.picture : getImageUrl("DefaultPfp", "jpg")} alt="profileImage" className="object-cover w-32 h-32 bg-black rounded-full" />
-                  <div className={`${!preview ? 'hidden' : ''} flex w-full gap-4 mt-4`}>
-                    <button type="submit" className={`bg-[#77de62] rounded h-10 flex items-center justify-center gap-1 flex-1`}><IoCheckmark /> Confirm</button>
-                    <button type="reset" onClick={() => { setPreview() }} className={`bg-[#f05d5d] rounded h-10 flex gap-1 items-center justify-center flex-1`}><FaTimes /> Cancel</button>
+                  <div className={` ${!preview ? 'hidden' : 'flex'} w-full gap-4 mt-4`}>
+                    <button disabled={loadingUpload} type="submit" className={`bg-[#77de62] rounded h-10 flex items-center justify-center gap-1 flex-1 active:scale-95 transition-all disabled:active:scale-100`}><IoCheckmark /> Confirm</button>
+                    <button disabled={loadingUpload} type="reset" onClick={() => { setPreview() }} className={`bg-[#f05d5d] rounded h-10 flex gap-1 items-center justify-center flex-1 active:scale-95 transition-all disabled:active:scale-100`}><FaTimes /> Cancel</button>
+                  </div>
+                  <div className="">
+                  <p className={`${uploadSuccess ? 'block' : 'hidden'} text-[green] text-sm`}>{uploadSuccess}</p>
+                  <p className={`${errUpload ? 'block' : 'hidden'} text-danger text-sm`}>{errUpload}</p>
+                  <p className={`${loadingUpload ? 'block' : 'hidden'} text-primary text-base`}>{loadingUpload}</p>
                   </div>
                 </form>
               </label>
-              <div className="text-2xl font-semibold text-center">
+              <div className="text-2xl font-semibold text-center ">
                 {profile?.firstName} {profile?.lastName} <br />
-                <span className="text-xl text-grey">Moviegoers</span>
+                <span className="text-lg text-grey">Moviegoers</span>
               </div>
             </div>
 
@@ -212,7 +261,7 @@ const Profile = () => {
           </div>
         </aside>
 
-        <section className={`flex-1 px-5 py-8 lg:pr-10`}>
+        <section className={`flex-1 px-5 lg:pr-10`}>
         
           <nav className="flex w-full h-24 gap-5 px-5 text-xl bg-white md:px-16 md:gap-20 rounded-3xl">
             <button className={pageSwitch ? 'border-b-4  border-primary' : ''} onClick={() => { setPageSwitch(true) }}>Account Setting</button>
@@ -271,15 +320,15 @@ const Profile = () => {
                       <label htmlFor="password" className="relative flex-1">
                         <p>Password</p> <br />
                         <input placeholder="Write your password" type={peekPassword ? 'password' : 'text'} id="password" name="password" autoComplete="off" className="w-full px-8 ml-auto border outline-none h-14 border-slate-300 bg-slate-100 rounded-xl" />
-                        <button type="button" onClick={peek}>
+                        <button type="button" onClick={() => setPeekPassword(!peekPassword)}>
                           {peekPassword ? <FaRegEyeSlash className={`absolute text-4xl bottom-2 right-3`} /> : <IoEyeOutline className={`absolute text-4xl bottom-2 right-3`} />}
                         </button>
                       </label>
                       <label htmlFor="confirmPassword" className="relative flex-1">
                         <p>Confirm Password</p> <br />
-                        <input placeholder="confirm your password" type={peekPassword ? 'password' : 'text'} id="confirmPassword" name="confirmPassword" autoComplete="off" className="w-full px-8 ml-auto border outline-none h-14 border-slate-300 bg-slate-100 rounded-xl" />
-                        <button type="button" onClick={peek}>
-                          {peekPassword ? <FaRegEyeSlash className={`absolute text-4xl bottom-2 right-3`} /> : <IoEyeOutline className={`absolute text-4xl bottom-2 right-3`} />}
+                        <input placeholder="confirm your password" type={peekConfirmPassword ? 'password' : 'text'} id="confirmPassword" name="confirmPassword" autoComplete="off" className="w-full px-8 ml-auto border outline-none h-14 border-slate-300 bg-slate-100 rounded-xl" />
+                        <button type="button" onClick={() => setPeekConfirmPassword(!peekConfirmPassword)}>
+                          {peekConfirmPassword ? <FaRegEyeSlash className={`absolute text-4xl bottom-2 right-3`} /> : <IoEyeOutline className={`absolute text-4xl bottom-2 right-3`} />}
                         </button>
                       </label>
                     </div>
@@ -289,11 +338,16 @@ const Profile = () => {
               </div>
             </div>
 
-            <button className="flex items-center justify-center w-full h-16 text-2xl text-white md:h-20 rounded-xl bg-primary relatve md:w-1/2">
-            <p className={`${updateSuccess ? 'block' : 'hidden'} md:-mt-[120px] md:text-[20px] text-[14px] -mt-[100px] absolute font-bold text-[green]`}>{updateSuccess}</p>
-              <p className={`${errMessage ? 'block' : 'hidden'} md:-mt-[120px] md:text-[20px] text-[14px] -mt-[100px] absolute  font-bold text-danger`}>{errMessage}</p>
+            <div className="flex flex-col gap-2 md:w-1/2 w-full justify-between items-center lg:h-28">
+              <div>
+                <p className={`${updateSuccess ? 'block' : 'hidden'} text-[green] text-lg`}>{updateSuccess}</p>
+                <p className={`${errMessage? 'block' : 'hidden'} text-danger text-lg`}>{errMessage}</p>
+                <p className={`${loadingUpdate? 'block': 'hidden'} text-primary text-lg`}>{loadingUpdate}</p>
+              </div>
+            <button className="flex items-center justify-center w-full h-16 text-2xl text-white md:h-20 rounded-xl bg-primary disabled:bg-slate-500 relatve  active:scale-95 transition-all">
               Update Changes
-              </button>
+            </button>
+            </div>
           </form>
 
           <div className={`${pageSwitch ? 'hidden' : ''}`}>

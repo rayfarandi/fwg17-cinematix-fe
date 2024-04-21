@@ -10,17 +10,19 @@ import { TbMovieOff } from "react-icons/tb";
 import { number } from 'prop-types';
 
 function AddMovie() {
-  const [errMessage, setErrMessage] = useState('')
-  const [message, setMessage] = useState('')
+  const [errMessage, setErrMessage] = useState()
+  const [message, setMessage] = useState()
+  const [loading, setLoading] = useState()
+
     const [isDropdownShown, setIsDropdownShow] = useState(false);
     const token = useSelector(state=>state.auth.token)
-    const [image, setImage] = useState("");
+    const [image, setImage] = useState();
     const changeImageHandler = (e) => {
         setImage(e.target.files[0]);
     };
     
 
-    const [selectedDate, setSelectedDate] = useState('');
+    const [selectedDate, setSelectedDate] = useState(null);
 
     const handleDateChange = (event) => {
         const newDate = event.target.value;
@@ -46,7 +48,7 @@ function AddMovie() {
           setTime(false)
         }
         if(x){
-            if(!choosedTime.includes(x)){
+            if(!choosedTime?.includes(x)){
                 setChoosedTime([...choosedTime, x])
             }
         }
@@ -79,6 +81,7 @@ function AddMovie() {
 
       const postMovie = async (e) => {
         e.preventDefault()
+        setLoading("loading")
         try{
             const [file] = e.target.image.files
             const { value: title } = e.target.title
@@ -89,7 +92,7 @@ function AddMovie() {
             const duration = Number(dHour * 60) + Number(dMinute) + ' minutes'
             const { value: director } = e.target.director
             const { value: casts } = e.target.casts
-            const { value: sinopsis } = e.target.sinopsis
+            const { value: synopsis } = e.target.synopsis
             const { value: location } = e.target.location
             // console.log(ratingId)
             // console.log(selectedDate)
@@ -104,7 +107,7 @@ function AddMovie() {
             form.append('duration', duration)
             form.append('director', director)
             form.append('casts', casts)
-            form.append('sinopsis', sinopsis)
+            form.append('synopsis', synopsis)
             form.append('location', location)
             form.append('ratingId', ratingId)
             form.append('date', selectedDate)
@@ -118,43 +121,58 @@ function AddMovie() {
            }
          })
        
-         setImage('')
-       
+         setLoading(null)
          console.log(data)
        
-         setMessage(data.results.message)
+         setMessage(data.message)
          setTimeout(() => {
-
-          setMessage('')
+          setMessage(null)
       }, 2000)
 
+      setImage('')
+      e.target.title.value = ''
+      e.target.genre.value = ''
+      e.target.releaseDate.value = ''
+      e.target.releaseDate.value = ''
+      e.target.dHour.value = ''
+      e.target.dMinute.value = ''
+      e.target.director.value = ''
+      e.target.casts.value = ''
+      e.target.synopsis.value = ''
+      e.target.location.value = ''
+      e.target.date.value = null
+      setChoosedRating('Choose Rating')
+      setChoosedTime([])
+
         }catch(err){
-            console.log(err)
+            console.log(err.response.data.message)
+            setLoading(null)
             setErrMessage(err.response.data.message)
             setTimeout(() => {
 
-              setErrMessage('')
+              setErrMessage(null)
           }, 2000)
         }
       }
     return (
         <>
-        {
-          message ? 
+        {message && 
           <div className='fixed left-[50%] top-[15%] bg-green-200 text-green-600 px-3 py-2 text-center items-center flex justify-center -translate-x-[50%] rounded-xl' >{message}</div>
-          : ''
         }
-        {
-          errMessage ? 
+
+        {errMessage && 
           <div className='fixed left-[50%] top-[15%] bg-red-200 text-red-600  px-3 py-2 text-center items-center flex justify-center -translate-x-[50%] rounded-xl' >{errMessage}</div>
-          : ''
+        }
+
+        {loading &&
+          <div className='fixed left-[50%] top-[15%] bg-primary text-white 00 px-3 py-2 text-center items-center flex justify-center -translate-x-[50%] rounded-xl' >{loading}</div>
         }
             <Navbar isClick={() => setIsDropdownShow(true)} />
             <main className='bg-gray-300 py-[50px] flex justify-center'>
                 <section className='max-w-[full] w-[85%] bg-white h-full md:p-[50px] p-[20px] rounded-lg'>
                     <form id='postForm' onSubmit={postMovie} className='flex flex-col gap-4 text-sm'>
                         <p className='text-xl font-semibold'>Add New Movie</p>
-                        <div id='Upload_Image' className='flex flex-col gap-4'>
+                        <div id='Upload_Image' className='flex flex-col gap-4 '>
                             {image ? (
                                 <img
                                     src={URL.createObjectURL(image)}
@@ -181,40 +199,40 @@ function AddMovie() {
                         </div>
                         <div>
                             <p>Movie Name</p>
-                            <input id='title' name='title' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add movie name' />
+                            <input required={true} id='title' name='title' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add movie name' />
                         </div>
                         <div>
                             <p>Genre</p>
-                            <input id='genre' name='genre' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add movie genre' />
+                            <input required={true} id='genre' name='genre' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add movie genre' />
                         </div>
                         <div className='flex flex-col gap-4 lg:flex-row'>
                             <div className='md:flex-1'>
                                 <p>Release date</p>
-                                <input id='releaseDate' name='releaseDate' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='YYYY-MM-DD' />
+                                <input required={true} id='releaseDate' name='releaseDate' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='YYYY-MM-DD' />
                             </div>
                             <div>
                                 <p>Duration (hour/minutes)</p>
                                 <div className='flex gap-3 '>
-                                    <input  id='dHour' name='dHour' type="text" className='w-1/2 px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='H' />
-                                    <input id='dMinute' name='dMinute' type="text" className='w-1/2 px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='M' />
+                                    <input required={true}  id='dHour' name='dHour' type="text" className='w-1/2 px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='H' />
+                                    <input required={true} id='dMinute' name='dMinute' type="text" className='w-1/2 px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='M' />
                                 </div>
                             </div>
                         </div>
                         <div>
                             <p>Director Name</p>
-                            <input  id='director' name='director' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add director name' />
+                            <input required={true}  id='director' name='director' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add director name' />
                         </div>
                         <div>
                             <p>Cast</p>
-                            <input id='casts' name='casts' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add movie cast' />
+                            <input required={true} id='casts' name='casts' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add movie cast' />
                         </div>
                         <div>
                             <p>Synopsis</p>
-                            <textarea  id='sinopsis' name='sinopsis' rows="7" cols="0" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add movie synopsis' />
+                            <textarea required={true}  id='synopsis' name='synopsis' rows="7" cols="0" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add movie synopsis' />
                         </div>
                         <div>
                             <p>Add Location</p>
-                            <input  id='location' name='location' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add location' />
+                            <input required={true}  id='location' name='location' type="text" className='w-full px-3 py-3 border border-solid rounded-md outline-none bg-input_bg border-input_border' placeholder='Add location' />
                         </div>
 
                         <div className="relative flex flex-col items-center justify-center py-2 cursor-pointer w-44 roun100d-md bg-slate-100">
@@ -243,7 +261,7 @@ function AddMovie() {
                         <div className='flex flex-col gap-3'>
                             <p >Set Date & Time</p>
                             <div className='flex flex-col gap-4'>
-                                <input id='dates' type="date" className='flex px-2 py-2 border-2 rounded-md outline-none w-44 bg-backgorund_gray' onChange={handleDateChange}/>  
+                                <input required={true} id='dates' type="date" name='date' className='flex px-2 py-2 border-2 rounded-md outline-none w-44 bg-backgorund_gray' onChange={handleDateChange}/>  
                             </div>
                         </div>
                         <div className="relative flex flex-col items-center justify-center py-2 cursor-pointer w-44 roun100d-md bg-slate-100">
@@ -283,7 +301,7 @@ function AddMovie() {
                                 })}
                             </div>
                         </div>
-                        <button className='flex justify-center w-full px-2 py-2 text-white rounded-md outline-none bg-primary'> Save Movie </button>
+                        <button disabled={loading || !choosedTime?.length || !image} className='flex justify-center w-full px-2 py-2 text-white rounded-md outline-none bg-primary active:scale-95 transition-all disabled:active:scale-100 disabled:transition-none disabled:bg-slate-500'> Save Movie </button>
                     </form>
                 </section>
             </main>

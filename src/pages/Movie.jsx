@@ -8,15 +8,22 @@ import DropdownMobile from "../components/DropdownMobile";
 import CardMovie from"../components/CardMovie"
 import Loading from "../components/Loading";
 import axios from "axios";
+import PageNavigator from "../components/PageNavigator";
 
 function Movie() {
   const [isDropdownShown, setIsDropdownShow] = useState(false)
-  const [movies, setMovies] = useState([{}])
-  const [search_movie,setSearchMovie] = useState("")
-  const [genre, setGenre] = useState("")
+  const [movies, setMovies] = useState()
+  const [searchMovie,setSearchMovie] = useState("")
+  const [genre, setGenre] = useState()
   const [isGenre, setIsGenre] = useState(false)
   const [loadingMovie,setLoadingMovie] = useState(true)
   const [errorMovie,setErrorMovie] = useState(false)
+  const [currentPage, setCurrentPage] = useState()
+  const [nextPage, setNextPage] = useState()
+  const [prevPage, setPrevPage] = useState()
+  const [totalPage, setTotalPage] = useState()
+
+
 
   useEffect(()=>{
     window.scrollTo({
@@ -31,14 +38,126 @@ function Movie() {
   const getMovie = async () => {
     setLoadingMovie(true)
     try{
-      const resAll = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {params:{
-       status: "now airing"
+      const {data} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {params:{
+       status: "now airing",
+       limit: 12,
+       orderBy: "createdAt",
+       orderMethod: "DESC"
      }})
-      if(resAll.data.success && resAll.data.results.length === 0){ //jika api mengembalikan aray kosong
+      if(data.success && data.results.length === 0){ //jika api mengembalikan aray kosong
         setErrorMovie("All movie not Found")
       }else{
         setLoadingMovie(false)
-        setMovies(resAll.data.results)
+        setMovies(data.results)
+        setCurrentPage(data.pageInfo.currentPage)
+        setNextPage(data.pageInfo.nextPage)
+        setPrevPage(data.pageInfo.prevPage)
+        setTotalPage(data.pageInfo.totalPage)
+      }
+    }catch(error){
+      console.error("no Movie",error)
+      setErrorMovie("Failed to fatch get movie") // jika link or endpoint tidak berfungsi
+    }
+    setLoadingMovie(false)
+  }
+
+
+
+  const handlingNextPage = async () => {
+    window.scrollTo({
+      top:0,
+      left:0,
+      behavior:'smooth'
+    })
+
+    setLoadingMovie(true)
+    try{
+      const {data} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {params:{
+       status: "now airing",
+       limit: 12,
+       page: nextPage,
+       orderBy: "createdAt",
+       orderMethod: "DESC"
+     }})
+      if(data.success && data.results.length === 0){ //jika api mengembalikan aray kosong
+        setErrorMovie("All movie not Found")
+      }else{
+        setLoadingMovie(false)
+        setMovies(data.results)
+        setCurrentPage(data.pageInfo.currentPage)
+        setNextPage(data.pageInfo.nextPage)
+        setPrevPage(data.pageInfo.prevPage)
+        setTotalPage(data.pageInfo.totalPage)
+      }
+    }catch(error){
+      console.error("no Movie",error)
+      setErrorMovie("Failed to fatch get movie") // jika link or endpoint tidak berfungsi
+    }
+    setLoadingMovie(false)
+  }
+
+
+
+  const handlingPrevPage = async () => {
+    window.scrollTo({
+      top:0,
+      left:0,
+      behavior:'smooth'
+    })
+
+    setLoadingMovie(true)
+    try{
+      const {data} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {params:{
+       status: "now airing",
+       limit: 12,
+       page: prevPage,
+       orderBy: "createdAt",
+       orderMethod: "DESC"
+     }})
+      if(data.success && data.results.length === 0){ //jika api mengembalikan aray kosong
+        setErrorMovie("All movie not Found")
+      }else{
+        setLoadingMovie(false)
+        setMovies(data.results)
+        setCurrentPage(data.pageInfo.currentPage)
+        setNextPage(data.pageInfo.nextPage)
+        setPrevPage(data.pageInfo.prevPage)
+        setTotalPage(data.pageInfo.totalPage)
+      }
+    }catch(error){
+      console.error("no Movie",error)
+      setErrorMovie("Failed to fatch get movie") // jika link or endpoint tidak berfungsi
+    }
+    setLoadingMovie(false)
+  }
+
+
+  const handlingPage = async (page) => {
+    window.scrollTo({
+      top:0,
+      left:0,
+      behavior:'smooth'
+    })
+    
+    setLoadingMovie(true)
+    try{
+      const {data} = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {params:{
+       status: "now airing",
+       limit: 12,
+       page: page,
+       orderBy: "createdAt",
+       orderMethod: "DESC"
+
+     }})
+      if(data.success && data.results.length === 0){ //jika api mengembalikan aray kosong
+        setErrorMovie("All movie not Found")
+      }else{
+        setLoadingMovie(false)
+        setMovies(data.results)
+        setCurrentPage(data.pageInfo.currentPage)
+        setNextPage(data.pageInfo.nextPage)
+        setPrevPage(data.pageInfo.prevPage)
+        setTotalPage(data.pageInfo.totalPage)
       }
     }catch(error){
       console.error("no Movie",error)
@@ -53,20 +172,26 @@ function Movie() {
     setLoadingMovie(true)
     try{
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/movies`, {params:{
-        search : search_movie,
-        status: "now airing"
+        search : searchMovie,
+        status: "now airing",
+        orderBy: "createdAt",
+        orderMethod: "DESC"
       }})
+
       if (res.data.results.length === 0 ){
         setErrorMovie("No movie found")
       } else{
         setMovies(res.data.results)
         setErrorMovie(null)
       }
+
+      setSearchMovie("")
     }catch(error){
       console.error("error searching movies",error)
     }
     setLoadingMovie(false)
   }
+
 
   const filterByGenre = async (selectedGenre) => {
     setLoadingMovie(true)
@@ -92,6 +217,9 @@ function Movie() {
     setIsGenre(false);
     filterByGenre(selectedGenre);
   }
+
+
+  const Genre = ["Animation", "Horror", "Romance", "Adventure", "Sci-Fi"]
   
   
   return (
@@ -119,7 +247,7 @@ function Movie() {
               <input
                 type="text"
                 name="search_movie"
-                value={search_movie}
+                value={searchMovie}
                 onChange={(e) => setSearchMovie(e.target.value)}
                 className="border border-[#DEDEDE] py-4 md:py-5 pl-16 pr-[18px] w-full md:w-[340px] rounded-sm outline-none placeholder:text-[#A0A3BD] placeholder:max-sm:text-sm"
                 placeholder="New Born Expert"
@@ -137,59 +265,24 @@ function Movie() {
           <div className="hidden md:flex flex-col gap-y-4 lg:gap-y-7">
             <p className="text-secondary font-semibold">Filter</p>
             <div className="flex flex-col md:flex-row md:gap-x-8 md:items-center text-sm font-nunito font-semibold">
-              <button
-                className={`py-2 px-4 ${
-                  genre === "Thriller"
-                    ? "bg-primary text-light"
-                    : "text-secondary "
-                } rounded-[10px] cursor-pointer`}
-                onClick={() => submitGenre("Thriller")}
-              >
-                Thriller
-              </button>
-              <button
-                className={`py-2 px-4 ${
-                  genre === "Horror"
-                    ? "bg-primary text-light"
-                    : "text-secondary "
-                } rounded-[10px] cursor-pointer`}
-                onClick={() => submitGenre("Horror")}
-              >
-                Horror
-              </button>
-              <button
-                className={`py-2 px-4 ${
-                  genre === "Romantic"
-                    ? "bg-primary text-light"
-                    : "text-secondary "
-                } rounded-[10px] cursor-pointer`}
-                onClick={() => submitGenre("Romantic")}
-              >
-                Romantic
-              </button>
-              <button
-                className={`py-2 px-4 ${
-                  genre === "Adventure"
-                    ? "bg-primary text-light"
-                    : "text-secondary "
-                } rounded-[10px] cursor-pointer`}
-                onClick={() => submitGenre("Adventure")}
-              >
-                Adventure
-              </button>
-              <button
-                className={`py-2 px-4 ${
-                  genre === "Sci fi"
-                    ? "bg-primary text-light"
-                    : "text-secondary "
-                } rounded-[10px] cursor-pointer`}
-                onClick={() => submitGenre("Sci-fi")}
-              >
-                Sci-Fi
-              </button>
+              {Genre.map((value, i) => {
+                return (
+                  <button
+                  key={i}
+                    className={`py-2 px-4 ${
+                      genre === "Thriller"
+                        ? "bg-primary text-light"
+                        : "text-secondary "
+                    } rounded-[10px] cursor-pointer`}
+                    onClick={() => submitGenre(value)}
+                  >
+                    {value}
+                  </button>
+                )
+              })}
             </div>
           </div>
-          <div className="flex flex-col gap-y-4 md:w-1/4 relative z-10">
+          <div className="flex flex-col gap-y-4 md:w-1/4 relative z-10 sm:hidden">
             <p className="md:text-[20px] font-semibold text-black">Filter</p>
             <div
               className="flex justify-between items-center p-4 px-6 bg-[#EFF0F6] rounded-md cursor-pointer w-full"
@@ -203,66 +296,23 @@ function Movie() {
             {isGenre && (
               <div className="flex justify-between items-center p-4 px-6 bg-[#EFF0F6] rounded-md cursor-pointer w-full absolute top-24 drop-shadow-xl">
                 <div className="flex flex-col gap-y-5">
-                  <button
-                    className="flex gap-x-4"
-                    onClick={() => {
-                      submitGenre("Thriller");
-                      setGenre("Thriller");
-                      setIsGenre((state) => !state);
-                    }}
-                  >
-                    <p className="text-xs lg:text-base text-secondary font-semibold">
-                      Thriller
-                    </p>
-                  </button>
-                  <button
-                    className="flex gap-x-4"
-                    onClick={() => {
-                      submitGenre("Horror");
-                      setGenre("Horror");
-                      setIsGenre((state) => !state);
-                    }}
-                  >
-                    <p className="text-xs lg:text-base text-secondary font-semibold">
-                      Horror
-                    </p>
-                  </button>
-                  <button
-                    className="flex gap-x-4"
-                    onClick={() => {
-                      submitGenre("Romantic");
-                      setGenre("Romantic");
-                      setIsGenre((state) => !state);
-                    }}
-                  >
-                    <p className="text-xs lg:text-base text-secondary font-semibold">
-                      Romantic
-                    </p>
-                  </button>
-                  <button
-                    className="flex gap-x-4"
-                    onClick={() => {
-                      submitGenre("Adventure");
-                      setGenre("Adventure");
-                      setIsGenre((state) => !state);
-                    }}
-                  >
-                    <p className="text-xs lg:text-base text-secondary font-semibold">
-                      Adventure
-                    </p>
-                  </button>
-                  <button
-                    className="flex gap-x-4"
-                    onClick={() => {
-                      submitGenre("Sci-Fi");
-                      setGenre("Sci-Fi");
-                      setIsGenre((state) => !state);
-                    }}
-                  >
-                    <p className="text-xs lg:text-base text-secondary font-semibold">
-                      Sci-Fi
-                    </p>
-                  </button>
+                  {Genre.map((value, i) => {
+                    return (
+                      <button
+                      key={i}
+                      className="flex gap-x-4"
+                      onClick={() => {
+                        submitGenre(value);
+                        setGenre(value);
+                        setIsGenre((state) => !state);
+                      }}
+                    >
+                      <p className="text-xs lg:text-base text-secondary font-semibold">
+                        {value}
+                      </p>
+                    </button>
+                    )
+                  })}
                 </div>
               </div>
             )}
@@ -287,7 +337,7 @@ function Movie() {
           {movies && movies.map((item) => (
             <CardMovie
               key={String('movie' + item.id)}
-              nameMovie={item.title}
+              title={item.title}
               genre={item.genre}
               image={item.image}
               id={item.id}
@@ -300,23 +350,9 @@ function Movie() {
           
         
       </section>
-      <section className="pb-[63px] flex gap-x-5 justify-center font-nunito font-medium">
-        <p className="text-light bg-primary rounded-full w-[40px] h-[40px] flex justify-center items-center">
-          1
-        </p>
-        {/* <p className="text-[#A0A3BD] bg-[#F9FAFB] rounded-full w-[40px] h-[40px] flex justify-center items-center">
-          2
-        </p>
-        <p className="text-[#A0A3BD] bg-[#F9FAFB] rounded-full w-[40px] h-[40px] flex justify-center items-center">
-          3
-        </p>
-        <p className="text-[#A0A3BD] bg-[#F9FAFB] rounded-full w-[40px] h-[40px] flex justify-center items-center">
-          4
-        </p> */}
-        <p className="bg-primary rounded-full w-[40px] h-[40px] flex justify-center items-center">
-          <img src={getImageUrl("arrow-right", "svg")} alt="arrow" />
-        </p>
-      </section>
+
+      <PageNavigator totalPage={totalPage} handlingPage={handlingPage} handlingNextPage={handlingNextPage} handlingPrevPage={handlingPrevPage} currentPage={currentPage} rounded="full"/>
+
       <section className="pb-[63px] px-5 md:px-11 xl:px-[130px] font-mulish">
         <div className="w-full h-[318px] bg-primary rounded-[20px] flex flex-col gap-y-4 md:gap-y-12 justify-center items-center">
           <p className="text-light text-xl md:text-3xl lg:text-5xl w-[80%] md:w-full text-center">

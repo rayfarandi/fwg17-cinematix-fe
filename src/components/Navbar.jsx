@@ -17,9 +17,9 @@ function Navbar(props) {
   const peekLogout = () => {
     if(!showLogOut){
       setShowLogOut(true)
-      setTimeout(()=>{
-        setShowLogOut(false)
-      }, 2000)
+      // setTimeout(()=>{
+      //   setShowLogOut(false)
+      // }, 2000)
     }else{
       setShowLogOut(false)
     }
@@ -99,11 +99,11 @@ function Navbar(props) {
             <img src={profile?.picture ? profile.picture : getImageUrl("DefaultPfp","jpg")} alt="" className="object-cover w-12 h-12 rounded-full"/>
           </button>
 
-          <div className={`${showLogOut ? 'flex flex-col' : 'hidden'} z-10 absolute items-center justify-center w-32 h-auto font-bold border-2 border-slate-500 rounded-md bg-white top-14 -right-10`}>
+          <div className={`${showLogOut ? 'flex flex-col' : 'hidden'} z-10 absolute items-center justify-center w-32 h-auto font-bold border-2 border-primary rounded-md bg-white top-14 -right-10`}>
             <button onClick={()=>{navigate('/profile')}} className="flex items-center gap-2">
               <CiUser className="my-3 text-xl font-extrabold"/> Profile
             </button>
-            <button onClick={processLogout} className="flex items-center gap-2 text-red-600 border-t-2 border-slate-500">
+            <button onClick={processLogout} className="flex items-center gap-2 text-red-600 border-t-2 border-primary">
               <CiLogout className="my-3 text-xl font-extrabold"/> Log Out
             </button>
           </div>

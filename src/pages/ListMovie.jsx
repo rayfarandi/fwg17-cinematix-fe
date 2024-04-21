@@ -5,6 +5,7 @@ import { SlPencil } from "react-icons/sl";
 import { IoEyeOutline } from "react-icons/io5";
 import { GoTrash } from "react-icons/go";
 
+import PageNavigator from "../components/PageNavigator";
 import Navbar from "../components/Navbar";
 import DropdownMobile from "../components/DropdownMobile";
 import Loading from "../components/Loading";
@@ -21,15 +22,15 @@ function ListMovie() {
 
 
   const [movies, setMovies] = useState([{}]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [page, setPage] = useState(1);
-  const [pagesArr, setPagesArr] = useState([]);
-  const [totalPage, setTotalPage] = useState(1);
   const [errMessage, setErrMessage] = useState(null)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [selectedMovieId, setSelectedMovieId] = useState(null)
   const [loadingMovie,setLoadingMovie] = useState(true)
   
+  const [totalPage, setTotalPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState()
+  const [nextPage, setNextPage] = useState()
+  const [prevPage, setPrevPage] = useState()
 
   const [dataDate] = useState([
     "January",
@@ -69,10 +70,161 @@ function ListMovie() {
     }
   }
 
-  const changePages = (page) => {
-    setCurrentPage(page);
-    setPage(page);
-  };
+
+  const getMovie = async() => {
+    setLoadingMovie(true)
+
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/list-movies`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            limit: 5,
+            month: date,
+          },
+        }
+      );
+
+      if (response.data.results.length === 0) {
+        throw new Error("No movies found.");
+      }
+
+      setMovies(response.data.results);
+      setErrMessage(null);
+
+      setCurrentPage(response.data.pageInfo.currentPage)
+      setTotalPage(response.data.pageInfo.totalPage)
+      setNextPage(response.data.pageInfo.nextPage)
+      setPrevPage(response.data.pageInfo.prevPage)
+    } catch (error) {
+      console.error("Error fetching movies:");
+      setMovies([]);
+      setTotalPage(0);
+      setErrMessage("No movies found.");
+    }
+    setLoadingMovie(false)
+  }
+
+
+  const handlingPrevPage = async () => {
+    setLoadingMovie(true)
+
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/list-movies`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            limit: 5,
+            month: date,
+            page: prevPage
+          },
+        }
+      );
+
+      if (response.data.results.length === 0) {
+        throw new Error("No movies found.");
+      }
+
+      setMovies(response.data.results);
+      setErrMessage(null);
+
+      setCurrentPage(response.data.pageInfo.currentPage)
+      setTotalPage(response.data.pageInfo.totalPage)
+      setNextPage(response.data.pageInfo.nextPage)
+      setPrevPage(response.data.pageInfo.prevPage)
+    } catch (error) {
+      console.error("Error fetching movies:");
+      setMovies([]);
+      setTotalPage(0);
+      setErrMessage("No movies found.");
+    }
+    setLoadingMovie(false)
+  }
+
+
+  const handlingNextPage = async () => {
+    setLoadingMovie(true)
+
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/list-movies`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            limit: 5,
+            month: date,
+            page: nextPage
+          },
+        }
+      );
+
+      if (response.data.results.length === 0) {
+        throw new Error("No movies found.");
+      }
+
+      setMovies(response.data.results);
+      setErrMessage(null);
+
+      setCurrentPage(response.data.pageInfo.currentPage)
+      setTotalPage(response.data.pageInfo.totalPage)
+      setNextPage(response.data.pageInfo.nextPage)
+      setPrevPage(response.data.pageInfo.prevPage)
+    } catch (error) {
+      console.error("Error fetching movies:");
+      setMovies([]);
+      setTotalPage(0);
+      setErrMessage("No movies found.");
+    }
+    setLoadingMovie(false)
+  }
+
+
+  const handlingPage = async (page) => {
+    setLoadingMovie(true)
+
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/list-movies`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            limit: 5,
+            month: date,
+            page: page
+          },
+        }
+      );
+
+      if (response.data.results.length === 0) {
+        throw new Error("No movies found.");
+      }
+
+      setMovies(response.data.results);
+      setErrMessage(null);
+
+      setCurrentPage(response.data.pageInfo.currentPage)
+      setTotalPage(response.data.pageInfo.totalPage)
+      setNextPage(response.data.pageInfo.nextPage)
+      setPrevPage(response.data.pageInfo.prevPage)
+    } catch (error) {
+      console.error("Error fetching movies:");
+      setMovies([]);
+      setTotalPage(0);
+      setErrMessage("No movies found.");
+    }
+    setLoadingMovie(false)
+  }
+
 
   useEffect(() => {
     window.scrollTo({
@@ -81,43 +233,8 @@ function ListMovie() {
       behavior: "smooth",
     });
 
-    async function getMovie() {
-      setLoadingMovie(true)
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/admin/list-movies`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            params: {
-              page: currentPage,
-              limit: 6,
-              month: date,
-            },
-          }
-        );
-
-        if (response.data.results.length === 0) {
-          throw new Error("No movies found.");
-        }
-
-        setMovies(response.data.results);
-        setTotalPage(response.data.totalPage);
-        setPagesArr(Array.from({ length: response.data.totalPage }, (_, i) => i + 1));
-        setErrMessage(null);
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-        setMovies([]);
-        setTotalPage(0);
-        setPagesArr([]);
-        setErrMessage("No movies found.");
-      }
-      setLoadingMovie(false)
-    }
-
     getMovie();
-  }, [currentPage, date, token]);
+  },[]);
 
   const deleteMovie = async (id) => {
     try {
@@ -249,44 +366,7 @@ function ListMovie() {
           </div>
 
           <div className="flex justify-center mt-4 font-medium gap-x-2 font-nunito">
-            {/* Pagination */}
-
-            <div className="flex justify-center flex-1">
-                <ul className="flex items-center gap-5">
-                {/* Previous data */}
-                {currentPage !== 1 && (
-                    <li>
-                    <button onClick={() => changePages(currentPage - 1)} className="px-3 py-3 border rounded-full bg-primary border-primary">
-                        Previou
-
-                    </button>
-                  </li>
-                )}
-
-                {/* Pagination numbers */}
-                {Array.from({ length: totalPage }, (_, i) => i + 1).map((page) => (
-                  <li key={page}>
-                    <button
-                      onClick={() => changePages(page)}
-                      className={`px-5 py-3 ${currentPage === page ? "bg-primary border-primary" : "text-[#A0A3BD] bg-[#E8E8E8]"} border rounded-full`}
-                    >
-                      {page}
-                    </button>
-                  </li>
-                ))}
-
-                {/* Next data */}
-                {currentPage !== totalPage && (
-
-                    <li>
-                    <button onClick={() => changePages(currentPage + 1)} className="px-3 py-3 text-white border rounded-full bg-primary border-primary">
-                    Next
-
-                    </button>
-                  </li>
-                )}
-              </ul>
-            </div>
+            <PageNavigator totalPage={totalPage} handlingPage={handlingPage} handlingNextPage={handlingNextPage} handlingPrevPage={handlingPrevPage} currentPage={currentPage} rounded="md"/>
           </div>
         </section>
       </main>
