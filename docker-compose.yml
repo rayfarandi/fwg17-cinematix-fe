@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  webapp:
+    build: .
+    ports:
+      - 7772:7771
+    environment:
+      - VITE_BACKEND_URL=http://143.110.156.215:7777
